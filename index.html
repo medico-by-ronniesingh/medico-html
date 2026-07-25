@@ -1262,7 +1262,26 @@ async function placeOrder(){
     status: 'Pending'
   };
   orders.unshift(order);
-  await saveOrders();
+  await saveOrders();try {
+  await fetch("https://script.google.com/macros/s/AKfycbz6J94n4-3B23CXB3uaWFxiFE0NsyyaIbg4RPiJwoydXXOqLDRoI1U3zZtChfap2LTlPw/exec", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      name: name,
+      phone: phone,
+      medicine: items.map(i => i.name).join(", "),
+      quantity: items.map(i => i.qty).join(", "),
+      address: currentFulfillment === "pickup"
+        ? "Pickup Center"
+        : `${address} (${pincode})`,
+      payment: payment
+    })
+  });
+} catch (err) {
+  console.error("Google Sheet Error:", err);
+}
  
   items.forEach(it=>{
     const p = products.find(x=>x.id===it.id);
