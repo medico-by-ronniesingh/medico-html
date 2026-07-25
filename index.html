@@ -721,6 +721,35 @@ input,textarea,select{font-family:var(--font-body);}
 </div>
  
 <script>
+/* ==========================================================================
+   BACKEND CONFIG — Google Apps Script + Google Sheets
+   ========================================================================== */
+const API_URL = "https://script.google.com/macros/s/AKfycbz6J94n4-3B23CXB3uaWFxiFE0NsyyaIbg4RPiJwoydXXOqLDRoI1U3zZtChfap2LTlPw/exec";
+
+/**
+ * Generic helper to call the Google Apps Script Web App.
+ * Sends { action, payload } as JSON in a POST body and expects
+ * a JSON response of the shape { ok: true, data: ... } or { ok:false, error:"..." }.
+ * Falls back gracefully (returns null) on network / parsing failure so the
+ * UI can keep working with whatever it already has in memory.
+ */
+async function api(action, data){
+  try{
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" }, // avoids CORS preflight on Apps Script
+      body: JSON.stringify({ action, payload: data || {} })
+    });
+    if(!res.ok) throw new Error("Network response was not ok");
+    const json = await res.json();
+    if(json && json.ok === false) throw new Error(json.error || "API error");
+    return json && Object.prototype.hasOwnProperty.call(json,'data') ? json.data : json;
+  }catch(err){
+    console.error(`API call failed [${action}]:`, err);
+    return null;
+  }
+}
+
 /* ---------------- State ---------------- */
 let products = [];
 let orders = [];
@@ -780,42 +809,53 @@ const DEFAULT_PRODUCTS = [
   {id:'p11',name:'Amoxicillin 500mg',company:'MediCare Labs',salt:'Amoxicillin',category:'Antibiotics',price:95,origPrice:120,stock:8,icon:'💊',rx:true,imageUrl:'',expiryDate:'',dealEnabled:false,dealEndsAt:''}
 ];
  
-/* ---------------- Storage helpers ---------------- */
+/* ==========================================================================
+   Google Sheets–backed data loaders
+   Each of these calls the Apps Script backend for its resource. If the
+   backend call fails (e.g. not deployed yet) it falls back to sensible
+   in-memory defaults so the storefront still renders.
+   ========================================================================== */
+async function loadProducts(){
+  const data = await api('getProducts');
+  products = (Array.isArray(data) && data.length) ? data : DEFAULT_PRODUCTS;
+  return products;
+}
+async function loadOrders(){
+  const data = await api('getOrders');
+  orders = Array.isArray(data) ? data : [];
+  return orders;
+}
+async function loadSettings(){
+  const data = await api('getSettings');
+  settings = (data && typeof data === 'object') ? { ...DEFAULT_SETTINGS, ...data } : { ...DEFAULT_SETTINGS };
+  return settings;
+}
+async function loadComplaints(){
+  const data = await api('getComplaints');
+  complaints = Array.isArray(data) ? data : [];
+  return complaints;
+}
+async function loadFaqs(){
+  const data = await api('getFaqs');
+  faqs = (Array.isArray(data) && data.length) ? data : DEFAULT_FAQS;
+  return faqs;
+}
+async function loadCoupons(){
+  const data = await api('getCoupons');
+  coupons = (Array.isArray(data) && data.length) ? data : DEFAULT_COUPONS;
+  return coupons;
+}
+
 async function loadData(){
-  try{
-    const p = await window.storage.get('products', true);
-    products = p ? JSON.parse(p.value) : DEFAULT_PRODUCTS;
-    if(!p) await window.storage.set('products', JSON.stringify(DEFAULT_PRODUCTS), true);
-  }catch(e){ products = DEFAULT_PRODUCTS; try{ await window.storage.set('products', JSON.stringify(DEFAULT_PRODUCTS), true); }catch(e2){} }
- 
-  try{
-    const o = await window.storage.get('orders', true);
-    orders = o ? JSON.parse(o.value) : [];
-  }catch(e){ orders = []; }
- 
-  try{
-    const s = await window.storage.get('settings', true);
-    settings = s ? JSON.parse(s.value) : {...DEFAULT_SETTINGS};
-    if(!s) await window.storage.set('settings', JSON.stringify(DEFAULT_SETTINGS), true);
-  }catch(e){ settings = {...DEFAULT_SETTINGS}; try{ await window.storage.set('settings', JSON.stringify(DEFAULT_SETTINGS), true); }catch(e2){} }
- 
-  try{
-    const c = await window.storage.get('complaints', true);
-    complaints = c ? JSON.parse(c.value) : [];
-  }catch(e){ complaints = []; }
- 
-  try{
-    const f = await window.storage.get('faqs', true);
-    faqs = f ? JSON.parse(f.value) : DEFAULT_FAQS;
-    if(!f) await window.storage.set('faqs', JSON.stringify(DEFAULT_FAQS), true);
-  }catch(e){ faqs = DEFAULT_FAQS; try{ await window.storage.set('faqs', JSON.stringify(DEFAULT_FAQS), true); }catch(e2){} }
- 
-  try{
-    const cp = await window.storage.get('coupons', true);
-    coupons = cp ? JSON.parse(cp.value) : DEFAULT_COUPONS;
-    if(!cp) await window.storage.set('coupons', JSON.stringify(DEFAULT_COUPONS), true);
-  }catch(e){ coupons = DEFAULT_COUPONS; try{ await window.storage.set('coupons', JSON.stringify(DEFAULT_COUPONS), true); }catch(e2){} }
- 
+  await Promise.all([
+    loadProducts(),
+    loadOrders(),
+    loadSettings(),
+    loadComplaints(),
+    loadFaqs(),
+    loadCoupons()
+  ]);
+
   applySettingsToDOM();
   populateCategoryFilter();
   renderProducts();
@@ -823,12 +863,6 @@ async function loadData(){
   renderCouponStrip();
   updateCartCount();
 }
-async function saveProducts(){ try{ await window.storage.set('products', JSON.stringify(products), true); }catch(e){ showToast('Could not save — try again'); } }
-async function saveOrders(){ try{ await window.storage.set('orders', JSON.stringify(orders), true); }catch(e){ showToast('Could not save order'); } }
-async function saveSettingsData(){ try{ await window.storage.set('settings', JSON.stringify(settings), true); }catch(e){ showToast('Could not save settings'); } }
-async function saveComplaints(){ try{ await window.storage.set('complaints', JSON.stringify(complaints), true); }catch(e){ showToast('Could not save — try again'); } }
-async function saveFaqs(){ try{ await window.storage.set('faqs', JSON.stringify(faqs), true); }catch(e){ showToast('Could not save — try again'); } }
-async function saveCoupons(){ try{ await window.storage.set('coupons', JSON.stringify(coupons), true); }catch(e){ showToast('Could not save — try again'); } }
  
 /* ---------------- Utility ---------------- */
 function fmt(n){ return '₹' + Number(n).toLocaleString('en-IN'); }
@@ -1261,33 +1295,20 @@ async function placeOrder(){
     items, subtotal, deliveryFee: fee, total,
     status: 'Pending'
   };
+
+  // Optimistically update local state so the UI feels instant.
   orders.unshift(order);
-  await saveOrders();try {
-  await fetch("https://script.google.com/macros/s/AKfycbz6J94n4-3B23CXB3uaWFxiFE0NsyyaIbg4RPiJwoydXXOqLDRoI1U3zZtChfap2LTlPw/exec", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      name: name,
-      phone: phone,
-      medicine: items.map(i => i.name).join(", "),
-      quantity: items.map(i => i.qty).join(", "),
-      address: currentFulfillment === "pickup"
-        ? "Pickup Center"
-        : `${address} (${pincode})`,
-      payment: payment
-    })
-  });
-} catch (err) {
-  console.error("Google Sheet Error:", err);
-}
- 
   items.forEach(it=>{
     const p = products.find(x=>x.id===it.id);
     if(p) p.stock = Math.max(0, p.stock - it.qty);
   });
-  await saveProducts();
+
+  // Persist the order (and the resulting stock levels) to Google Sheets.
+  const saved = await api('addOrder', order);
+  if(saved === null){
+    showToast('Order saved locally — could not reach the server. It will not sync.');
+  }
+  await api('updateProductsStock', { items });
  
   cart = {};
   updateCartCount();
@@ -1330,7 +1351,7 @@ function openTrack(){
   document.getElementById('trackResult').innerHTML='';
   setActiveNav('more');
 }
-function trackOrder(){
+async function trackOrder(){
   const idFilter = document.getElementById('trackOrderId').value.trim().toUpperCase();
   const phone = document.getElementById('trackPhone').value.trim();
   const result = document.getElementById('trackResult');
@@ -1338,8 +1359,18 @@ function trackOrder(){
     result.innerHTML = `<div class="field-error" style="display:block;">Please enter the valid 10-digit number used for the order.</div>`;
     return;
   }
-  let matches = orders.filter(o=>o.customer.phone===phone);
-  if(idFilter) matches = matches.filter(o=>o.id.toUpperCase()===idFilter);
+  result.innerHTML = `<div class="empty-state">Checking your order…</div>`;
+
+  // Prefer a fresh lookup from the sheet; fall back to whatever is cached locally.
+  const remote = await api('trackOrder', { phone, orderId: idFilter });
+  let matches;
+  if(Array.isArray(remote)){
+    matches = remote;
+  }else{
+    matches = orders.filter(o=>o.customer.phone===phone);
+    if(idFilter) matches = matches.filter(o=>o.id.toUpperCase()===idFilter);
+  }
+
   if(matches.length===0){
     result.innerHTML = `<div class="field-error" style="display:block;">No order found for that number${idFilter?' and order ID':''}.</div>`;
     return;
@@ -1412,7 +1443,8 @@ async function submitComplaint(){
     status: 'Open'
   };
   complaints.unshift(complaint);
-  await saveComplaints();
+  const saved = await api('addComplaint', complaint);
+  if(saved === null) showToast('Complaint saved locally — could not reach the server.');
 
   closeModal('complaintModal');
   document.getElementById('cmpReceiptId').textContent = id;
@@ -1536,6 +1568,7 @@ function enterAdmin(){
   renderAdminOrders();
   renderAdminComplaints();
   renderAdminFAQ();
+  renderAdminCoupons();
   fillSettingsForm();
 }
 function exitAdmin(){
@@ -1579,7 +1612,8 @@ async function editProduct(id, field, value){
   const p = products.find(x=>x.id===id);
   if(!p) return;
   p[field] = value;
-  await saveProducts();
+  const saved = await api('editProduct', { id, field, value, product: p });
+  if(saved === null) showToast('Updated locally — could not reach the server.');
   populateCategoryFilter();
   renderProducts();
   showToast('Product updated');
@@ -1587,7 +1621,8 @@ async function editProduct(id, field, value){
 async function deleteProduct(id){
   if(!confirm('Delete this product? This cannot be undone.')) return;
   products = products.filter(x=>x.id!==id);
-  await saveProducts();
+  const saved = await api('deleteProduct', { id });
+  if(saved === null) showToast('Deleted locally — could not reach the server.');
   renderAdminProducts();
   populateCategoryFilter();
   renderProducts();
@@ -1609,8 +1644,10 @@ async function addProduct(){
   const dealEndsAt = document.getElementById('newProdDealEnds').value;
   if(!name || price<=0){ showToast('Enter at least a name and price'); return; }
   const id = 'p' + Date.now();
-  products.push({id,name,company,salt,category,price,origPrice,stock,icon,rx,imageUrl,expiryDate,dealEnabled,dealEndsAt});
-  await saveProducts();
+  const product = {id,name,company,salt,category,price,origPrice,stock,icon,rx,imageUrl,expiryDate,dealEnabled,dealEndsAt};
+  products.push(product);
+  const saved = await api('addProduct', product);
+  if(saved === null) showToast('Added locally — could not reach the server.');
   ['newProdName','newProdCompany','newProdSalt','newProdCategory','newProdPrice','newProdOrigPrice','newProdStock','newProdIcon','newProdExpiry','newProdDealEnds'].forEach(i=>document.getElementById(i).value='');
   document.getElementById('newProdImageFile').value = '';
   document.getElementById('newProdImageData').value = '';
@@ -1657,7 +1694,8 @@ async function updateOrderStatus(id, status){
   const o = orders.find(x=>x.id===id);
   if(!o) return;
   o.status = status;
-  await saveOrders();
+  const saved = await api('updateOrderStatus', { id, status });
+  if(saved === null) showToast('Updated locally — could not reach the server.');
   showToast('Order status updated');
 }
  
@@ -1690,7 +1728,8 @@ async function updateComplaintStatus(id, status){
   const c = complaints.find(x=>x.id===id);
   if(!c) return;
   c.status = status;
-  await saveComplaints();
+  const saved = await api('updateComplaintStatus', { id, status });
+  if(saved === null) showToast('Updated locally — could not reach the server.');
   showToast('Complaint status updated');
 }
 
@@ -1718,14 +1757,16 @@ async function editFAQ(id, field, value){
   const f = faqs.find(x=>x.id===id);
   if(!f) return;
   f[field] = value;
-  await saveFaqs();
+  const saved = await api('editFaq', { id, field, value, faq: f });
+  if(saved === null) showToast('Updated locally — could not reach the server.');
   renderFAQ();
   showToast('FAQ updated');
 }
 async function deleteFAQ(id){
   if(!confirm('Delete this FAQ question? This cannot be undone.')) return;
   faqs = faqs.filter(x=>x.id!==id);
-  await saveFaqs();
+  const saved = await api('deleteFaq', { id });
+  if(saved === null) showToast('Deleted locally — could not reach the server.');
   renderAdminFAQ();
   renderFAQ();
   showToast('FAQ deleted');
@@ -1735,13 +1776,73 @@ async function addFAQ(){
   const a = document.getElementById('newFaqA').value.trim();
   if(!q || !a){ showToast('Enter both a question and an answer'); return; }
   const id = 'f' + Date.now();
-  faqs.push({id, q, a});
-  await saveFaqs();
+  const faq = {id, q, a};
+  faqs.push(faq);
+  const saved = await api('addFaq', faq);
+  if(saved === null) showToast('Added locally — could not reach the server.');
   document.getElementById('newFaqQ').value = '';
   document.getElementById('newFaqA').value = '';
   renderAdminFAQ();
   renderFAQ();
   showToast('FAQ added');
+}
+
+/* ---------------- Coupons (admin) ---------------- */
+function renderAdminCoupons(){
+  document.getElementById('couponCountLabel').textContent = coupons.length + ' coupon(s)';
+  const wrap = document.getElementById('adminCouponsList');
+  if(coupons.length===0){
+    wrap.innerHTML = `<div class="empty-state">No coupons yet.</div>`;
+    return;
+  }
+  wrap.innerHTML = coupons.map(c=>`
+    <div class="order-card">
+      <div class="order-head">
+        <div>
+          <div class="order-id">${escapeHtml(c.code)}</div>
+          <div class="order-meta">${escapeHtml(couponDiscountText(c))}</div>
+        </div>
+        <div class="admin-toggle-row">
+          <label class="admin-toggle-row"><input type="checkbox" ${c.active?'checked':''} onchange="toggleCouponActive('${c.id}',this.checked)"> Active</label>
+        </div>
+      </div>
+      <button class="small-btn danger" style="margin-top:10px;" onclick="deleteCoupon('${c.id}')">Delete</button>
+    </div>`).join('');
+}
+async function addCoupon(){
+  const code = document.getElementById('newCouponCode').value.trim().toUpperCase();
+  const type = document.getElementById('newCouponType').value;
+  const value = Number(document.getElementById('newCouponValue').value) || 0;
+  const minOrder = Number(document.getElementById('newCouponMinOrder').value) || 0;
+  if(!code || value<=0){ showToast('Enter a coupon code and a discount value'); return; }
+  const id = 'c' + Date.now();
+  const coupon = {id, code, type, value, minOrder, active:true};
+  coupons.push(coupon);
+  const saved = await api('addCoupon', coupon);
+  if(saved === null) showToast('Added locally — could not reach the server.');
+  document.getElementById('newCouponCode').value = '';
+  document.getElementById('newCouponValue').value = '';
+  document.getElementById('newCouponMinOrder').value = '';
+  renderAdminCoupons();
+  renderCouponStrip();
+  showToast('Coupon created');
+}
+async function toggleCouponActive(id, active){
+  const c = coupons.find(x=>x.id===id);
+  if(!c) return;
+  c.active = active;
+  const saved = await api('editCoupon', { id, field:'active', value:active, coupon:c });
+  if(saved === null) showToast('Updated locally — could not reach the server.');
+  renderCouponStrip();
+}
+async function deleteCoupon(id){
+  if(!confirm('Delete this coupon? This cannot be undone.')) return;
+  coupons = coupons.filter(x=>x.id!==id);
+  const saved = await api('deleteCoupon', { id });
+  if(saved === null) showToast('Deleted locally — could not reach the server.');
+  renderAdminCoupons();
+  renderCouponStrip();
+  showToast('Coupon deleted');
 }
 
 function fillSettingsForm(){
@@ -1769,7 +1870,8 @@ async function saveSettings(){
   settings.lowStockThreshold = Number(document.getElementById('setLowStock').value) || 10;
   settings.contact = document.getElementById('setContact').value.trim();
   settings.footerNote = document.getElementById('setFooterNote').value.trim() || 'Medico · by Ronnie Singh';
-  await saveSettingsData();
+  const saved = await api('saveSettings', settings);
+  if(saved === null) showToast('Saved locally — could not reach the server.');
   applySettingsToDOM();
   renderProducts();
   showToast('Settings saved');
@@ -1778,14 +1880,16 @@ async function savePickupSettings(){
   settings.pickupAddress = document.getElementById('setPickupAddress').value.trim();
   settings.deliveryFee = Number(document.getElementById('setDeliveryFee').value) || 0;
   settings.freeAbove = Number(document.getElementById('setFreeAbove').value) || 0;
-  await saveSettingsData();
+  const saved = await api('saveSettings', settings);
+  if(saved === null) showToast('Saved locally — could not reach the server.');
   renderProducts();
   showToast('Pickup & delivery settings saved');
 }
 async function saveUpiSettings(){
   settings.upiId = document.getElementById('setUpiId').value.trim();
   settings.upiQrImage = document.getElementById('setUpiQrData').value;
-  await saveSettingsData();
+  const saved = await api('saveSettings', settings);
+  if(saved === null) showToast('Saved locally — could not reach the server.');
   showToast('UPI details saved');
 }
 async function changeAdminPassword(){
@@ -1794,7 +1898,8 @@ async function changeAdminPassword(){
   if(!p1 || p1.length<4){ showToast('Password should be at least 4 characters'); return; }
   if(p1!==p2){ showToast('Passwords do not match'); return; }
   settings.adminPassword = p1;
-  await saveSettingsData();
+  const saved = await api('saveSettings', settings);
+  if(saved === null) showToast('Saved locally — could not reach the server.');
   document.getElementById('newAdminPass').value='';
   document.getElementById('confirmAdminPass').value='';
   showToast('Admin password updated');
