@@ -576,6 +576,7 @@ input,textarea,select{font-family:var(--font-body);}
     <div class="sheet-list">
       <button class="sheet-item" onclick="closeModal('moreModal');openTrack();"><span class="si-icon">📦</span> Track an order</button>
       <button class="sheet-item" onclick="closeModal('moreModal');openCart();"><span class="si-icon">🛒</span> View cart</button>
+      <button class="sheet-item" id="signupSheetItem" onclick="closeModal('moreModal');openCustomerLogin();"><span class="si-icon">👤</span> Sign up / Sign in</button>
       <button class="sheet-item" id="contactSheetItem"><span class="si-icon">📞</span> Contact us</button>
       <button class="sheet-item" id="logoutSheetItem" style="display:none;color:var(--danger);" onclick="logoutFromMoreSheet()"><span class="si-icon">🚪</span> Logout</button>
     </div>
@@ -796,7 +797,7 @@ input,textarea,select{font-family:var(--font-body);}
 /* ==========================================================================
    BACKEND CONFIG — Google Apps Script + Google Sheets
    ========================================================================== */
-const API_URL = "https://script.google.com/macros/s/AKfycby1EhlGkb7Ld4T2sqrrnkafjffhtgRZN-CaBe3M15QR_bt4S5GQe-oTKL4gsCQwfJ0I/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxDmGzFeZ7S7X3bB6uA1dtNC6X66ubY-tz2MXVtK9nIQ19HMQ9CziVWTB0xfs3w_lu7/exec";
 
 /**
  * Generic helper to call the Google Apps Script Web App.
@@ -1031,6 +1032,8 @@ function renderCustomerStatus(){
   }
   const logoutItem = document.getElementById('logoutSheetItem');
   if(logoutItem) logoutItem.style.display = currentCustomerPhone ? 'flex' : 'none';
+  const signupItem = document.getElementById('signupSheetItem');
+  if(signupItem) signupItem.style.display = currentCustomerPhone ? 'none' : 'flex';
 }
 function openCustomerLogin(){
   document.getElementById('customerLoginPhone').value = '';
