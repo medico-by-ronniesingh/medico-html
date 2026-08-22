@@ -609,7 +609,9 @@ input,textarea,select{font-family:var(--font-body);}
       <button class="admin-tab" data-tab="orders" onclick="switchAdminTab('orders')">Orders</button>
       <button class="admin-tab" data-tab="complaints" onclick="switchAdminTab('complaints')">Help & Support</button>
       <button class="admin-tab" data-tab="coupons" onclick="switchAdminTab('coupons')">Coupons</button>
-      <button class="admin-tab" data-tab="custpricing" onclick="switchAdminTab('custpricing')">Customer Pricing</button>
+      <button class="admin-tab" data-tab="customers" onclick="switchAdminTab('customers')">Customers</button>
+      <button class="admin-tab" data-tab="pricing" onclick="switchAdminTab('pricing')">Pricing</button>
+      <button class="admin-tab" data-tab="offers" onclick="switchAdminTab('offers')">Customer Offers</button>
       <button class="admin-tab" data-tab="settings" onclick="switchAdminTab('settings')">Website Settings</button>
     </div>
  
@@ -669,55 +671,30 @@ input,textarea,select{font-family:var(--font-body);}
     <div class="admin-panel" id="panel-coupons">
       <div class="admin-card">
         <div class="admin-row-head"><h3>Create a coupon</h3></div>
+        <p class="helper-text" style="margin-top:-4px;">Leave a scope field blank to apply it to everyone / everything. All checks (dates, limits, eligibility) are enforced on the server, so a coupon can never be used outside these rules.</p>
         <div class="two-col">
           <div class="field"><label>Coupon code</label><input type="text" id="newCouponCode" placeholder="e.g. SAVE10" style="text-transform:uppercase;"></div>
           <div class="field"><label>Discount type</label>
-            <select id="newCouponType" onchange="toggleCouponValueFields()">
+            <select id="newCouponType">
               <option value="percent">Percentage off (%)</option>
               <option value="flat">Flat amount off (₹)</option>
-              <option value="freeDelivery">Free delivery</option>
             </select>
           </div>
-        </div>
-        <div class="two-col" id="couponValueRow">
-          <div class="field" id="couponValueWrap"><label>Discount value</label><input type="number" id="newCouponValue" placeholder="e.g. 10"></div>
-          <div class="field" id="couponMaxDiscountWrap"><label>Max discount cap (₹, optional)</label><input type="number" id="newCouponMaxDiscount" placeholder="e.g. 150"></div>
-        </div>
-        <div class="two-col">
-          <div class="field"><label>Minimum order value (₹, optional)</label><input type="number" id="newCouponMinOrder" placeholder="e.g. 499"></div>
-          <div class="field"><label>Only valid on category (optional)</label>
-            <select id="newCouponCategory"><option value="">All categories</option></select>
-          </div>
+          <div class="field"><label>Discount value</label><input type="number" id="newCouponValue" placeholder="e.g. 10"></div>
+          <div class="field"><label>Maximum discount (₹, for % coupons)</label><input type="number" id="newCouponMaxDiscount" placeholder="e.g. 100"></div>
+          <div class="field"><label>Minimum order value (₹)</label><input type="number" id="newCouponMinOrder" placeholder="e.g. 499"></div>
+          <div class="field"><label>Usage limit (total, 0 = unlimited)</label><input type="number" id="newCouponUsageLimit" placeholder="e.g. 100"></div>
+          <div class="field"><label>Per-customer limit (0 = unlimited)</label><input type="number" id="newCouponPerCustomerLimit" placeholder="e.g. 1"></div>
+          <div class="field"><label>Start date (optional)</label><input type="date" id="newCouponStart"></div>
+          <div class="field"><label>Expiry date (optional)</label><input type="date" id="newCouponExpiry"></div>
         </div>
         <div class="two-col">
-          <div class="field"><label>Valid from (optional)</label><input type="date" id="newCouponValidFrom"></div>
-          <div class="field"><label>Valid until (optional)</label><input type="date" id="newCouponValidTo"></div>
+          <div class="field"><label>Applicable customer IDs (comma-separated, optional)</label><input type="text" id="newCouponCustomers" placeholder="e.g. CUST001,CUST002"></div>
+          <div class="field"><label>Applicable price groups (comma-separated, optional)</label><input type="text" id="newCouponGroups" placeholder="e.g. PG_WHOLESALE"></div>
+          <div class="field"><label>Applicable product IDs (comma-separated, optional)</label><input type="text" id="newCouponProducts" placeholder="e.g. p1,p2"></div>
+          <div class="field"><label>Applicable categories (comma-separated, optional)</label><input type="text" id="newCouponCategories" placeholder="e.g. Pain Relief"></div>
         </div>
-        <div class="two-col">
-          <div class="field"><label>Total uses allowed (optional, blank = unlimited)</label><input type="number" id="newCouponUsageLimit" placeholder="e.g. 100"></div>
-          <div class="field"><label>Uses per customer (optional, blank = unlimited)</label><input type="number" id="newCouponPerCustomerLimit" placeholder="e.g. 1"></div>
-        </div>
-        <div class="checkbox-field"><input type="checkbox" id="newCouponFirstOrder"> Only valid for a customer's first order</div>
-        <div class="field">
-          <label>Who can use this coupon?</label>
-          <div class="pay-method-row">
-            <label class="pay-method-card active" id="couponVisPublicCard">
-              <input type="radio" name="couponVisRadio" value="public" checked onchange="toggleCouponVisibilityFields('public')">
-              <span class="pmc-icon">🌐</span>
-              <span class="pmc-label">Everyone</span>
-            </label>
-            <label class="pay-method-card" id="couponVisTargetedCard">
-              <input type="radio" name="couponVisRadio" value="targeted" onchange="toggleCouponVisibilityFields('targeted')">
-              <span class="pmc-icon">🔒</span>
-              <span class="pmc-label">Specific customer(s)</span>
-            </label>
-          </div>
-        </div>
-        <div class="field" id="couponTargetWrap" style="display:none;">
-          <label>Customer phone number(s)</label>
-          <textarea id="newCouponTargetPhones" rows="2" placeholder="e.g. 9876543210, 9123456780"></textarea>
-          <p class="helper-text" style="margin-top:4px;">Separate multiple numbers with a comma. This coupon will only work for these numbers, and won't appear on the public coupon strip or work for anyone else.</p>
-        </div>
+        <div class="checkbox-field"><input type="checkbox" id="newCouponFirstOrder"> Valid for a customer's first order only</div>
         <button class="small-btn" onclick="addCoupon()">Create coupon</button>
       </div>
       <div class="admin-card">
@@ -726,30 +703,57 @@ input,textarea,select{font-family:var(--font-body);}
       </div>
     </div>
 
-    <div class="admin-panel" id="panel-custpricing">
+    <div class="admin-panel" id="panel-customers">
       <div class="admin-card">
-        <div class="admin-row-head"><h3>Set a custom price for a customer</h3></div>
-        <p class="helper-text" style="margin-top:-4px;">When this customer signs in with this number, they'll see this price instead of the normal price for this product. Start typing a name or number — existing customers will suggest automatically, so you don't accidentally type the wrong number.</p>
+        <div class="admin-row-head"><h3>Add a customer</h3></div>
         <div class="two-col">
-          <div class="field">
-            <label>Customer phone number</label>
-            <input type="tel" id="newCpPhone" list="cpCustomerDatalist" placeholder="10-digit mobile number" maxlength="10" inputmode="numeric" oninput="this.value=this.value.replace(/\D/g,'').slice(0,10);updateCpPhonePreview();">
-            <datalist id="cpCustomerDatalist"></datalist>
-            <div class="helper-text" id="cpPhonePreview" style="margin:6px 0 0;display:none;"></div>
-          </div>
-          <div class="field"><label>Product</label><select id="newCpProduct"></select></div>
-          <div class="field"><label>Custom price (₹)</label><input type="number" id="newCpPrice" placeholder="e.g. 150"></div>
+          <div class="field"><label>Name</label><input type="text" id="newCustName" placeholder="e.g. Rahul Medical"></div>
+          <div class="field"><label>Phone number</label><input type="tel" id="newCustPhone" maxlength="10" inputmode="numeric" placeholder="10-digit mobile number" oninput="this.value=this.value.replace(/\D/g,'').slice(0,10)"></div>
+          <div class="field"><label>Address (optional)</label><input type="text" id="newCustAddress" placeholder="e.g. MG Road, Patna"></div>
+          <div class="field"><label>Price group</label><select id="newCustGroup"></select></div>
+          <div class="field"><label>Login PIN (4 digits, optional — auto-generated if left blank)</label><input type="text" id="newCustPin" maxlength="4" inputmode="numeric" placeholder="e.g. 1234" oninput="this.value=this.value.replace(/\D/g,'').slice(0,4)"></div>
         </div>
-        <button class="small-btn" onclick="addCustomerPricingEntry()">Set price</button>
+        <div class="field"><label>Notes (optional)</label><textarea id="newCustNotes" rows="2" placeholder="e.g. Wholesale buyer, pays on delivery"></textarea></div>
+        <button class="small-btn" onclick="addCustomerAdmin()">Add customer</button>
       </div>
       <div class="admin-card">
-        <div class="admin-row-head"><h3>All custom prices</h3><span class="footer-note" id="cpCountLabel" style="padding:0;"></span></div>
+        <div class="admin-row-head"><h3>All customers</h3><span class="footer-note" id="custCountLabel" style="padding:0;"></span></div>
         <div class="field" style="margin-bottom:4px;">
-          <label>Search by customer name or phone</label>
-          <input type="text" id="cpSearchInput" placeholder="Type a name or number to filter" oninput="renderAdminCustomerPricing()">
+          <label>Search by name or phone</label>
+          <input type="text" id="custSearchInput" placeholder="Type a name or number to filter" oninput="renderAdminCustomers()">
         </div>
-        <div id="adminCustomerPricingList"></div>
+        <div style="overflow-x:auto;"><table class="ptable" id="adminCustomersTable"></table></div>
       </div>
+    </div>
+
+    <div class="admin-panel" id="panel-pricing">
+      <div class="admin-card">
+        <div class="admin-row-head"><h3>Price groups</h3></div>
+        <p class="helper-text" style="margin-top:-4px;">Retail, Wholesale, Hospital and Distributor are created by default. Add more if you need them.</p>
+        <div class="two-col">
+          <div class="field"><label>New price group name</label><input type="text" id="newPriceGroupName" placeholder="e.g. VIP"></div>
+        </div>
+        <button class="small-btn" onclick="addPriceGroupAdmin()">Add price group</button>
+        <div id="adminPriceGroupsList" style="margin-top:14px;"></div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-row-head"><h3>Per-group product prices</h3></div>
+        <p class="helper-text" style="margin-top:-4px;">Set what each price group pays for each medicine. Leave blank to fall back to the medicine's default selling price. This is the second step in the pricing waterfall — a customer's own special price (set in Customer Offers) always wins over this.</p>
+        <div style="overflow-x:auto;"><table class="ptable" id="adminPricingMatrix"></table></div>
+      </div>
+    </div>
+
+    <div class="admin-panel" id="panel-offers">
+      <div class="admin-card">
+        <div class="admin-row-head"><h3>Customer Offers &amp; Pricing</h3></div>
+        <p class="helper-text" style="margin-top:-4px;">Search a customer to see and edit everything about their pricing in one place — general discount, special product prices, product/category discounts, applicable coupons and order history.</p>
+        <div class="field">
+          <label>Search customer by name or phone</label>
+          <input type="text" id="offersSearchInput" placeholder="Type a name or number…" oninput="searchCustomerOffers()">
+        </div>
+        <div id="offersSearchResults"></div>
+      </div>
+      <div id="offersDetailWrap"></div>
     </div>
 
     <div class="admin-panel" id="panel-settings">
@@ -824,7 +828,7 @@ input,textarea,select{font-family:var(--font-body);}
 /* ==========================================================================
    BACKEND CONFIG — Google Apps Script + Google Sheets
    ========================================================================== */
-const API_URL = "https://script.google.com/macros/s/AKfycbwSUisPRyA-axwygQ-0zs8VlQK4dDISYsE7YRKcjBzchAy6T3JrjMLZSD-qQJHZicZP/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxDmGzFeZ7S7X3bB6uA1dtNC6X66ubY-tz2MXVtK9nIQ19HMQ9CziVWTB0xfs3w_lu7/exec";
 
 /**
  * Generic helper to call the Google Apps Script Web App.
@@ -835,10 +839,16 @@ const API_URL = "https://script.google.com/macros/s/AKfycbwSUisPRyA-axwygQ-0zs8V
  */
 async function api(action, data){
   try{
+    const payload = Object.assign({}, data || {});
+    // Once the shop owner has entered the admin password, attach it to every
+    // call automatically. The backend only checks it for admin-only actions,
+    // so this is harmless for ordinary customer-facing calls.
+    if(adminPasswordValue) payload.adminPassword = adminPasswordValue;
+    if(currentCustomerToken) payload.token = payload.token || currentCustomerToken;
     const res = await fetch(API_URL, {
       method: "POST",
       headers: { "Content-Type": "text/plain;charset=utf-8" }, // avoids CORS preflight on Apps Script
-      body: JSON.stringify({ action, payload: data || {} })
+      body: JSON.stringify({ action, payload })
     });
     if(!res.ok) throw new Error("Network response was not ok");
     const json = await res.json();
@@ -856,18 +866,24 @@ let orders = [];
 let complaints = [];
 let faqs = [];
 let coupons = [];
-let appliedCoupon = null;
+let appliedCouponCode = '';
 let settings = {};
 let cart = {};
 let currentTab = 'products';
 let currentPaymentMethod = 'COD';
 let currentFulfillment = 'pickup';
-let customerPricing = [];
-let customers = [];
-let currentCustomerPhone = (typeof localStorage!=='undefined' && localStorage.getItem('medico_customer_phone')) || '';
+let customers = [];               // admin-only cache (loaded inside admin panel)
+let priceGroups = [];
+let myPricing = {};               // productId -> {price, isSpecial} — server-computed, never trusted from elsewhere
+let currentCustomerToken = (typeof localStorage!=='undefined' && localStorage.getItem('medico_customer_token')) || '';
 let currentCustomerName = '';
+let currentCustomerPhone = '';
+let currentCustomerGroup = '';
 let pendingLoginPhone = '';
 let pendingLoginIsNew = false;
+let adminPasswordValue = '';      // set on successful admin login, sent with every admin API call
+let checkoutPreview = null;       // last server-computed checkout summary (source of truth for the total shown)
+let previewDebounceTimer = null;
  
 const DEFAULT_SETTINGS = {
   shopName:'Medico',
@@ -896,9 +912,9 @@ const DEFAULT_FAQS = [
 ];
 
 const DEFAULT_COUPONS = [
-  {id:'c1', code:'SAVE10', type:'percent', value:10, maxDiscount:0, minOrder:0, category:'', validFrom:'', validTo:'', usageLimit:0, perCustomerLimit:0, usedCount:0, usedByPhones:{}, targetPhones:[], firstOrderOnly:false, active:true},
-  {id:'c2', code:'SAVE40', type:'percent', value:40, maxDiscount:200, minOrder:999, category:'', validFrom:'', validTo:'', usageLimit:0, perCustomerLimit:0, usedCount:0, usedByPhones:{}, targetPhones:[], firstOrderOnly:false, active:true},
-  {id:'c3', code:'EXTRA10', type:'flat', value:10, maxDiscount:0, minOrder:499, category:'', validFrom:'', validTo:'', usageLimit:0, perCustomerLimit:0, usedCount:0, usedByPhones:{}, targetPhones:[], firstOrderOnly:false, active:true}
+  {id:'c1', code:'SAVE10', type:'percent', value:10, minOrder:0, active:true},
+  {id:'c2', code:'SAVE40', type:'percent', value:40, minOrder:999, active:true},
+  {id:'c3', code:'EXTRA10', type:'flat', value:10, minOrder:499, active:true}
 ];
 
 const DEFAULT_PRODUCTS = [
@@ -951,51 +967,46 @@ async function loadCoupons(){
   coupons = (Array.isArray(data) && data.length) ? data : DEFAULT_COUPONS;
   return coupons;
 }
-async function loadCustomerPricing(){
-  const data = await api('getCustomerPricing');
-  customerPricing = Array.isArray(data) ? data : [];
-  return customerPricing;
+async function loadPriceGroups(){
+  const data = await api('getPriceGroups');
+  priceGroups = Array.isArray(data) ? data : [];
+  return priceGroups;
 }
-function saveCustomersCache(){
-  try{ if(typeof localStorage!=='undefined') localStorage.setItem('medico_customers', JSON.stringify(customers)); }catch(e){}
+// Fetches the final, already-calculated price for every product for the
+// current session (guest or logged-in customer). The server is the only
+// place price logic lives — the frontend just displays what it returns.
+async function loadMyPricing(){
+  const data = await api('getMyPricing', { token: currentCustomerToken });
+  myPricing = {};
+  if(Array.isArray(data)) data.forEach(row=>{ myPricing[row.productId] = row; });
+  return myPricing;
 }
-async function loadCustomers(){
-  let cached = [];
-  try{
-    const c = typeof localStorage!=='undefined' ? localStorage.getItem('medico_customers') : null;
-    cached = c ? JSON.parse(c) : [];
-  }catch(e){ cached = []; }
-
-  const data = await api('getCustomers');
-  const remote = Array.isArray(data) ? data : [];
-
-  // Merge remote + local cache (local wins for anything the server doesn't
-  // know about yet) so a locally-created account is never lost on refresh.
-  const merged = [...remote];
-  cached.forEach(localCust=>{
-    if(!merged.some(c=>c.phone===localCust.phone)) merged.push(localCust);
-  });
-  customers = merged;
-  saveCustomersCache();
-  return customers;
+// Restores a remembered session by asking the server who this token
+// belongs to — the frontend never assumes an identity on its own.
+async function restoreCustomerSession(){
+  if(!currentCustomerToken) return;
+  const me = await api('whoAmI', { token: currentCustomerToken });
+  if(me){
+    currentCustomerName = me.name;
+    currentCustomerPhone = me.phone;
+    currentCustomerGroup = me.priceGroupId;
+  }else{
+    // token expired / invalid — clear the stale local cache
+    currentCustomerToken = '';
+    if(typeof localStorage!=='undefined') localStorage.removeItem('medico_customer_token');
+  }
 }
 
 async function loadData(){
+  await restoreCustomerSession();
   await Promise.all([
     loadProducts(),
-    loadOrders(),
     loadSettings(),
-    loadComplaints(),
     loadFaqs(),
     loadCoupons(),
-    loadCustomerPricing(),
-    loadCustomers()
+    loadPriceGroups(),
+    loadMyPricing()
   ]);
-
-  if(currentCustomerPhone){
-    const existing = customers.find(c=>c.phone===currentCustomerPhone);
-    if(existing) currentCustomerName = existing.name;
-  }
 
   applySettingsToDOM();
   populateCategoryFilter();
@@ -1028,12 +1039,16 @@ function applySettingsToDOM(){
 }
 
 /* ---------------- Customer login & personal pricing ---------------- */
+// The price shown is whatever the server already calculated for this
+// session (guest = Retail defaults, logged in = their own price group +
+// overrides + discounts). The frontend never computes or trusts a price.
 function getEffectivePrice(p){
-  if(currentCustomerPhone){
-    const cp = customerPricing.find(x=>x.phone===currentCustomerPhone && x.productId===p.id);
-    if(cp) return cp.price;
-  }
-  return p.price;
+  const row = myPricing[p.id];
+  return row ? row.price : p.price;
+}
+function isSpecialPrice_(p){
+  const row = myPricing[p.id];
+  return !!(row && row.isSpecial);
 }
 function maskPhone(phone){
   if(!phone || phone.length<10) return phone;
@@ -1042,17 +1057,16 @@ function maskPhone(phone){
 function renderCustomerStatus(){
   const btn = document.getElementById('customerStatusBtn');
   if(!btn) return;
-  if(currentCustomerPhone){
-    const hasSpecial = customerPricing.some(x=>x.phone===currentCustomerPhone);
+  if(currentCustomerToken && currentCustomerPhone){
     const label = currentCustomerName || maskPhone(currentCustomerPhone);
-    btn.textContent = hasSpecial ? `✓ ${label}` : label;
+    btn.textContent = label;
     btn.onclick = openMore;
   }else{
     btn.textContent = 'Sign in';
     btn.onclick = openCustomerLogin;
   }
   const logoutItem = document.getElementById('logoutSheetItem');
-  if(logoutItem) logoutItem.style.display = currentCustomerPhone ? 'flex' : 'none';
+  if(logoutItem) logoutItem.style.display = currentCustomerToken ? 'flex' : 'none';
 }
 function openCustomerLogin(){
   document.getElementById('customerLoginPhone').value = '';
@@ -1066,7 +1080,10 @@ function openCustomerLogin(){
   document.getElementById('customerLoginModal').classList.add('show');
   setTimeout(()=>{ const el=document.getElementById('customerLoginPhone'); if(el) el.focus(); }, 50);
 }
-function checkCustomerPhone(){
+// Only asks the server whether this number is registered — it never
+// receives or trusts pricing/identity data at this step. (This is also
+// the point where an OTP send step would slot in later.)
+async function checkCustomerPhone(){
   const phone = document.getElementById('customerLoginPhone').value.trim();
   if(!/^[6-9]\d{9}$/.test(phone)){
     document.getElementById('err-customerLoginPhone').style.display = 'block';
@@ -1074,8 +1091,8 @@ function checkCustomerPhone(){
   }
   document.getElementById('err-customerLoginPhone').style.display = 'none';
   pendingLoginPhone = phone;
-  const existing = customers.find(c=>c.phone===phone);
-  pendingLoginIsNew = !existing;
+  const result = await api('requestCustomerLogin', { phone });
+  pendingLoginIsNew = !!(result && result.isNew);
 
   document.getElementById('custLoginStep1').style.display = 'none';
   document.getElementById('custLoginStep2').style.display = 'block';
@@ -1107,6 +1124,19 @@ function backToPhoneStep(){
   document.getElementById('custLoginTitle').textContent = 'Sign in';
   document.getElementById('custLoginSub').textContent = 'Enter your mobile number to continue.';
 }
+async function applySession(session, welcomeMsg){
+  currentCustomerToken = session.token;
+  currentCustomerName = session.customer.name;
+  currentCustomerPhone = session.customer.phone;
+  currentCustomerGroup = session.customer.priceGroupId;
+  if(typeof localStorage!=='undefined') localStorage.setItem('medico_customer_token', session.token);
+  closeModal('customerLoginModal');
+  await loadMyPricing();
+  renderCustomerStatus();
+  renderProducts();
+  renderCartDrawer();
+  showToast(welcomeMsg);
+}
 async function submitCustomerLogin(){
   const phone = pendingLoginPhone;
   const pin = document.getElementById('customerLoginPin').value.trim();
@@ -1120,60 +1150,42 @@ async function submitCustomerLogin(){
     const nameOk = name.length>=2;
     document.getElementById('err-customerLoginName').style.display = nameOk ? 'none' : 'block';
     if(!nameOk) return;
-
-    const customer = {id:'cu'+Date.now(), phone, name, pin, createdAt:new Date().toISOString()};
-    customers.push(customer);
-    saveCustomersCache();
-    const saved = await api('addCustomer', customer);
-    if(saved === null) showToast('Account created locally — could not reach the server.');
-
-    currentCustomerPhone = phone;
-    currentCustomerName = name;
-    if(typeof localStorage!=='undefined') localStorage.setItem('medico_customer_phone', phone);
-    closeModal('customerLoginModal');
-    renderCustomerStatus();
-    renderProducts();
-    renderCartDrawer();
-    showToast(`Account created — welcome, ${name}!`);
+    try{
+      const session = await api('createCustomerAccount', { phone, name, pin });
+      if(!session){ showToast('Could not reach the server — please try again.'); return; }
+      await applySession(session, `Account created — welcome, ${name}!`);
+    }catch(e){ showToast('Could not create the account — that number may already be registered.'); }
     return;
   }
 
-  const existing = customers.find(c=>c.phone===phone);
-  if(!existing || existing.pin !== pin){
+  try{
+    const session = await api('customerLogin', { phone, pin });
+    if(!session){ showToast('Could not reach the server — please try again.'); return; }
+    await applySession(session, `Welcome back, ${session.customer.name}`);
+  }catch(e){
     document.getElementById('err-customerLoginPin').textContent = 'Incorrect PIN';
     document.getElementById('err-customerLoginPin').style.display = 'block';
-    return;
   }
-
-  currentCustomerPhone = phone;
-  currentCustomerName = existing.name;
-  if(typeof localStorage!=='undefined') localStorage.setItem('medico_customer_phone', phone);
-  closeModal('customerLoginModal');
+}
+async function doCustomerLogout(){
+  if(currentCustomerToken) api('logoutCustomer', { token: currentCustomerToken });
+  currentCustomerToken = '';
+  currentCustomerName = '';
+  currentCustomerPhone = '';
+  currentCustomerGroup = '';
+  if(typeof localStorage!=='undefined') localStorage.removeItem('medico_customer_token');
+  await loadMyPricing();
   renderCustomerStatus();
   renderProducts();
   renderCartDrawer();
-  const hasSpecial = customerPricing.some(x=>x.phone===phone);
-  showToast(hasSpecial ? `Welcome back, ${existing.name} — your special prices are showing` : `Welcome back, ${existing.name}`);
+  showToast('Signed out');
 }
 function switchCustomerNumber(){
-  currentCustomerPhone = '';
-  currentCustomerName = '';
-  if(typeof localStorage!=='undefined') localStorage.removeItem('medico_customer_phone');
-  renderCustomerStatus();
-  renderProducts();
-  renderCartDrawer();
-  showToast('Signed out');
-  openCustomerLogin();
+  doCustomerLogout().then(openCustomerLogin);
 }
 function logoutFromMoreSheet(){
-  currentCustomerPhone = '';
-  currentCustomerName = '';
-  if(typeof localStorage!=='undefined') localStorage.removeItem('medico_customer_phone');
   closeModal('moreModal');
-  renderCustomerStatus();
-  renderProducts();
-  renderCartDrawer();
-  showToast('Signed out');
+  doCustomerLogout();
 }
  
 /* ---------------- Product rendering ---------------- */
@@ -1212,7 +1224,7 @@ function renderProducts(){
     const outOfStock = p.stock <= 0;
     const lowStock = !outOfStock && p.stock <= lowStockThreshold;
     const effPrice = getEffectivePrice(p);
-    const isSpecialPrice = effPrice !== p.price;
+    const isSpecialPrice = isSpecialPrice_(p);
     const disc = discountPct(p, effPrice);
     const dealActive = isDealActive(p);
     const expiryInfo = expiryLabel(p.expiryDate);
@@ -1463,7 +1475,7 @@ function openCheckout(){
   document.getElementById('payCardUPI').classList.remove('active');
   document.querySelector('input[name="custPaymentRadio"][value="COD"]').checked = true;
   toggleUpiBox();
-  appliedCoupon = null;
+  appliedCouponCode = '';
   document.getElementById('couponCodeInput').value = '';
   document.getElementById('couponError').style.display = 'none';
   renderCouponAppliedBox();
@@ -1488,21 +1500,48 @@ function selectFulfillment(type){
   }else{
     pickupBox.innerHTML = '';
   }
-  updateCheckoutSummary();
+  scheduleCheckoutPreview();
 }
-function updateCheckoutSummary(){
+// The checkout total is never computed on the frontend. Every change
+// (quantity, fulfillment, coupon) re-asks the server for a fresh
+// calculation via previewOrder, and THAT response is what's displayed and
+// what placeOrder() later re-confirms server-side.
+function scheduleCheckoutPreview(){
   const el = document.getElementById('checkoutSummary');
-  if(!el) return;
-  const subtotal = cartTotal();
-  const fee = feeForFulfillment(currentFulfillment, subtotal);
-  const discount = appliedCoupon ? couponDiscountAmount(appliedCoupon, subtotal) : 0;
-  const total = Math.max(0, subtotal + fee - discount);
+  if(el) el.innerHTML = `<div class="slip-row"><span>Calculating…</span><span></span></div>`;
+  if(previewDebounceTimer) clearTimeout(previewDebounceTimer);
+  previewDebounceTimer = setTimeout(fetchCheckoutPreview, 250);
+}
+async function fetchCheckoutPreview(){
+  const items = Object.entries(cart).filter(([id,qty])=>qty>0).map(([id,qty])=>({id, qty}));
+  if(items.length===0) return;
+  const couponCode = (appliedCouponCode||'').trim();
+  const result = await api('previewOrder', { items, fulfillment: currentFulfillment, couponCode });
+  checkoutPreview = result;
+  renderCheckoutSummary();
+  if(couponCode){
+    const errEl = document.getElementById('couponError');
+    if(result && result.couponError){
+      errEl.textContent = result.couponError;
+      errEl.style.display = 'block';
+      appliedCouponCode = '';
+    }else{
+      errEl.style.display = 'none';
+    }
+  }
+  renderCouponAppliedBox();
+}
+function renderCheckoutSummary(){
+  const el = document.getElementById('checkoutSummary');
+  if(!el || !checkoutPreview) return;
+  const p = checkoutPreview;
   el.innerHTML = `
-    <div class="slip-row"><span>Subtotal</span><span>${fmt(subtotal)}</span></div>
-    <div class="slip-row"><span>${currentFulfillment==='pickup'?'Pickup':'Home delivery'}</span><span>${fee===0?'Free':fmt(fee)}</span></div>
-    ${discount>0?`<div class="slip-row"><span>Coupon (${escapeHtml(appliedCoupon.code)})</span><span>−${fmt(discount)}</span></div>`:''}
+    <div class="slip-row"><span>Subtotal</span><span>${fmt(p.subtotal||0)}</span></div>
+    ${p.generalDiscountAmount>0?`<div class="slip-row"><span>Your discount</span><span>−${fmt(p.generalDiscountAmount)}</span></div>`:''}
+    <div class="slip-row"><span>${currentFulfillment==='pickup'?'Pickup':'Home delivery'}</span><span>${(p.deliveryFee||0)===0?'Free':fmt(p.deliveryFee)}</span></div>
+    ${p.couponDiscountAmount>0?`<div class="slip-row"><span>Coupon (${escapeHtml(p.couponCode||'')})</span><span>−${fmt(p.couponDiscountAmount)}</span></div>`:''}
     <div class="slip-divider"></div>
-    <div class="slip-row"><b>Total</b><b>${fmt(total)}</b></div>`;
+    <div class="slip-row"><b>Total</b><b>${fmt(p.grandTotal!=null?p.grandTotal:p.total||0)}</b></div>`;
 }
 function selectPaymentMethod(method){
   currentPaymentMethod = method;
@@ -1568,49 +1607,34 @@ async function placeOrder(){
     if(!rxBox || !rxBox.checked){ showToast('Please confirm you have a valid prescription'); ok=false; }
   }
   if(!ok) return;
- 
-  const items = Object.entries(cart).filter(([id,qty])=>qty>0).map(([id,qty])=>{
-    const p = products.find(x=>x.id===id);
-    return {id, name:p?p.name:'Unknown', price:p?getEffectivePrice(p):0, qty, rx:p?p.rx:false, expiryDate:p?p.expiryDate:'', wasDeal:p?isDealActive(p):false};
-  });
+
+  const items = Object.entries(cart).filter(([id,qty])=>qty>0).map(([id,qty])=>({id, qty}));
   if(items.length===0) return;
- 
-  const subtotal = cartTotal();
-  const fee = feeForFulfillment(currentFulfillment, subtotal);
-  const total = subtotal + fee;
- 
-  const orderNum = 'MC-' + (1000 + orders.length + 1);
-  const order = {
-    id: orderNum,
-    createdAt: new Date().toISOString(),
-    customer: {name, phone, address, pincode, notes},
-    fulfillment: currentFulfillment,
-    pickupAddress: currentFulfillment==='pickup' ? (settings.pickupAddress||'') : '',
-    payment,
-    paymentScreenshot,
-    items, subtotal, deliveryFee: fee, total,
-    status: 'Pending'
-  };
 
-  orders.unshift(order);
-  items.forEach(it=>{
-    const p = products.find(x=>x.id===it.id);
-    if(p) p.stock = Math.max(0, p.stock - it.qty);
+  const btn = document.querySelector('#checkoutModal .primary-btn');
+  if(btn){ btn.disabled = true; btn.textContent = 'Placing order…'; }
+
+  // The server is the ONLY place the price is decided. It re-resolves the
+  // logged-in customer from the session token, recomputes every item's
+  // price group / override / discount, re-validates the coupon, and
+  // returns the final order — nothing the browser sent about price is
+  // ever trusted.
+  const order = await api('placeOrder', {
+    items, fulfillment: currentFulfillment, name, phone, address, pincode, notes,
+    payment, paymentScreenshot, couponCode: (appliedCouponCode||'').trim()
   });
 
-  const saved = await api('addOrder', order);
-  if(saved === null){
-    showToast('Order saved locally — could not reach the server. It will not sync.');
-  }
-  await api('updateProductsStock', { items });
- 
+  if(btn){ btn.disabled = false; btn.textContent = 'Place order'; }
+  if(!order){ showToast('Could not place the order — please check your connection and try again.'); return; }
+
   cart = {};
   updateCartCount();
+  await loadProducts(); // refresh stock levels as decremented by the server
   renderProducts();
- 
+
   closeModal('checkoutModal');
   showReceipt(order);
- 
+
   ['custName','custPhone','custAddress','custPincode','custNotes'].forEach(id=>document.getElementById(id).value='');
 }
 function showReceipt(order){
@@ -1627,6 +1651,8 @@ function showReceipt(order){
     }).join('')}
     <div class="slip-divider"></div>
     <div class="slip-row"><span>Subtotal</span><span>${fmt(order.subtotal)}</span></div>
+    ${order.generalDiscountAmount>0?`<div class="slip-row"><span>Your discount</span><span>−${fmt(order.generalDiscountAmount)}</span></div>`:''}
+    ${order.couponDiscountAmount>0?`<div class="slip-row"><span>Coupon (${escapeHtml(order.couponCode||'')})</span><span>−${fmt(order.couponDiscountAmount)}</span></div>`:''}
     <div class="slip-row"><span>${order.fulfillment==='pickup'?'Pickup':'Home delivery'}</span><span>${order.deliveryFee===0?'Free':fmt(order.deliveryFee)}</span></div>
     <div class="slip-row"><span>Payment</span><span>${order.payment==='UPI'?'UPI':'Cash on delivery'}</span></div>
     <div class="slip-row"><b>Total</b><b>${fmt(order.total)}</b></div>
@@ -1655,6 +1681,7 @@ async function trackOrder(){
   }
   result.innerHTML = `<div class="empty-state">Checking your order…</div>`;
 
+  // Prefer a fresh lookup from the sheet; fall back to whatever is cached locally.
   const remote = await api('trackOrder', { phone, orderId: idFilter });
   let matches;
   if(Array.isArray(remote)){
@@ -1745,49 +1772,14 @@ async function submitComplaint(){
 }
 
 /* ---------------- Coupons ---------------- */
-function getCartCategorySubtotal(category){
-  return Object.entries(cart).reduce((sum,[id,qty])=>{
-    const p = products.find(x=>x.id===id);
-    if(!p || p.category!==category) return sum;
-    return sum + getEffectivePrice(p)*qty;
-  },0);
-}
-function isWithinValidityWindow(c){
-  const todayStr = new Date().toISOString().slice(0,10);
-  if(c.validFrom && todayStr < c.validFrom) return false;
-  if(c.validTo && todayStr > c.validTo) return false;
-  return true;
-}
-function couponBaseAmount(c, subtotal){
-  return c.category ? getCartCategorySubtotal(c.category) : subtotal;
-}
-function couponWaivesDelivery(c){
-  return !!(c && c.type==='freeDelivery');
-}
 function couponDiscountText(c){
-  let base;
-  if(c.type==='percent'){
-    base = `${c.value}% off`;
-    if(c.maxDiscount>0) base += ` up to ${fmt(c.maxDiscount)}`;
-  }else if(c.type==='flat'){
-    base = `${fmt(c.value)} off`;
-  }else{
-    base = 'Free delivery';
-  }
-  if(c.category) base += ` on ${c.category}`;
-  if(c.minOrder>0) base += ` on orders above ${fmt(c.minOrder)}`;
-  if(c.firstOrderOnly) base += ' · first order only';
-  return base;
+  const base = c.type==='percent' ? `${c.value}% off` : `${fmt(c.value)} off`;
+  return c.minOrder>0 ? `${base} on orders above ${fmt(c.minOrder)}` : base;
 }
 function renderCouponStrip(){
   const wrap = document.getElementById('couponStripWrap');
   const strip = document.getElementById('couponStrip');
-  const active = coupons.filter(c=>
-    c.active &&
-    (!c.targetPhones || c.targetPhones.length===0) &&
-    isWithinValidityWindow(c) &&
-    !(c.usageLimit>0 && (c.usedCount||0)>=c.usageLimit)
-  );
+  const active = coupons.filter(c=>c.active);
   if(active.length===0){
     wrap.style.display = 'none';
     return;
@@ -1799,81 +1791,30 @@ function renderCouponStrip(){
       <div class="coupon-chip-desc">${escapeHtml(couponDiscountText(c))}</div>
     </div>`).join('');
 }
-function couponDiscountAmount(c, subtotal){
-  if(c.type==='freeDelivery') return 0;
-  const base = couponBaseAmount(c, subtotal);
-  if(base <= 0) return 0;
-  if(c.type==='percent'){
-    let amt = Math.round(base * c.value / 100);
-    if(c.maxDiscount>0) amt = Math.min(amt, c.maxDiscount);
-    return Math.min(amt, base);
-  }
-  return Math.min(c.value, base);
-}
-function couponEligibilityError(c, phone, subtotal){
-  if(!c.active) return 'Invalid or inactive coupon code';
-  if(!isWithinValidityWindow(c)) return 'This coupon is not valid right now';
-  if(c.targetPhones && c.targetPhones.length>0){
-    if(!phone || !c.targetPhones.includes(phone)) return 'Invalid or inactive coupon code';
-  }
-  if(c.category){
-    const catSubtotal = getCartCategorySubtotal(c.category);
-    if(catSubtotal<=0) return `This coupon only applies to ${c.category} items`;
-    if(catSubtotal < (c.minOrder||0)) return `This coupon needs a minimum order of ${fmt(c.minOrder)} in ${c.category}`;
-  }else{
-    if(subtotal < (c.minOrder||0)) return `This coupon needs a minimum order of ${fmt(c.minOrder)}`;
-  }
-  if(c.usageLimit>0 && (c.usedCount||0) >= c.usageLimit) return 'This coupon has reached its usage limit';
-  if(c.perCustomerLimit>0){
-    if(!phone) return 'Enter your phone number above first to use this coupon';
-    const used = (c.usedByPhones && c.usedByPhones[phone]) || 0;
-    if(used >= c.perCustomerLimit) return "You've already used this coupon the maximum number of times";
-  }
-  if(c.firstOrderOnly){
-    if(!phone) return 'Enter your phone number above first to use this coupon';
-    const hasOrder = orders.some(o=>o.customer && o.customer.phone===phone);
-    if(hasOrder) return 'This coupon is valid only on your first order';
-  }
-  return null;
-}
 function applyCoupon(){
   const input = document.getElementById('couponCodeInput');
   const code = input.value.trim().toUpperCase();
   const errEl = document.getElementById('couponError');
   errEl.style.display = 'none';
   if(!code) return;
-  const c = coupons.find(x=>x.code.toUpperCase()===code);
-  const subtotal = cartTotal();
-  const phone = (document.getElementById('custPhone').value||'').trim();
-  if(!c){
-    errEl.textContent = 'Invalid or inactive coupon code';
-    errEl.style.display = 'block';
-    return;
-  }
-  const err = couponEligibilityError(c, phone, subtotal);
-  if(err){
-    errEl.textContent = err;
-    errEl.style.display = 'block';
-    return;
-  }
-  appliedCoupon = c;
+  appliedCouponCode = code;
   input.value = '';
-  renderCouponAppliedBox();
-  updateCheckoutSummary();
+  scheduleCheckoutPreview();
 }
 function removeCoupon(){
-  appliedCoupon = null;
+  appliedCouponCode = '';
+  document.getElementById('couponError').style.display = 'none';
   renderCouponAppliedBox();
-  updateCheckoutSummary();
+  scheduleCheckoutPreview();
 }
 function renderCouponAppliedBox(){
   const box = document.getElementById('couponAppliedBox');
-  if(!appliedCoupon){
+  if(!appliedCouponCode || !checkoutPreview || !checkoutPreview.couponCode){
     box.innerHTML = '';
     return;
   }
   box.innerHTML = `<div class="coupon-applied-box">
-    <span>✓ ${escapeHtml(appliedCoupon.code)} applied — ${escapeHtml(couponDiscountText(appliedCoupon))}</span>
+    <span>✓ ${escapeHtml(checkoutPreview.couponCode)} applied — you save ${fmt(checkoutPreview.couponDiscountAmount)}</span>
     <button type="button" class="coupon-remove-link" onclick="removeCoupon()">Remove</button>
   </div>`;
 }
@@ -1916,23 +1857,27 @@ function openAdminGate(){
 function adminLogin(){
   const pass = document.getElementById('adminPassword').value;
   if(pass === (settings.adminPassword || DEFAULT_SETTINGS.adminPassword)){
+    adminPasswordValue = pass; // attached to every admin API call from here on
     closeModal('adminGateModal');
     enterAdmin();
   }else{
     document.getElementById('err-adminPassword').style.display='block';
   }
 }
-function enterAdmin(){
+async function enterAdmin(){
   document.getElementById('adminShell').classList.add('show');
   document.getElementById('storefront').style.display = 'none';
   document.getElementById('bottomNav').style.display = 'none';
   renderAdminProducts();
+  renderAdminFAQ();
+  fillSettingsForm();
+  // Admin-only data, fetched only now that adminPasswordValue is attached.
+  await Promise.all([loadOrders(), loadComplaints(), loadCustomersAdmin(), loadProductPricesAdmin()]);
   renderAdminOrders();
   renderAdminComplaints();
-  renderAdminFAQ();
   renderAdminCoupons();
-  renderAdminCustomerPricing();
-  fillSettingsForm();
+  renderAdminCustomers();
+  renderAdminPricing();
 }
 function exitAdmin(){
   document.getElementById('adminShell').classList.remove('show');
@@ -2159,34 +2104,59 @@ function renderAdminCoupons(){
     wrap.innerHTML = `<div class="empty-state">No coupons yet.</div>`;
     return;
   }
-  wrap.innerHTML = coupons.map(c=>`
+  wrap.innerHTML = coupons.map(c=>{
+    const scopeBits = [];
+    if(c.applicableCustomers) scopeBits.push('Customers: '+c.applicableCustomers);
+    if(c.applicableGroups) scopeBits.push('Groups: '+c.applicableGroups);
+    if(c.applicableProducts) scopeBits.push('Products: '+c.applicableProducts);
+    if(c.applicableCategories) scopeBits.push('Categories: '+c.applicableCategories);
+    if(c.firstOrderOnly) scopeBits.push('First order only');
+    if(c.usageLimit>0) scopeBits.push(`Limit: ${c.usageLimit} total`);
+    if(c.perCustomerLimit>0) scopeBits.push(`Limit: ${c.perCustomerLimit}/customer`);
+    if(c.startDate || c.expiryDate) scopeBits.push(`${c.startDate||'…'} → ${c.expiryDate||'…'}`);
+    return `
     <div class="order-card">
       <div class="order-head">
         <div>
           <div class="order-id">${escapeHtml(c.code)}</div>
           <div class="order-meta">${escapeHtml(couponDiscountText(c))}</div>
+          ${scopeBits.length?`<div class="order-meta">${scopeBits.map(escapeHtml).join(' · ')}</div>`:''}
         </div>
         <div class="admin-toggle-row">
           <label class="admin-toggle-row"><input type="checkbox" ${c.active?'checked':''} onchange="toggleCouponActive('${c.id}',this.checked)"> Active</label>
         </div>
       </div>
       <button class="small-btn danger" style="margin-top:10px;" onclick="deleteCoupon('${c.id}')">Delete</button>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 async function addCoupon(){
   const code = document.getElementById('newCouponCode').value.trim().toUpperCase();
   const type = document.getElementById('newCouponType').value;
   const value = Number(document.getElementById('newCouponValue').value) || 0;
+  const maxDiscount = Number(document.getElementById('newCouponMaxDiscount').value) || 0;
   const minOrder = Number(document.getElementById('newCouponMinOrder').value) || 0;
+  const usageLimit = Number(document.getElementById('newCouponUsageLimit').value) || 0;
+  const perCustomerLimit = Number(document.getElementById('newCouponPerCustomerLimit').value) || 0;
+  const startDate = document.getElementById('newCouponStart').value;
+  const expiryDate = document.getElementById('newCouponExpiry').value;
+  const applicableCustomers = document.getElementById('newCouponCustomers').value.trim();
+  const applicableGroups = document.getElementById('newCouponGroups').value.trim();
+  const applicableProducts = document.getElementById('newCouponProducts').value.trim();
+  const applicableCategories = document.getElementById('newCouponCategories').value.trim();
+  const firstOrderOnly = document.getElementById('newCouponFirstOrder').checked;
   if(!code || value<=0){ showToast('Enter a coupon code and a discount value'); return; }
-  const id = 'c' + Date.now();
-  const coupon = {id, code, type, value, minOrder, active:true};
+  const coupon = await api('addCoupon', {
+    code, type, value, maxDiscount, minOrder, usageLimit, perCustomerLimit,
+    startDate, expiryDate, applicableCustomers, applicableGroups, applicableProducts,
+    applicableCategories, firstOrderOnly
+  });
+  if(!coupon){ showToast('Could not reach the server'); return; }
   coupons.push(coupon);
-  const saved = await api('addCoupon', coupon);
-  if(saved === null) showToast('Added locally — could not reach the server.');
-  document.getElementById('newCouponCode').value = '';
-  document.getElementById('newCouponValue').value = '';
-  document.getElementById('newCouponMinOrder').value = '';
+  ['newCouponCode','newCouponValue','newCouponMaxDiscount','newCouponMinOrder','newCouponUsageLimit',
+   'newCouponPerCustomerLimit','newCouponStart','newCouponExpiry','newCouponCustomers','newCouponGroups',
+   'newCouponProducts','newCouponCategories'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('newCouponFirstOrder').checked = false;
   renderAdminCoupons();
   renderCouponStrip();
   showToast('Coupon created');
@@ -2209,149 +2179,291 @@ async function deleteCoupon(id){
   showToast('Coupon deleted');
 }
 
-/* ---------------- Customer Pricing (admin) ---------------- */
-function populateCpProductSelect(){
-  const sel = document.getElementById('newCpProduct');
+/* ---------------- Customers (admin) ---------------- */
+async function loadCustomersAdmin(){
+  const data = await api('getCustomers');
+  customers = Array.isArray(data) ? data : [];
+  return customers;
+}
+function priceGroupName(id){
+  const g = priceGroups.find(x=>x.id===id);
+  return g ? g.name : (id||'—');
+}
+function populateGroupSelect(selectId, selected){
+  const sel = document.getElementById(selectId);
   if(!sel) return;
-  sel.innerHTML = products.map(p=>`<option value="${p.id}">${escapeHtml(p.name)} (normal: ${fmt(p.price)})</option>`).join('');
+  sel.innerHTML = priceGroups.map(g=>`<option value="${g.id}" ${g.id===selected?'selected':''}>${escapeHtml(g.name)}</option>`).join('');
 }
-function populateCpCustomerDatalist(){
-  const dl = document.getElementById('cpCustomerDatalist');
-  if(!dl) return;
-  dl.innerHTML = customers.map(c=>`<option value="${escapeAttr(c.phone)}">${escapeHtml(c.name)}</option>`).join('');
+function renderAdminCustomers(){
+  populateGroupSelect('newCustGroup');
+  document.getElementById('custCountLabel').textContent = customers.length + ' customer(s)';
+  const table = document.getElementById('adminCustomersTable');
+  const search = (document.getElementById('custSearchInput')?.value||'').toLowerCase().trim();
+  let list = customers;
+  if(search) list = list.filter(c=>String(c.name).toLowerCase().includes(search) || String(c.phone).includes(search) || String(c.id).toLowerCase().includes(search));
+  if(list.length===0){ table.innerHTML = `<tr><td class="empty-state" colspan="7">No customers found.</td></tr>`; return; }
+  table.innerHTML = `<tr><th>ID</th><th>Name</th><th>Phone</th><th>Price group</th><th>Active</th><th>Notes</th><th></th></tr>` +
+    list.map(c=>`<tr>
+      <td style="font-family:var(--font-mono);font-size:11.5px;">${escapeHtml(c.id)}</td>
+      <td><input type="text" value="${escapeAttr(c.name)}" onchange="editCustomerAdmin('${c.id}','name',this.value)"></td>
+      <td><input type="text" value="${escapeAttr(c.phone)}" onchange="editCustomerAdmin('${c.id}','phone',this.value)"></td>
+      <td><select onchange="editCustomerAdmin('${c.id}','priceGroupId',this.value)">${priceGroups.map(g=>`<option value="${g.id}" ${g.id===c.priceGroupId?'selected':''}>${escapeHtml(g.name)}</option>`).join('')}</select></td>
+      <td style="text-align:center;"><input type="checkbox" ${c.active!==false?'checked':''} onchange="editCustomerAdmin('${c.id}','active',this.checked)"></td>
+      <td><input type="text" value="${escapeAttr(c.notes||'')}" onchange="editCustomerAdmin('${c.id}','notes',this.value)"></td>
+      <td><button class="small-btn secondary" onclick="openOffersForCustomer('${c.id}')">Offers</button> <button class="small-btn danger" onclick="deleteCustomerAdmin('${c.id}')">Delete</button></td>
+    </tr>`).join('');
 }
-function updateCpPhonePreview(){
-  const el = document.getElementById('cpPhonePreview');
-  const phoneInput = document.getElementById('newCpPhone');
-  if(!el || !phoneInput) return;
-  const phone = phoneInput.value.trim();
-  if(phone.length!==10){ el.style.display='none'; return; }
-  const cust = customers.find(c=>c.phone===phone);
-  const existingCount = customerPricing.filter(x=>x.phone===phone).length;
-  if(cust){
-    el.style.display = 'block';
-    el.style.color = 'var(--green)';
-    el.textContent = `✓ ${cust.name}${existingCount>0?` — already has ${existingCount} custom price(s)`:' — no custom prices yet'}`;
-  }else{
-    el.style.display = 'block';
-    el.style.color = 'var(--warn)';
-    el.textContent = `⚠ No account found for this number yet — double-check it before saving.`;
-  }
+async function addCustomerAdmin(){
+  const name = document.getElementById('newCustName').value.trim();
+  const phone = document.getElementById('newCustPhone').value.trim();
+  const address = document.getElementById('newCustAddress').value.trim();
+  const priceGroupId = document.getElementById('newCustGroup').value;
+  const pin = document.getElementById('newCustPin').value.trim();
+  const notes = document.getElementById('newCustNotes').value.trim();
+  if(name.length<2){ showToast('Enter a customer name'); return; }
+  if(!/^[6-9]\d{9}$/.test(phone)){ showToast('Enter a valid 10-digit phone number'); return; }
+  const created = await api('addCustomer', { name, phone, address, priceGroupId, pin, notes });
+  if(!created){ showToast('Could not reach the server'); return; }
+  ['newCustName','newCustPhone','newCustAddress','newCustPin','newCustNotes'].forEach(id=>document.getElementById(id).value='');
+  await loadCustomersAdmin();
+  renderAdminCustomers();
+  showToast(`Customer added${pin?'':` — PIN is ${created.pin}`}`);
 }
-function renderAdminCustomerPricing(){
-  populateCpProductSelect();
-  populateCpCustomerDatalist();
-  document.getElementById('cpCountLabel').textContent = customerPricing.length + ' custom price(s)';
-  const wrap = document.getElementById('adminCustomerPricingList');
-  if(customerPricing.length===0){
-    wrap.innerHTML = `<div class="empty-state">No custom prices set yet.</div>`;
-    return;
-  }
-  const groups = {};
-  customerPricing.forEach(cp=>{
-    (groups[cp.phone] = groups[cp.phone] || []).push(cp);
-  });
-  const search = (document.getElementById('cpSearchInput')?.value || '').toLowerCase().trim();
-  let phones = Object.keys(groups);
-  if(search){
-    phones = phones.filter(phone=>{
-      const cust = customers.find(c=>c.phone===phone);
-      const name = cust ? cust.name.toLowerCase() : '';
-      return phone.includes(search) || name.includes(search);
-    });
-  }
-  if(phones.length===0){
-    wrap.innerHTML = `<div class="empty-state">No customers match that search.</div>`;
-    return;
-  }
-  wrap.innerHTML = phones.map(phone=>{
-    const cust = customers.find(c=>c.phone===phone);
-    const entries = groups[phone];
-    const remainingProducts = products.filter(p=>!entries.some(e=>e.productId===p.id));
-    const rows = entries.map(cp=>{
-      const p = products.find(x=>x.id===cp.productId);
-      return `<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);">
-        <div style="flex:1;min-width:0;">
-          <div style="font-size:13px;font-weight:600;">${escapeHtml(p?p.name:'Unknown product')}</div>
-          <div style="font-size:11.5px;color:var(--muted);">Normal price: ${fmt(p?p.price:0)}</div>
-        </div>
-        <input type="number" value="${cp.price}" style="width:80px;padding:6px 8px;border:1px solid var(--line);border-radius:6px;font-size:12.5px;background:var(--bg);" onchange="editCustomerPricingPrice('${cp.id}',Number(this.value))">
-        <button class="small-btn danger" style="padding:6px 10px;font-size:11.5px;" onclick="deleteCustomerPricingEntry('${cp.id}')">Remove</button>
-      </div>`;
+async function editCustomerAdmin(id, field, value){
+  const patch = {id}; patch[field] = value;
+  await api('editCustomer', patch);
+  const c = customers.find(x=>x.id===id);
+  if(c) c[field] = value;
+  showToast('Customer updated');
+}
+async function deleteCustomerAdmin(id){
+  if(!confirm('Delete this customer? Their special pricing and discounts will also stop applying. This cannot be undone.')) return;
+  await api('deleteCustomer', { id });
+  customers = customers.filter(x=>x.id!==id);
+  renderAdminCustomers();
+  showToast('Customer deleted');
+}
+
+/* ---------------- Pricing: price groups + per-group product prices (admin) ---------------- */
+let productPricesMatrix = [];
+async function loadProductPricesAdmin(){
+  const data = await api('getProductPrices');
+  productPricesMatrix = Array.isArray(data) ? data : [];
+  return productPricesMatrix;
+}
+function renderAdminPricing(){
+  const pgWrap = document.getElementById('adminPriceGroupsList');
+  pgWrap.innerHTML = priceGroups.map(g=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);">
+      <input type="text" value="${escapeAttr(g.name)}" style="flex:1;padding:7px 10px;border:1px solid var(--line);border-radius:7px;background:var(--bg);font-size:13px;" onchange="editPriceGroupAdmin('${g.id}','name',this.value)">
+      <label style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-soft);"><input type="checkbox" ${g.active!==false?'checked':''} onchange="editPriceGroupAdmin('${g.id}','active',this.checked)"> Active</label>
+      <button class="small-btn danger" style="padding:6px 10px;font-size:11.5px;" onclick="deletePriceGroupAdmin('${g.id}')">Delete</button>
+    </div>`).join('');
+
+  const table = document.getElementById('adminPricingMatrix');
+  const groups = priceGroups.filter(g=>g.active!==false);
+  table.innerHTML = `<tr><th>Medicine</th><th>Default price</th>${groups.map(g=>`<th>${escapeHtml(g.name)}</th>`).join('')}</tr>` +
+    products.map(p=>{
+      const cells = groups.map(g=>{
+        const row = productPricesMatrix.find(r=>r.productId===p.id && r.priceGroupId===g.id);
+        return `<td><input type="number" value="${row?row.price:''}" placeholder="${fmt(p.price)}" style="width:80px;" onchange="setProductPriceAdmin('${p.id}','${g.id}',this.value)"></td>`;
+      }).join('');
+      return `<tr><td>${escapeHtml(p.name)}</td><td style="color:var(--muted);">${fmt(p.price)}</td>${cells}</tr>`;
     }).join('');
-    return `<div class="admin-card" style="margin-bottom:14px;border:1.5px solid var(--line);">
-      <div class="admin-row-head" style="margin-bottom:4px;align-items:flex-start;">
-        <div>
-          <div style="font-weight:800;font-size:14.5px;">${escapeHtml(cust?cust.name:'Unknown customer')}</div>
-          <div style="font-size:12px;color:var(--muted);font-family:var(--font-mono);">${escapeHtml(phone)}</div>
-        </div>
-        <span class="footer-note" style="padding:0;">${entries.length} product${entries.length!==1?'s':''}</span>
-      </div>
-      ${rows}
-      ${remainingProducts.length>0 ? `<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
-        <select id="cpAddProduct-${phone}" style="flex:1;min-width:140px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:12.5px;background:var(--bg);">
-          ${remainingProducts.map(p=>`<option value="${p.id}">${escapeHtml(p.name)}</option>`).join('')}
-        </select>
-        <input type="number" id="cpAddPrice-${phone}" placeholder="₹ price" style="width:90px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:12.5px;background:var(--bg);">
-        <button class="small-btn" onclick="addCustomerPricingForPhone('${phone}')">Add</button>
-      </div>` : ''}
-    </div>`;
-  }).join('');
 }
-async function editCustomerPricingPrice(id, price){
-  const cp = customerPricing.find(x=>x.id===id);
-  if(!cp) return;
-  if(price<=0){ showToast('Enter a valid price'); renderAdminCustomerPricing(); return; }
-  cp.price = price;
-  const saved = await api('editCustomerPricing', cp);
-  if(saved === null) showToast('Updated locally — could not reach the server.');
+async function addPriceGroupAdmin(){
+  const name = document.getElementById('newPriceGroupName').value.trim();
+  if(!name){ showToast('Enter a price group name'); return; }
+  const g = await api('addPriceGroup', { name });
+  if(!g){ showToast('Could not reach the server'); return; }
+  priceGroups.push(g);
+  document.getElementById('newPriceGroupName').value = '';
+  renderAdminPricing();
+  showToast('Price group added');
+}
+async function editPriceGroupAdmin(id, field, value){
+  await api('editPriceGroup', { id, field, value });
+  const g = priceGroups.find(x=>x.id===id);
+  if(g) g[field] = value;
+  showToast('Price group updated');
+}
+async function deletePriceGroupAdmin(id){
+  if(!confirm('Delete this price group? Customers assigned to it will fall back to the default product price.')) return;
+  await api('deletePriceGroup', { id });
+  priceGroups = priceGroups.filter(x=>x.id!==id);
+  renderAdminPricing();
+  showToast('Price group deleted');
+}
+async function setProductPriceAdmin(productId, priceGroupId, value){
+  const price = Number(value);
+  if(!value || isNaN(price) || price<=0){
+    showToast('Enter a valid price (leave blank to clear)');
+    return;
+  }
+  const row = await api('setProductPrice', { productId, priceGroupId, price });
+  if(row){
+    const idx = productPricesMatrix.findIndex(r=>r.productId===productId && r.priceGroupId===priceGroupId);
+    if(idx>=0) productPricesMatrix[idx] = row; else productPricesMatrix.push(row);
+  }
   showToast('Price updated');
 }
-async function addCustomerPricingForPhone(phone){
-  const productSel = document.getElementById('cpAddProduct-'+phone);
-  const priceInput = document.getElementById('cpAddPrice-'+phone);
-  const productId = productSel ? productSel.value : '';
-  const price = priceInput ? (Number(priceInput.value) || 0) : 0;
-  if(!productId){ showToast('Choose a product'); return; }
-  if(price<=0){ showToast('Enter a valid price'); return; }
-  const entry = {id:'cp'+Date.now(), phone, productId, price};
-  customerPricing.push(entry);
-  const saved = await api('addCustomerPricing', entry);
-  if(saved === null) showToast('Added locally — could not reach the server.');
-  renderAdminCustomerPricing();
-  showToast('Custom price saved');
+
+/* ---------------- Customer Offers & Pricing (admin) ---------------- */
+let offersSearchTimer = null;
+function searchCustomerOffers(){
+  const q = document.getElementById('offersSearchInput').value.trim();
+  clearTimeout(offersSearchTimer);
+  const wrap = document.getElementById('offersSearchResults');
+  if(!q){ wrap.innerHTML=''; return; }
+  offersSearchTimer = setTimeout(async ()=>{
+    const results = await api('searchCustomers', { q });
+    if(!Array.isArray(results) || results.length===0){ wrap.innerHTML = `<div class="empty-state">No matching customers.</div>`; return; }
+    wrap.innerHTML = `<div class="sheet-list" style="margin-top:10px;">` + results.map(c=>
+      `<button class="sheet-item" onclick="openOffersForCustomer('${c.id}')">${escapeHtml(c.name)} <span style="color:var(--muted);font-weight:500;margin-left:6px;">${escapeHtml(c.phone)}</span></button>`
+    ).join('') + `</div>`;
+  }, 250);
 }
-async function addCustomerPricingEntry(){
-  const phone = document.getElementById('newCpPhone').value.trim();
-  const productId = document.getElementById('newCpProduct').value;
-  const price = Number(document.getElementById('newCpPrice').value) || 0;
-  if(!/^[6-9]\d{9}$/.test(phone)){ showToast('Enter a valid 10-digit phone number'); return; }
-  if(!productId){ showToast('Choose a product'); return; }
-  if(price<=0){ showToast('Enter a valid price'); return; }
-  const existing = customerPricing.find(x=>x.phone===phone && x.productId===productId);
-  if(existing){
-    existing.price = price;
-    const saved = await api('editCustomerPricing', existing);
-    if(saved === null) showToast('Updated locally — could not reach the server.');
-  }else{
-    const entry = {id:'cp'+Date.now(), phone, productId, price};
-    customerPricing.push(entry);
-    const saved = await api('addCustomerPricing', entry);
-    if(saved === null) showToast('Added locally — could not reach the server.');
-  }
-  document.getElementById('newCpPhone').value = '';
-  document.getElementById('newCpPrice').value = '';
-  document.getElementById('cpPhonePreview').style.display = 'none';
-  renderAdminCustomerPricing();
-  showToast('Custom price saved');
+async function openOffersForCustomer(customerId){
+  switchAdminTab('offers');
+  const detail = document.getElementById('offersDetailWrap');
+  detail.innerHTML = `<div class="empty-state">Loading…</div>`;
+  const data = await api('getCustomerOffers', { customerId });
+  if(!data){ detail.innerHTML = `<div class="empty-state">Could not load this customer.</div>`; return; }
+  renderOffersDetail(data);
 }
-async function deleteCustomerPricingEntry(id){
-  if(!confirm('Remove this custom price? This cannot be undone.')) return;
-  customerPricing = customerPricing.filter(x=>x.id!==id);
-  const saved = await api('deleteCustomerPricing', { id });
-  if(saved === null) showToast('Deleted locally — could not reach the server.');
-  renderAdminCustomerPricing();
-  showToast('Custom price removed');
+function discountLine(d){
+  if(!d) return 'No general discount set';
+  return `${d.type==='percent'?d.value+'% off':fmt(d.value)+' off'}${d.minOrder>0?` · min order ${fmt(d.minOrder)}`:''}${d.active===false?' · inactive':''}`;
+}
+function renderOffersDetail(data){
+  const c = data.customer;
+  const wrap = document.getElementById('offersDetailWrap');
+  const productOptions = products.map(p=>`<option value="${p.id}">${escapeHtml(p.name)}</option>`).join('');
+  const gd = data.generalDiscount;
+  wrap.innerHTML = `
+    <div class="admin-card">
+      <div class="admin-row-head"><h3>${escapeHtml(c.name)}</h3><span class="footer-note" style="padding:0;">${escapeHtml(c.id)}</span></div>
+      <div class="order-meta">${escapeHtml(c.phone)} · Price group: <b>${escapeHtml(priceGroupName(c.priceGroupId))}</b> · ${c.active!==false?'Active':'<span style="color:var(--danger);">Disabled</span>'}</div>
+    </div>
+
+    <div class="admin-card">
+      <div class="admin-row-head"><h3>General discount</h3></div>
+      <p class="helper-text" style="margin-top:-4px;">Applies once at checkout, only to items that don't already have a product- or category-specific discount below.</p>
+      <div class="order-meta" style="margin-bottom:10px;">Current: ${discountLine(gd)}</div>
+      <div class="two-col">
+        <div class="field"><label>Type</label><select id="ofGenType"><option value="percent" ${gd&&gd.type==='percent'?'selected':''}>Percentage (%)</option><option value="flat" ${gd&&gd.type==='flat'?'selected':''}>Flat (₹)</option></select></div>
+        <div class="field"><label>Value</label><input type="number" id="ofGenValue" value="${gd?gd.value:''}" placeholder="e.g. 5"></div>
+        <div class="field"><label>Minimum order (₹)</label><input type="number" id="ofGenMinOrder" value="${gd?gd.minOrder:''}" placeholder="e.g. 0"></div>
+        <div class="field"><label>Expiry date (optional)</label><input type="date" id="ofGenExpiry" value="${gd?gd.expiryDate||'':''}"></div>
+      </div>
+      <button class="small-btn" onclick="saveGeneralDiscount('${c.id}')">Save general discount</button>
+    </div>
+
+    <div class="admin-card">
+      <div class="admin-row-head"><h3>Special product prices</h3></div>
+      <p class="helper-text" style="margin-top:-4px;">Overrides the price-group price entirely for this one customer, on this one product.</p>
+      <div class="two-col">
+        <div class="field"><label>Product</label><select id="ofPriceProduct">${productOptions}</select></div>
+        <div class="field"><label>Special price (₹)</label><input type="number" id="ofPriceValue" placeholder="e.g. 158"></div>
+      </div>
+      <button class="small-btn" onclick="saveCustomerProductPrice('${c.id}')">Set special price</button>
+      <div style="margin-top:10px;">${data.productPrices.length? data.productPrices.map(r=>`
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px;">
+          <span>${escapeHtml(r.productName)} → ${fmt(r.price)}</span>
+          <button class="small-btn danger" style="padding:5px 10px;font-size:11px;" onclick="removeCustomerProductPrice('${r.id}','${c.id}')">Remove</button>
+        </div>`).join('') : '<div class="empty-state" style="padding:16px;">None set</div>'}</div>
+    </div>
+
+    <div class="admin-card">
+      <div class="admin-row-head"><h3>Product-specific discount</h3></div>
+      <p class="helper-text" style="margin-top:-4px;">Highest priority — overrides both the general discount and category discount for this product.</p>
+      <div class="two-col">
+        <div class="field"><label>Product</label><select id="ofPdProduct">${productOptions}</select></div>
+        <div class="field"><label>Type</label><select id="ofPdType"><option value="percent">Percentage (%)</option><option value="flat">Flat (₹)</option></select></div>
+        <div class="field"><label>Value</label><input type="number" id="ofPdValue" placeholder="e.g. 10"></div>
+      </div>
+      <button class="small-btn" onclick="saveCustomerProductDiscount('${c.id}')">Set product discount</button>
+      <div style="margin-top:10px;">${data.productDiscounts.length? data.productDiscounts.map(r=>`
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px;">
+          <span>${escapeHtml(r.productName)} → ${r.type==='percent'?r.value+'%':fmt(r.value)} off</span>
+          <button class="small-btn danger" style="padding:5px 10px;font-size:11px;" onclick="removeCustomerProductDiscount('${r.id}','${c.id}')">Remove</button>
+        </div>`).join('') : '<div class="empty-state" style="padding:16px;">None set</div>'}</div>
+    </div>
+
+    <div class="admin-card">
+      <div class="admin-row-head"><h3>Category-specific discount</h3></div>
+      <p class="helper-text" style="margin-top:-4px;">Used only when there's no product-specific discount for the item.</p>
+      <div class="two-col">
+        <div class="field"><label>Category</label><input type="text" id="ofCdCategory" placeholder="e.g. Pain Relief"></div>
+        <div class="field"><label>Type</label><select id="ofCdType"><option value="percent">Percentage (%)</option><option value="flat">Flat (₹)</option></select></div>
+        <div class="field"><label>Value</label><input type="number" id="ofCdValue" placeholder="e.g. 8"></div>
+      </div>
+      <button class="small-btn" onclick="saveCustomerCategoryDiscount('${c.id}')">Set category discount</button>
+      <div style="margin-top:10px;">${data.categoryDiscounts.length? data.categoryDiscounts.map(r=>`
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px;">
+          <span>${escapeHtml(r.category)} → ${r.type==='percent'?r.value+'%':fmt(r.value)} off</span>
+          <button class="small-btn danger" style="padding:5px 10px;font-size:11px;" onclick="removeCustomerCategoryDiscount('${r.id}','${c.id}')">Remove</button>
+        </div>`).join('') : '<div class="empty-state" style="padding:16px;">None set</div>'}</div>
+    </div>
+
+    <div class="admin-card">
+      <div class="admin-row-head"><h3>Applicable coupons</h3></div>
+      <div>${data.applicableCoupons.length ? data.applicableCoupons.map(c2=>`<div class="order-meta">${escapeHtml(c2.code)} — ${escapeHtml(couponDiscountText(c2))}</div>`).join('') : '<div class="empty-state" style="padding:16px;">None specifically targeted at this customer</div>'}</div>
+    </div>
+
+    <div class="admin-card">
+      <div class="admin-row-head"><h3>Order history</h3></div>
+      <div>${data.orders.length ? data.orders.map(o=>`<div class="order-meta">${escapeHtml(o.id)} · ${new Date(o.createdAt).toLocaleDateString('en-IN')} · ${escapeHtml(o.status)} · ${fmt(o.total)}</div>`).join('') : '<div class="empty-state" style="padding:16px;">No orders yet</div>'}</div>
+    </div>`;
+}
+async function saveGeneralDiscount(customerId){
+  const type = document.getElementById('ofGenType').value;
+  const value = Number(document.getElementById('ofGenValue').value)||0;
+  const minOrder = Number(document.getElementById('ofGenMinOrder').value)||0;
+  const expiryDate = document.getElementById('ofGenExpiry').value;
+  if(value<=0){ showToast('Enter a discount value'); return; }
+  await api('setCustomerDiscount', { customerId, type, value, minOrder, expiryDate, active:true });
+  showToast('General discount saved');
+  openOffersForCustomer(customerId);
+}
+async function saveCustomerProductPrice(customerId){
+  const productId = document.getElementById('ofPriceProduct').value;
+  const price = Number(document.getElementById('ofPriceValue').value)||0;
+  if(price<=0){ showToast('Enter a valid price'); return; }
+  await api('setCustomerProductPrice', { customerId, productId, price });
+  showToast('Special price saved');
+  openOffersForCustomer(customerId);
+}
+async function removeCustomerProductPrice(id, customerId){
+  await api('deleteCustomerProductPrice', { id });
+  openOffersForCustomer(customerId);
+}
+async function saveCustomerProductDiscount(customerId){
+  const productId = document.getElementById('ofPdProduct').value;
+  const type = document.getElementById('ofPdType').value;
+  const value = Number(document.getElementById('ofPdValue').value)||0;
+  if(value<=0){ showToast('Enter a discount value'); return; }
+  await api('setCustomerProductDiscount', { customerId, productId, type, value });
+  showToast('Product discount saved');
+  openOffersForCustomer(customerId);
+}
+async function removeCustomerProductDiscount(id, customerId){
+  await api('deleteCustomerProductDiscount', { id });
+  openOffersForCustomer(customerId);
+}
+async function saveCustomerCategoryDiscount(customerId){
+  const category = document.getElementById('ofCdCategory').value.trim();
+  const type = document.getElementById('ofCdType').value;
+  const value = Number(document.getElementById('ofCdValue').value)||0;
+  if(!category){ showToast('Enter a category'); return; }
+  if(value<=0){ showToast('Enter a discount value'); return; }
+  await api('setCustomerCategoryDiscount', { customerId, category, type, value });
+  showToast('Category discount saved');
+  openOffersForCustomer(customerId);
+}
+async function removeCustomerCategoryDiscount(id, customerId){
+  await api('deleteCustomerCategoryDiscount', { id });
+  openOffersForCustomer(customerId);
 }
 
 function fillSettingsForm(){
