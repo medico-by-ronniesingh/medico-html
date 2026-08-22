@@ -298,6 +298,7 @@ input,textarea,select{font-family:var(--font-body);}
         </div>
       </div>
       <div class="header-actions">
+        <button class="pill-btn" id="customerStatusBtn" onclick="openCustomerLogin()">Sign in</button>
         <button class="pill-btn solid" onclick="openCart()">Cart <span class="cart-count" id="cartCount">0</span></button>
       </div>
     </div>
@@ -467,6 +468,39 @@ input,textarea,select{font-family:var(--font-body);}
   </div>
 </div>
  
+<!-- Customer Login Modal -->
+<div class="modal-wrap" id="customerLoginModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('customerLoginModal')">✕</button>
+    <h3 style="margin-bottom:4px;" id="custLoginTitle">Sign in</h3>
+    <p class="helper-text" style="margin-top:6px;" id="custLoginSub">Enter your mobile number to continue.</p>
+
+    <div id="custLoginStep1">
+      <div class="field">
+        <label>Phone number</label>
+        <input type="tel" id="customerLoginPhone" placeholder="10-digit mobile number" maxlength="10" inputmode="numeric" oninput="this.value=this.value.replace(/\D/g,'').slice(0,10)" onkeydown="if(event.key==='Enter')checkCustomerPhone()">
+        <div class="field-error" id="err-customerLoginPhone">Enter a valid 10-digit number</div>
+      </div>
+      <button class="primary-btn" onclick="checkCustomerPhone()">Continue</button>
+    </div>
+
+    <div id="custLoginStep2" style="display:none;">
+      <div class="field" id="custLoginNameField" style="display:none;">
+        <label>Your name</label>
+        <input type="text" id="customerLoginName" placeholder="e.g. Rahul Kumar">
+        <div class="field-error" id="err-customerLoginName">Please enter your name</div>
+      </div>
+      <div class="field">
+        <label id="custLoginPinLabel">Enter your 4-digit PIN</label>
+        <input type="password" id="customerLoginPin" placeholder="4-digit PIN" maxlength="4" inputmode="numeric" oninput="this.value=this.value.replace(/\D/g,'').slice(0,4)" onkeydown="if(event.key==='Enter')submitCustomerLogin()">
+        <div class="field-error" id="err-customerLoginPin">Enter a valid 4-digit PIN</div>
+      </div>
+      <button class="primary-btn" onclick="submitCustomerLogin()" id="custLoginSubmitBtn">Sign in</button>
+      <button type="button" class="pill-btn" style="width:100%;margin-top:8px;text-align:center;" onclick="backToPhoneStep()">Use a different number</button>
+    </div>
+  </div>
+</div>
+ 
 <!-- Complaint Modal -->
 <div class="modal-wrap" id="complaintModal">
   <div class="modal">
@@ -543,6 +577,7 @@ input,textarea,select{font-family:var(--font-body);}
       <button class="sheet-item" onclick="closeModal('moreModal');openTrack();"><span class="si-icon">📦</span> Track an order</button>
       <button class="sheet-item" onclick="closeModal('moreModal');openCart();"><span class="si-icon">🛒</span> View cart</button>
       <button class="sheet-item" id="contactSheetItem"><span class="si-icon">📞</span> Contact us</button>
+      <button class="sheet-item" id="logoutSheetItem" style="display:none;color:var(--danger);" onclick="logoutFromMoreSheet()"><span class="si-icon">🚪</span> Logout</button>
     </div>
   </div>
 </div>
@@ -574,6 +609,7 @@ input,textarea,select{font-family:var(--font-body);}
       <button class="admin-tab" data-tab="orders" onclick="switchAdminTab('orders')">Orders</button>
       <button class="admin-tab" data-tab="complaints" onclick="switchAdminTab('complaints')">Help & Support</button>
       <button class="admin-tab" data-tab="coupons" onclick="switchAdminTab('coupons')">Coupons</button>
+      <button class="admin-tab" data-tab="custpricing" onclick="switchAdminTab('custpricing')">Customer Pricing</button>
       <button class="admin-tab" data-tab="settings" onclick="switchAdminTab('settings')">Website Settings</button>
     </div>
  
@@ -636,19 +672,83 @@ input,textarea,select{font-family:var(--font-body);}
         <div class="two-col">
           <div class="field"><label>Coupon code</label><input type="text" id="newCouponCode" placeholder="e.g. SAVE10" style="text-transform:uppercase;"></div>
           <div class="field"><label>Discount type</label>
-            <select id="newCouponType">
+            <select id="newCouponType" onchange="toggleCouponValueFields()">
               <option value="percent">Percentage off (%)</option>
               <option value="flat">Flat amount off (₹)</option>
+              <option value="freeDelivery">Free delivery</option>
             </select>
           </div>
-          <div class="field"><label>Discount value</label><input type="number" id="newCouponValue" placeholder="e.g. 10"></div>
+        </div>
+        <div class="two-col" id="couponValueRow">
+          <div class="field" id="couponValueWrap"><label>Discount value</label><input type="number" id="newCouponValue" placeholder="e.g. 10"></div>
+          <div class="field" id="couponMaxDiscountWrap"><label>Max discount cap (₹, optional)</label><input type="number" id="newCouponMaxDiscount" placeholder="e.g. 150"></div>
+        </div>
+        <div class="two-col">
           <div class="field"><label>Minimum order value (₹, optional)</label><input type="number" id="newCouponMinOrder" placeholder="e.g. 499"></div>
+          <div class="field"><label>Only valid on category (optional)</label>
+            <select id="newCouponCategory"><option value="">All categories</option></select>
+          </div>
+        </div>
+        <div class="two-col">
+          <div class="field"><label>Valid from (optional)</label><input type="date" id="newCouponValidFrom"></div>
+          <div class="field"><label>Valid until (optional)</label><input type="date" id="newCouponValidTo"></div>
+        </div>
+        <div class="two-col">
+          <div class="field"><label>Total uses allowed (optional, blank = unlimited)</label><input type="number" id="newCouponUsageLimit" placeholder="e.g. 100"></div>
+          <div class="field"><label>Uses per customer (optional, blank = unlimited)</label><input type="number" id="newCouponPerCustomerLimit" placeholder="e.g. 1"></div>
+        </div>
+        <div class="checkbox-field"><input type="checkbox" id="newCouponFirstOrder"> Only valid for a customer's first order</div>
+        <div class="field">
+          <label>Who can use this coupon?</label>
+          <div class="pay-method-row">
+            <label class="pay-method-card active" id="couponVisPublicCard">
+              <input type="radio" name="couponVisRadio" value="public" checked onchange="toggleCouponVisibilityFields('public')">
+              <span class="pmc-icon">🌐</span>
+              <span class="pmc-label">Everyone</span>
+            </label>
+            <label class="pay-method-card" id="couponVisTargetedCard">
+              <input type="radio" name="couponVisRadio" value="targeted" onchange="toggleCouponVisibilityFields('targeted')">
+              <span class="pmc-icon">🔒</span>
+              <span class="pmc-label">Specific customer(s)</span>
+            </label>
+          </div>
+        </div>
+        <div class="field" id="couponTargetWrap" style="display:none;">
+          <label>Customer phone number(s)</label>
+          <textarea id="newCouponTargetPhones" rows="2" placeholder="e.g. 9876543210, 9123456780"></textarea>
+          <p class="helper-text" style="margin-top:4px;">Separate multiple numbers with a comma. This coupon will only work for these numbers, and won't appear on the public coupon strip or work for anyone else.</p>
         </div>
         <button class="small-btn" onclick="addCoupon()">Create coupon</button>
       </div>
       <div class="admin-card">
         <div class="admin-row-head"><h3>All coupons</h3><span class="footer-note" id="couponCountLabel" style="padding:0;"></span></div>
         <div id="adminCouponsList"></div>
+      </div>
+    </div>
+
+    <div class="admin-panel" id="panel-custpricing">
+      <div class="admin-card">
+        <div class="admin-row-head"><h3>Set a custom price for a customer</h3></div>
+        <p class="helper-text" style="margin-top:-4px;">When this customer signs in with this number, they'll see this price instead of the normal price for this product. Start typing a name or number — existing customers will suggest automatically, so you don't accidentally type the wrong number.</p>
+        <div class="two-col">
+          <div class="field">
+            <label>Customer phone number</label>
+            <input type="tel" id="newCpPhone" list="cpCustomerDatalist" placeholder="10-digit mobile number" maxlength="10" inputmode="numeric" oninput="this.value=this.value.replace(/\D/g,'').slice(0,10);updateCpPhonePreview();">
+            <datalist id="cpCustomerDatalist"></datalist>
+            <div class="helper-text" id="cpPhonePreview" style="margin:6px 0 0;display:none;"></div>
+          </div>
+          <div class="field"><label>Product</label><select id="newCpProduct"></select></div>
+          <div class="field"><label>Custom price (₹)</label><input type="number" id="newCpPrice" placeholder="e.g. 150"></div>
+        </div>
+        <button class="small-btn" onclick="addCustomerPricingEntry()">Set price</button>
+      </div>
+      <div class="admin-card">
+        <div class="admin-row-head"><h3>All custom prices</h3><span class="footer-note" id="cpCountLabel" style="padding:0;"></span></div>
+        <div class="field" style="margin-bottom:4px;">
+          <label>Search by customer name or phone</label>
+          <input type="text" id="cpSearchInput" placeholder="Type a name or number to filter" oninput="renderAdminCustomerPricing()">
+        </div>
+        <div id="adminCustomerPricingList"></div>
       </div>
     </div>
 
@@ -762,6 +862,12 @@ let cart = {};
 let currentTab = 'products';
 let currentPaymentMethod = 'COD';
 let currentFulfillment = 'pickup';
+let customerPricing = [];
+let customers = [];
+let currentCustomerPhone = (typeof localStorage!=='undefined' && localStorage.getItem('medico_customer_phone')) || '';
+let currentCustomerName = '';
+let pendingLoginPhone = '';
+let pendingLoginIsNew = false;
  
 const DEFAULT_SETTINGS = {
   shopName:'Medico',
@@ -790,9 +896,9 @@ const DEFAULT_FAQS = [
 ];
 
 const DEFAULT_COUPONS = [
-  {id:'c1', code:'SAVE10', type:'percent', value:10, minOrder:0, active:true},
-  {id:'c2', code:'SAVE40', type:'percent', value:40, minOrder:999, active:true},
-  {id:'c3', code:'EXTRA10', type:'flat', value:10, minOrder:499, active:true}
+  {id:'c1', code:'SAVE10', type:'percent', value:10, maxDiscount:0, minOrder:0, category:'', validFrom:'', validTo:'', usageLimit:0, perCustomerLimit:0, usedCount:0, usedByPhones:{}, targetPhones:[], firstOrderOnly:false, active:true},
+  {id:'c2', code:'SAVE40', type:'percent', value:40, maxDiscount:200, minOrder:999, category:'', validFrom:'', validTo:'', usageLimit:0, perCustomerLimit:0, usedCount:0, usedByPhones:{}, targetPhones:[], firstOrderOnly:false, active:true},
+  {id:'c3', code:'EXTRA10', type:'flat', value:10, maxDiscount:0, minOrder:499, category:'', validFrom:'', validTo:'', usageLimit:0, perCustomerLimit:0, usedCount:0, usedByPhones:{}, targetPhones:[], firstOrderOnly:false, active:true}
 ];
 
 const DEFAULT_PRODUCTS = [
@@ -845,6 +951,34 @@ async function loadCoupons(){
   coupons = (Array.isArray(data) && data.length) ? data : DEFAULT_COUPONS;
   return coupons;
 }
+async function loadCustomerPricing(){
+  const data = await api('getCustomerPricing');
+  customerPricing = Array.isArray(data) ? data : [];
+  return customerPricing;
+}
+function saveCustomersCache(){
+  try{ if(typeof localStorage!=='undefined') localStorage.setItem('medico_customers', JSON.stringify(customers)); }catch(e){}
+}
+async function loadCustomers(){
+  let cached = [];
+  try{
+    const c = typeof localStorage!=='undefined' ? localStorage.getItem('medico_customers') : null;
+    cached = c ? JSON.parse(c) : [];
+  }catch(e){ cached = []; }
+
+  const data = await api('getCustomers');
+  const remote = Array.isArray(data) ? data : [];
+
+  // Merge remote + local cache (local wins for anything the server doesn't
+  // know about yet) so a locally-created account is never lost on refresh.
+  const merged = [...remote];
+  cached.forEach(localCust=>{
+    if(!merged.some(c=>c.phone===localCust.phone)) merged.push(localCust);
+  });
+  customers = merged;
+  saveCustomersCache();
+  return customers;
+}
 
 async function loadData(){
   await Promise.all([
@@ -853,8 +987,15 @@ async function loadData(){
     loadSettings(),
     loadComplaints(),
     loadFaqs(),
-    loadCoupons()
+    loadCoupons(),
+    loadCustomerPricing(),
+    loadCustomers()
   ]);
+
+  if(currentCustomerPhone){
+    const existing = customers.find(c=>c.phone===currentCustomerPhone);
+    if(existing) currentCustomerName = existing.name;
+  }
 
   applySettingsToDOM();
   populateCategoryFilter();
@@ -862,6 +1003,7 @@ async function loadData(){
   renderFAQ();
   renderCouponStrip();
   updateCartCount();
+  renderCustomerStatus();
 }
  
 /* ---------------- Utility ---------------- */
@@ -884,6 +1026,155 @@ function applySettingsToDOM(){
   document.getElementById('contactSheetItem').innerHTML = `<span class="si-icon">📞</span> Contact us · ${escapeHtml(settings.contact)}`;
   document.title = settings.shopName;
 }
+
+/* ---------------- Customer login & personal pricing ---------------- */
+function getEffectivePrice(p){
+  if(currentCustomerPhone){
+    const cp = customerPricing.find(x=>x.phone===currentCustomerPhone && x.productId===p.id);
+    if(cp) return cp.price;
+  }
+  return p.price;
+}
+function maskPhone(phone){
+  if(!phone || phone.length<10) return phone;
+  return phone.slice(0,2) + '••••' + phone.slice(-4);
+}
+function renderCustomerStatus(){
+  const btn = document.getElementById('customerStatusBtn');
+  if(!btn) return;
+  if(currentCustomerPhone){
+    const hasSpecial = customerPricing.some(x=>x.phone===currentCustomerPhone);
+    const label = currentCustomerName || maskPhone(currentCustomerPhone);
+    btn.textContent = hasSpecial ? `✓ ${label}` : label;
+    btn.onclick = openMore;
+  }else{
+    btn.textContent = 'Sign in';
+    btn.onclick = openCustomerLogin;
+  }
+  const logoutItem = document.getElementById('logoutSheetItem');
+  if(logoutItem) logoutItem.style.display = currentCustomerPhone ? 'flex' : 'none';
+}
+function openCustomerLogin(){
+  document.getElementById('customerLoginPhone').value = '';
+  document.getElementById('customerLoginName').value = '';
+  document.getElementById('customerLoginPin').value = '';
+  ['err-customerLoginPhone','err-customerLoginName','err-customerLoginPin'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById('custLoginStep1').style.display = 'block';
+  document.getElementById('custLoginStep2').style.display = 'none';
+  document.getElementById('custLoginTitle').textContent = 'Sign in';
+  document.getElementById('custLoginSub').textContent = 'Enter your mobile number to continue.';
+  document.getElementById('customerLoginModal').classList.add('show');
+  setTimeout(()=>{ const el=document.getElementById('customerLoginPhone'); if(el) el.focus(); }, 50);
+}
+function checkCustomerPhone(){
+  const phone = document.getElementById('customerLoginPhone').value.trim();
+  if(!/^[6-9]\d{9}$/.test(phone)){
+    document.getElementById('err-customerLoginPhone').style.display = 'block';
+    return;
+  }
+  document.getElementById('err-customerLoginPhone').style.display = 'none';
+  pendingLoginPhone = phone;
+  const existing = customers.find(c=>c.phone===phone);
+  pendingLoginIsNew = !existing;
+
+  document.getElementById('custLoginStep1').style.display = 'none';
+  document.getElementById('custLoginStep2').style.display = 'block';
+  document.getElementById('customerLoginPin').value = '';
+  document.getElementById('customerLoginName').value = '';
+  ['err-customerLoginName','err-customerLoginPin'].forEach(id=>document.getElementById(id).style.display='none');
+
+  if(pendingLoginIsNew){
+    document.getElementById('custLoginTitle').textContent = 'Create your account';
+    document.getElementById('custLoginSub').textContent = `We don't have an account for ${phone} yet — set your name and a 4-digit PIN to create one.`;
+    document.getElementById('custLoginNameField').style.display = 'block';
+    document.getElementById('custLoginPinLabel').textContent = 'Set a 4-digit PIN';
+    document.getElementById('custLoginSubmitBtn').textContent = 'Create account & sign in';
+  }else{
+    document.getElementById('custLoginTitle').textContent = 'Welcome back';
+    document.getElementById('custLoginSub').textContent = `Enter the PIN for ${phone}.`;
+    document.getElementById('custLoginNameField').style.display = 'none';
+    document.getElementById('custLoginPinLabel').textContent = 'Enter your 4-digit PIN';
+    document.getElementById('custLoginSubmitBtn').textContent = 'Sign in';
+  }
+  setTimeout(()=>{
+    const el = pendingLoginIsNew ? document.getElementById('customerLoginName') : document.getElementById('customerLoginPin');
+    if(el) el.focus();
+  }, 50);
+}
+function backToPhoneStep(){
+  document.getElementById('custLoginStep1').style.display = 'block';
+  document.getElementById('custLoginStep2').style.display = 'none';
+  document.getElementById('custLoginTitle').textContent = 'Sign in';
+  document.getElementById('custLoginSub').textContent = 'Enter your mobile number to continue.';
+}
+async function submitCustomerLogin(){
+  const phone = pendingLoginPhone;
+  const pin = document.getElementById('customerLoginPin').value.trim();
+  const pinOk = /^\d{4}$/.test(pin);
+  document.getElementById('err-customerLoginPin').textContent = 'Enter a valid 4-digit PIN';
+  document.getElementById('err-customerLoginPin').style.display = pinOk ? 'none' : 'block';
+  if(!pinOk) return;
+
+  if(pendingLoginIsNew){
+    const name = document.getElementById('customerLoginName').value.trim();
+    const nameOk = name.length>=2;
+    document.getElementById('err-customerLoginName').style.display = nameOk ? 'none' : 'block';
+    if(!nameOk) return;
+
+    const customer = {id:'cu'+Date.now(), phone, name, pin, createdAt:new Date().toISOString()};
+    customers.push(customer);
+    saveCustomersCache();
+    const saved = await api('addCustomer', customer);
+    if(saved === null) showToast('Account created locally — could not reach the server.');
+
+    currentCustomerPhone = phone;
+    currentCustomerName = name;
+    if(typeof localStorage!=='undefined') localStorage.setItem('medico_customer_phone', phone);
+    closeModal('customerLoginModal');
+    renderCustomerStatus();
+    renderProducts();
+    renderCartDrawer();
+    showToast(`Account created — welcome, ${name}!`);
+    return;
+  }
+
+  const existing = customers.find(c=>c.phone===phone);
+  if(!existing || existing.pin !== pin){
+    document.getElementById('err-customerLoginPin').textContent = 'Incorrect PIN';
+    document.getElementById('err-customerLoginPin').style.display = 'block';
+    return;
+  }
+
+  currentCustomerPhone = phone;
+  currentCustomerName = existing.name;
+  if(typeof localStorage!=='undefined') localStorage.setItem('medico_customer_phone', phone);
+  closeModal('customerLoginModal');
+  renderCustomerStatus();
+  renderProducts();
+  renderCartDrawer();
+  const hasSpecial = customerPricing.some(x=>x.phone===phone);
+  showToast(hasSpecial ? `Welcome back, ${existing.name} — your special prices are showing` : `Welcome back, ${existing.name}`);
+}
+function switchCustomerNumber(){
+  currentCustomerPhone = '';
+  currentCustomerName = '';
+  if(typeof localStorage!=='undefined') localStorage.removeItem('medico_customer_phone');
+  renderCustomerStatus();
+  renderProducts();
+  renderCartDrawer();
+  showToast('Signed out');
+  openCustomerLogin();
+}
+function logoutFromMoreSheet(){
+  currentCustomerPhone = '';
+  currentCustomerName = '';
+  if(typeof localStorage!=='undefined') localStorage.removeItem('medico_customer_phone');
+  closeModal('moreModal');
+  renderCustomerStatus();
+  renderProducts();
+  renderCartDrawer();
+  showToast('Signed out');
+}
  
 /* ---------------- Product rendering ---------------- */
 function populateCategoryFilter(){
@@ -904,9 +1195,9 @@ function renderProducts(){
     return matchesQ && matchesCat && matchesRx;
   });
  
-  if(sort==='priceLow') list = [...list].sort((a,b)=>a.price-b.price);
-  else if(sort==='priceHigh') list = [...list].sort((a,b)=>b.price-a.price);
-  else if(sort==='discount') list = [...list].sort((a,b)=>discountPct(b)-discountPct(a));
+  if(sort==='priceLow') list = [...list].sort((a,b)=>getEffectivePrice(a)-getEffectivePrice(b));
+  else if(sort==='priceHigh') list = [...list].sort((a,b)=>getEffectivePrice(b)-getEffectivePrice(a));
+  else if(sort==='discount') list = [...list].sort((a,b)=>discountPct(b,getEffectivePrice(b))-discountPct(a,getEffectivePrice(a)));
  
   document.getElementById('countPill').textContent = list.length + ' item' + (list.length!==1?'s':'');
  
@@ -920,7 +1211,9 @@ function renderProducts(){
     const qty = cart[p.id] || 0;
     const outOfStock = p.stock <= 0;
     const lowStock = !outOfStock && p.stock <= lowStockThreshold;
-    const disc = discountPct(p);
+    const effPrice = getEffectivePrice(p);
+    const isSpecialPrice = effPrice !== p.price;
+    const disc = discountPct(p, effPrice);
     const dealActive = isDealActive(p);
     const expiryInfo = expiryLabel(p.expiryDate);
     return `<div class="card">
@@ -939,9 +1232,10 @@ function renderProducts(){
         <div class="card-company">${escapeHtml(p.company||'')}</div>
         <div class="card-meta">${escapeHtml(p.category)}${p.salt&&p.salt!=='—'?' · '+escapeHtml(p.salt):''}</div>
         <div class="card-price-row">
-          <span class="card-price">${fmt(p.price)}</span>
-          ${p.origPrice && p.origPrice>p.price ? `<span class="card-price-orig">${fmt(p.origPrice)}</span>` : ''}
+          <span class="card-price">${fmt(effPrice)}</span>
+          ${p.origPrice && p.origPrice>effPrice ? `<span class="card-price-orig">${fmt(p.origPrice)}</span>` : ''}
         </div>
+        ${isSpecialPrice ? `<div class="card-expiry" style="color:var(--green);font-weight:700;">✓ Your price</div>` : ''}
         <div class="card-stock">Stock: ${p.stock}</div>
         ${expiryInfo ? `<div class="card-expiry ${expiryInfo.soon?'soon':''}">${expiryInfo.text}</div>` : ''}
         ${dealActive ? `<div class="deal-strip"><span>⚡ Limited time deal</span><span class="deal-timer" data-deal-end="${escapeAttr(p.dealEndsAt)}">${dealCountdownText(p.dealEndsAt)}</span></div>` : ''}
@@ -997,9 +1291,10 @@ function startDealCountdownTicker(){
     });
   }, 1000);
 }
-function discountPct(p){
-  if(!p.origPrice || p.origPrice<=p.price) return 0;
-  return Math.round(((p.origPrice-p.price)/p.origPrice)*100);
+function discountPct(p, priceOverride){
+  const price = priceOverride!==undefined ? priceOverride : p.price;
+  if(!p.origPrice || p.origPrice<=price) return 0;
+  return Math.round(((p.origPrice-price)/p.origPrice)*100);
 }
  
 let pendingQty = {};
@@ -1046,7 +1341,7 @@ function updateCartCount(){
 function cartTotal(){
   return Object.entries(cart).reduce((sum,[id,qty])=>{
     const p = products.find(x=>x.id===id);
-    return sum + (p ? p.price*qty : 0);
+    return sum + (p ? getEffectivePrice(p)*qty : 0);
   },0);
 }
 function homeDeliveryFeeFor(subtotal){
@@ -1079,11 +1374,12 @@ function renderCartDrawer(){
     if(!p) return '';
     const expiryInfo = expiryLabel(p.expiryDate);
     const dealActive = isDealActive(p);
+    const effPrice = getEffectivePrice(p);
     return `<div class="cart-item">
       <div class="cart-item-icon">${p.imageUrl?`<img src="${escapeAttr(p.imageUrl)}" alt="${escapeAttr(p.name)}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><span style="display:none;align-items:center;justify-content:center;width:100%;height:100%;">${p.icon||'💊'}</span>`:(p.icon||'💊')}</div>
       <div class="cart-item-info">
         <div class="cart-item-name">${escapeHtml(p.name)}${dealActive?' <span class="badge badge-deal" style="font-size:9px;padding:2px 6px;">⚡ Deal</span>':''}</div>
-        <div class="cart-item-price">${fmt(p.price)} × ${qty} = ${fmt(p.price*qty)}</div>
+        <div class="cart-item-price">${fmt(effPrice)} × ${qty} = ${fmt(effPrice*qty)}</div>
         ${expiryInfo?`<div class="card-expiry ${expiryInfo.soon?'soon':''}" style="margin-top:2px;">${expiryInfo.text}</div>`:''}
         <div class="cart-item-actions">
           <div class="stepper">
@@ -1275,7 +1571,7 @@ async function placeOrder(){
  
   const items = Object.entries(cart).filter(([id,qty])=>qty>0).map(([id,qty])=>{
     const p = products.find(x=>x.id===id);
-    return {id, name:p?p.name:'Unknown', price:p?p.price:0, qty, rx:p?p.rx:false, expiryDate:p?p.expiryDate:'', wasDeal:p?isDealActive(p):false};
+    return {id, name:p?p.name:'Unknown', price:p?getEffectivePrice(p):0, qty, rx:p?p.rx:false, expiryDate:p?p.expiryDate:'', wasDeal:p?isDealActive(p):false};
   });
   if(items.length===0) return;
  
@@ -1296,14 +1592,12 @@ async function placeOrder(){
     status: 'Pending'
   };
 
-  // Optimistically update local state so the UI feels instant.
   orders.unshift(order);
   items.forEach(it=>{
     const p = products.find(x=>x.id===it.id);
     if(p) p.stock = Math.max(0, p.stock - it.qty);
   });
 
-  // Persist the order (and the resulting stock levels) to Google Sheets.
   const saved = await api('addOrder', order);
   if(saved === null){
     showToast('Order saved locally — could not reach the server. It will not sync.');
@@ -1361,7 +1655,6 @@ async function trackOrder(){
   }
   result.innerHTML = `<div class="empty-state">Checking your order…</div>`;
 
-  // Prefer a fresh lookup from the sheet; fall back to whatever is cached locally.
   const remote = await api('trackOrder', { phone, orderId: idFilter });
   let matches;
   if(Array.isArray(remote)){
@@ -1452,14 +1745,49 @@ async function submitComplaint(){
 }
 
 /* ---------------- Coupons ---------------- */
+function getCartCategorySubtotal(category){
+  return Object.entries(cart).reduce((sum,[id,qty])=>{
+    const p = products.find(x=>x.id===id);
+    if(!p || p.category!==category) return sum;
+    return sum + getEffectivePrice(p)*qty;
+  },0);
+}
+function isWithinValidityWindow(c){
+  const todayStr = new Date().toISOString().slice(0,10);
+  if(c.validFrom && todayStr < c.validFrom) return false;
+  if(c.validTo && todayStr > c.validTo) return false;
+  return true;
+}
+function couponBaseAmount(c, subtotal){
+  return c.category ? getCartCategorySubtotal(c.category) : subtotal;
+}
+function couponWaivesDelivery(c){
+  return !!(c && c.type==='freeDelivery');
+}
 function couponDiscountText(c){
-  const base = c.type==='percent' ? `${c.value}% off` : `${fmt(c.value)} off`;
-  return c.minOrder>0 ? `${base} on orders above ${fmt(c.minOrder)}` : base;
+  let base;
+  if(c.type==='percent'){
+    base = `${c.value}% off`;
+    if(c.maxDiscount>0) base += ` up to ${fmt(c.maxDiscount)}`;
+  }else if(c.type==='flat'){
+    base = `${fmt(c.value)} off`;
+  }else{
+    base = 'Free delivery';
+  }
+  if(c.category) base += ` on ${c.category}`;
+  if(c.minOrder>0) base += ` on orders above ${fmt(c.minOrder)}`;
+  if(c.firstOrderOnly) base += ' · first order only';
+  return base;
 }
 function renderCouponStrip(){
   const wrap = document.getElementById('couponStripWrap');
   const strip = document.getElementById('couponStrip');
-  const active = coupons.filter(c=>c.active);
+  const active = coupons.filter(c=>
+    c.active &&
+    (!c.targetPhones || c.targetPhones.length===0) &&
+    isWithinValidityWindow(c) &&
+    !(c.usageLimit>0 && (c.usedCount||0)>=c.usageLimit)
+  );
   if(active.length===0){
     wrap.style.display = 'none';
     return;
@@ -1472,9 +1800,41 @@ function renderCouponStrip(){
     </div>`).join('');
 }
 function couponDiscountAmount(c, subtotal){
-  if(subtotal < (c.minOrder||0)) return 0;
-  if(c.type==='percent') return Math.round(subtotal * c.value / 100);
-  return Math.min(c.value, subtotal);
+  if(c.type==='freeDelivery') return 0;
+  const base = couponBaseAmount(c, subtotal);
+  if(base <= 0) return 0;
+  if(c.type==='percent'){
+    let amt = Math.round(base * c.value / 100);
+    if(c.maxDiscount>0) amt = Math.min(amt, c.maxDiscount);
+    return Math.min(amt, base);
+  }
+  return Math.min(c.value, base);
+}
+function couponEligibilityError(c, phone, subtotal){
+  if(!c.active) return 'Invalid or inactive coupon code';
+  if(!isWithinValidityWindow(c)) return 'This coupon is not valid right now';
+  if(c.targetPhones && c.targetPhones.length>0){
+    if(!phone || !c.targetPhones.includes(phone)) return 'Invalid or inactive coupon code';
+  }
+  if(c.category){
+    const catSubtotal = getCartCategorySubtotal(c.category);
+    if(catSubtotal<=0) return `This coupon only applies to ${c.category} items`;
+    if(catSubtotal < (c.minOrder||0)) return `This coupon needs a minimum order of ${fmt(c.minOrder)} in ${c.category}`;
+  }else{
+    if(subtotal < (c.minOrder||0)) return `This coupon needs a minimum order of ${fmt(c.minOrder)}`;
+  }
+  if(c.usageLimit>0 && (c.usedCount||0) >= c.usageLimit) return 'This coupon has reached its usage limit';
+  if(c.perCustomerLimit>0){
+    if(!phone) return 'Enter your phone number above first to use this coupon';
+    const used = (c.usedByPhones && c.usedByPhones[phone]) || 0;
+    if(used >= c.perCustomerLimit) return "You've already used this coupon the maximum number of times";
+  }
+  if(c.firstOrderOnly){
+    if(!phone) return 'Enter your phone number above first to use this coupon';
+    const hasOrder = orders.some(o=>o.customer && o.customer.phone===phone);
+    if(hasOrder) return 'This coupon is valid only on your first order';
+  }
+  return null;
 }
 function applyCoupon(){
   const input = document.getElementById('couponCodeInput');
@@ -1484,13 +1844,15 @@ function applyCoupon(){
   if(!code) return;
   const c = coupons.find(x=>x.code.toUpperCase()===code);
   const subtotal = cartTotal();
-  if(!c || !c.active){
+  const phone = (document.getElementById('custPhone').value||'').trim();
+  if(!c){
     errEl.textContent = 'Invalid or inactive coupon code';
     errEl.style.display = 'block';
     return;
   }
-  if(subtotal < (c.minOrder||0)){
-    errEl.textContent = `This coupon needs a minimum order of ${fmt(c.minOrder)}`;
+  const err = couponEligibilityError(c, phone, subtotal);
+  if(err){
+    errEl.textContent = err;
     errEl.style.display = 'block';
     return;
   }
@@ -1569,6 +1931,7 @@ function enterAdmin(){
   renderAdminComplaints();
   renderAdminFAQ();
   renderAdminCoupons();
+  renderAdminCustomerPricing();
   fillSettingsForm();
 }
 function exitAdmin(){
@@ -1657,6 +2020,7 @@ async function addProduct(){
   document.getElementById('dealEndsWrap').style.display = 'none';
   renderAdminProducts();
   populateCategoryFilter();
+  populateCpProductSelect();
   renderProducts();
   showToast('Product added');
 }
@@ -1843,6 +2207,151 @@ async function deleteCoupon(id){
   renderAdminCoupons();
   renderCouponStrip();
   showToast('Coupon deleted');
+}
+
+/* ---------------- Customer Pricing (admin) ---------------- */
+function populateCpProductSelect(){
+  const sel = document.getElementById('newCpProduct');
+  if(!sel) return;
+  sel.innerHTML = products.map(p=>`<option value="${p.id}">${escapeHtml(p.name)} (normal: ${fmt(p.price)})</option>`).join('');
+}
+function populateCpCustomerDatalist(){
+  const dl = document.getElementById('cpCustomerDatalist');
+  if(!dl) return;
+  dl.innerHTML = customers.map(c=>`<option value="${escapeAttr(c.phone)}">${escapeHtml(c.name)}</option>`).join('');
+}
+function updateCpPhonePreview(){
+  const el = document.getElementById('cpPhonePreview');
+  const phoneInput = document.getElementById('newCpPhone');
+  if(!el || !phoneInput) return;
+  const phone = phoneInput.value.trim();
+  if(phone.length!==10){ el.style.display='none'; return; }
+  const cust = customers.find(c=>c.phone===phone);
+  const existingCount = customerPricing.filter(x=>x.phone===phone).length;
+  if(cust){
+    el.style.display = 'block';
+    el.style.color = 'var(--green)';
+    el.textContent = `✓ ${cust.name}${existingCount>0?` — already has ${existingCount} custom price(s)`:' — no custom prices yet'}`;
+  }else{
+    el.style.display = 'block';
+    el.style.color = 'var(--warn)';
+    el.textContent = `⚠ No account found for this number yet — double-check it before saving.`;
+  }
+}
+function renderAdminCustomerPricing(){
+  populateCpProductSelect();
+  populateCpCustomerDatalist();
+  document.getElementById('cpCountLabel').textContent = customerPricing.length + ' custom price(s)';
+  const wrap = document.getElementById('adminCustomerPricingList');
+  if(customerPricing.length===0){
+    wrap.innerHTML = `<div class="empty-state">No custom prices set yet.</div>`;
+    return;
+  }
+  const groups = {};
+  customerPricing.forEach(cp=>{
+    (groups[cp.phone] = groups[cp.phone] || []).push(cp);
+  });
+  const search = (document.getElementById('cpSearchInput')?.value || '').toLowerCase().trim();
+  let phones = Object.keys(groups);
+  if(search){
+    phones = phones.filter(phone=>{
+      const cust = customers.find(c=>c.phone===phone);
+      const name = cust ? cust.name.toLowerCase() : '';
+      return phone.includes(search) || name.includes(search);
+    });
+  }
+  if(phones.length===0){
+    wrap.innerHTML = `<div class="empty-state">No customers match that search.</div>`;
+    return;
+  }
+  wrap.innerHTML = phones.map(phone=>{
+    const cust = customers.find(c=>c.phone===phone);
+    const entries = groups[phone];
+    const remainingProducts = products.filter(p=>!entries.some(e=>e.productId===p.id));
+    const rows = entries.map(cp=>{
+      const p = products.find(x=>x.id===cp.productId);
+      return `<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);">
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:13px;font-weight:600;">${escapeHtml(p?p.name:'Unknown product')}</div>
+          <div style="font-size:11.5px;color:var(--muted);">Normal price: ${fmt(p?p.price:0)}</div>
+        </div>
+        <input type="number" value="${cp.price}" style="width:80px;padding:6px 8px;border:1px solid var(--line);border-radius:6px;font-size:12.5px;background:var(--bg);" onchange="editCustomerPricingPrice('${cp.id}',Number(this.value))">
+        <button class="small-btn danger" style="padding:6px 10px;font-size:11.5px;" onclick="deleteCustomerPricingEntry('${cp.id}')">Remove</button>
+      </div>`;
+    }).join('');
+    return `<div class="admin-card" style="margin-bottom:14px;border:1.5px solid var(--line);">
+      <div class="admin-row-head" style="margin-bottom:4px;align-items:flex-start;">
+        <div>
+          <div style="font-weight:800;font-size:14.5px;">${escapeHtml(cust?cust.name:'Unknown customer')}</div>
+          <div style="font-size:12px;color:var(--muted);font-family:var(--font-mono);">${escapeHtml(phone)}</div>
+        </div>
+        <span class="footer-note" style="padding:0;">${entries.length} product${entries.length!==1?'s':''}</span>
+      </div>
+      ${rows}
+      ${remainingProducts.length>0 ? `<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+        <select id="cpAddProduct-${phone}" style="flex:1;min-width:140px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:12.5px;background:var(--bg);">
+          ${remainingProducts.map(p=>`<option value="${p.id}">${escapeHtml(p.name)}</option>`).join('')}
+        </select>
+        <input type="number" id="cpAddPrice-${phone}" placeholder="₹ price" style="width:90px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:12.5px;background:var(--bg);">
+        <button class="small-btn" onclick="addCustomerPricingForPhone('${phone}')">Add</button>
+      </div>` : ''}
+    </div>`;
+  }).join('');
+}
+async function editCustomerPricingPrice(id, price){
+  const cp = customerPricing.find(x=>x.id===id);
+  if(!cp) return;
+  if(price<=0){ showToast('Enter a valid price'); renderAdminCustomerPricing(); return; }
+  cp.price = price;
+  const saved = await api('editCustomerPricing', cp);
+  if(saved === null) showToast('Updated locally — could not reach the server.');
+  showToast('Price updated');
+}
+async function addCustomerPricingForPhone(phone){
+  const productSel = document.getElementById('cpAddProduct-'+phone);
+  const priceInput = document.getElementById('cpAddPrice-'+phone);
+  const productId = productSel ? productSel.value : '';
+  const price = priceInput ? (Number(priceInput.value) || 0) : 0;
+  if(!productId){ showToast('Choose a product'); return; }
+  if(price<=0){ showToast('Enter a valid price'); return; }
+  const entry = {id:'cp'+Date.now(), phone, productId, price};
+  customerPricing.push(entry);
+  const saved = await api('addCustomerPricing', entry);
+  if(saved === null) showToast('Added locally — could not reach the server.');
+  renderAdminCustomerPricing();
+  showToast('Custom price saved');
+}
+async function addCustomerPricingEntry(){
+  const phone = document.getElementById('newCpPhone').value.trim();
+  const productId = document.getElementById('newCpProduct').value;
+  const price = Number(document.getElementById('newCpPrice').value) || 0;
+  if(!/^[6-9]\d{9}$/.test(phone)){ showToast('Enter a valid 10-digit phone number'); return; }
+  if(!productId){ showToast('Choose a product'); return; }
+  if(price<=0){ showToast('Enter a valid price'); return; }
+  const existing = customerPricing.find(x=>x.phone===phone && x.productId===productId);
+  if(existing){
+    existing.price = price;
+    const saved = await api('editCustomerPricing', existing);
+    if(saved === null) showToast('Updated locally — could not reach the server.');
+  }else{
+    const entry = {id:'cp'+Date.now(), phone, productId, price};
+    customerPricing.push(entry);
+    const saved = await api('addCustomerPricing', entry);
+    if(saved === null) showToast('Added locally — could not reach the server.');
+  }
+  document.getElementById('newCpPhone').value = '';
+  document.getElementById('newCpPrice').value = '';
+  document.getElementById('cpPhonePreview').style.display = 'none';
+  renderAdminCustomerPricing();
+  showToast('Custom price saved');
+}
+async function deleteCustomerPricingEntry(id){
+  if(!confirm('Remove this custom price? This cannot be undone.')) return;
+  customerPricing = customerPricing.filter(x=>x.id!==id);
+  const saved = await api('deleteCustomerPricing', { id });
+  if(saved === null) showToast('Deleted locally — could not reach the server.');
+  renderAdminCustomerPricing();
+  showToast('Custom price removed');
 }
 
 function fillSettingsForm(){
