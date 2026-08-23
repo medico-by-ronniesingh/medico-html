@@ -38,34 +38,92 @@ input,textarea,select{font-family:var(--font-body);}
  
 /* ---------- Header ---------- */
 .site-header{position:sticky;top:0;z-index:40;background:var(--surface);border-bottom:1px solid var(--line);}
-.header-inner{max-width:1100px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
-.brand{display:flex;align-items:center;gap:11px;cursor:pointer;}
-.brand-mark{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--primary),var(--primary-light));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:20px;flex-shrink:0;box-shadow:0 4px 10px rgba(47,111,237,.25);}
-.brand-name{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--ink);line-height:1.1;}
-.header-actions{display:flex;align-items:center;gap:10px;}
-.pill-btn{background:var(--bg);border:1px solid var(--line);border-radius:20px;padding:9px 18px;font-size:13.5px;font-weight:600;color:var(--ink);transition:background .15s;}
-.pill-btn:hover{background:#EAEFFC;}
-.pill-btn.solid{background:var(--primary);color:#fff;border:none;position:relative;}
-.pill-btn.solid:hover{background:var(--primary-dark);}
-.cart-count{position:absolute;top:-6px;right:-6px;background:var(--danger);color:#fff;font-size:10.5px;font-weight:700;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.header-inner{max-width:1100px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.hamburger-btn{background:none;font-size:20px;color:var(--ink);width:34px;height:34px;flex-shrink:0;}
+.brand{display:flex;align-items:center;gap:9px;cursor:pointer;margin-right:auto;}
+.brand-mark{width:34px;height:34px;border-radius:50%;background:#fff;border:2px solid var(--primary);display:flex;align-items:center;justify-content:center;color:var(--primary);font-weight:800;font-size:16px;flex-shrink:0;}
+.brand-name{font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--ink);line-height:1.15;}
+.header-actions{display:flex;align-items:center;gap:4px;}
+.icon-btn{background:none;font-size:18px;color:var(--ink-soft);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0;}
+.icon-btn:hover{background:var(--bg);}
+.account-btn{width:auto;padding:0 8px;gap:5px;font-size:12.5px;font-weight:600;color:var(--ink);}
+.account-btn .chev{font-size:11px;color:var(--muted);}
+.cart-btn{font-size:19px;}
+.cart-count{position:absolute;top:2px;right:2px;background:var(--danger);color:#fff;font-size:10px;font-weight:700;min-width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:0 2px;}
+.top-search-wrap{max-width:1100px;margin:0 auto;padding:0 16px 12px;}
+.top-search-row{position:relative;display:flex;align-items:center;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:0 12px;}
+.top-search-icon{color:var(--muted);font-size:15px;flex-shrink:0;}
+.top-search-row input{flex:1;border:none;background:none;padding:12px 8px;font-size:13.5px;outline:none;color:var(--ink);}
+.top-search-mic{background:none;font-size:16px;flex-shrink:0;color:var(--primary);width:30px;height:30px;border-radius:50%;}
+.top-search-mic.listening{background:var(--primary);color:#fff;}
  
 /* ---------- Hero card ---------- */
-.hero-wrap{max-width:1100px;margin:0 auto;padding:24px 20px 0;}
-.hero-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:32px;box-shadow:0 10px 30px rgba(22,33,62,.04);}
-.hero-card h1{font-size:32px;margin-top:8px;letter-spacing:-.01em;}
-.hero-card .sub{margin-top:12px;color:var(--ink-soft);font-size:14.5px;line-height:1.6;max-width:60ch;}
-.search-row{margin-top:22px;position:relative;}
-.search-row input{width:100%;padding:14px 16px 14px 44px;border:1px solid var(--line);border-radius:12px;background:var(--bg);font-size:14.5px;outline:none;}
-.search-row input:focus{border-color:var(--primary);background:#fff;}
-.search-row::before{content:"⌕";position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:18px;}
-.filter-row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;align-items:center;}
-.voice-btn{display:flex;align-items:center;gap:6px;padding:10px 16px;border-radius:20px;background:var(--bg);border:1px solid var(--line);font-size:13px;font-weight:600;color:var(--primary);}
-.voice-btn:hover{background:#EAEFFC;}
-.voice-btn.listening{background:var(--primary);color:#fff;}
-.filter-row select{padding:10px 14px;border-radius:20px;border:1px solid var(--line);background:var(--bg);font-size:13px;font-weight:500;color:var(--ink-soft);outline:none;}
+.hero-wrap{max-width:1100px;margin:0 auto;padding:8px 16px 0;}
+.hero-card{position:relative;background:linear-gradient(120deg,#1E9E5A,#28B571 60%,#2FC98A);border-radius:20px;padding:24px 20px 34px;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:14px;color:#fff;min-height:172px;}
+.hero-left{position:relative;z-index:2;flex:1;min-width:0;}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.22);color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.04em;padding:5px 11px;border-radius:20px;text-transform:uppercase;}
+.hero-card h1{font-size:23px;margin-top:10px;letter-spacing:-.01em;color:#fff;line-height:1.2;}
+.hero-card .sub{margin-top:8px;color:rgba(255,255,255,.9);font-size:12.5px;line-height:1.55;max-width:32ch;}
+.shop-now-btn{margin-top:16px;background:#fff;color:var(--green);font-weight:700;font-size:13px;padding:10px 18px;border-radius:10px;}
+.shop-now-btn:hover{background:#EFFFF6;}
+.hero-right{position:relative;flex-shrink:0;width:118px;height:130px;z-index:2;}
+.hero-graphic{position:relative;width:100%;height:100%;}
+.hero-basket{position:absolute;bottom:0;left:6px;font-size:64px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.18));}
+.hero-bottle.b1{position:absolute;top:6px;left:22px;font-size:30px;transform:rotate(-8deg);}
+.hero-bottle.b2{position:absolute;top:0;left:52px;font-size:26px;transform:rotate(8deg);}
+.hero-shield{position:absolute;bottom:20px;right:-4px;width:34px;height:34px;background:#fff;color:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;box-shadow:0 4px 10px rgba(0,0,0,.15);}
+.hero-offbox{position:absolute;top:-6px;right:-10px;background:rgba(255,255,255,.16);backdrop-filter:blur(2px);border-radius:12px;padding:8px 10px;display:flex;flex-direction:column;align-items:center;text-align:center;width:78px;}
+.hero-offbox-top{font-size:9px;font-weight:700;color:#fff;letter-spacing:.05em;}
+.hero-offbox-pct{font-size:20px;font-weight:800;color:#fff;line-height:1.1;}
+.hero-offbox-bottom{font-size:8.5px;color:rgba(255,255,255,.9);line-height:1.3;margin-top:2px;}
+.hero-dots{position:absolute;bottom:12px;left:0;right:0;display:flex;justify-content:center;gap:5px;z-index:2;}
+.hero-dots .dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.45);}
+.hero-dots .dot.active{width:14px;border-radius:4px;background:#fff;}
+ 
+/* ---------- Today's Best Offers ---------- */
+.offers-wrap{max-width:1100px;margin:0 auto;padding:20px 16px 0;}
+.offers-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;}
+.offers-head h2{font-size:17.5px;}
+.view-all-link{font-size:12.5px;font-weight:700;color:var(--primary);cursor:pointer;}
+.offers-strip{display:flex;gap:12px;overflow-x:auto;padding-bottom:4px;}
+.offer-card{flex-shrink:0;width:150px;border-radius:14px;padding:14px 14px 12px;border:1px solid transparent;}
+.offer-card.oc-green{background:var(--green-bg);}
+.offer-card.oc-purple{background:#F1EBFF;}
+.offer-card.oc-orange{background:var(--warn-bg);}
+.offer-card.oc-blue{background:#EAF1FE;}
+.offer-card-tag{display:inline-block;font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:8px;letter-spacing:.02em;margin-bottom:8px;}
+.oc-green .offer-card-tag{background:#fff;color:var(--green);}
+.oc-purple .offer-card-tag{background:#fff;color:#6A4E9C;}
+.oc-orange .offer-card-tag{background:#fff;color:var(--warn);}
+.oc-blue .offer-card-tag{background:#fff;color:var(--primary-dark);}
+.offer-card-title{font-size:19px;font-weight:800;line-height:1.15;}
+.oc-green .offer-card-title{color:var(--green);}
+.oc-purple .offer-card-title{color:#6A4E9C;}
+.oc-orange .offer-card-title{color:var(--warn);}
+.oc-blue .offer-card-title{color:var(--primary-dark);}
+.offer-card-desc{font-size:11px;color:var(--ink-soft);margin-top:5px;line-height:1.4;min-height:28px;}
+.offer-card-code{margin-top:9px;background:rgba(255,255,255,.75);border-radius:7px;padding:5px 8px;font-size:10px;font-weight:700;font-family:var(--font-mono);color:var(--ink);}
+ 
+/* ---------- Trust badges ---------- */
+.trust-row-wrap{max-width:1100px;margin:0 auto;padding:18px 16px 0;}
+.trust-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 6px;}
+.trust-item{display:flex;flex-direction:column;align-items:center;text-align:center;gap:5px;font-size:9.5px;font-weight:600;color:var(--ink-soft);line-height:1.35;}
+.trust-icon{font-size:19px;}
+@media(max-width:520px){ .trust-row{grid-template-columns:repeat(4,1fr);padding:12px 2px;} .trust-item{font-size:8.5px;} }
+ 
+/* ---------- Filter bar v2 ---------- */
+.filter-bar-2{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:6px;position:relative;}
+.filter-bar-2-search{flex:1 1 160px;min-width:140px;display:flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:0 10px;}
+.filter-bar-2-search input{flex:1;border:none;background:none;padding:10px 4px;font-size:13px;outline:none;}
+.filter-bar-2 select{padding:9px 10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);font-size:12.5px;font-weight:500;color:var(--ink-soft);outline:none;max-width:120px;}
+.filter-icon-btn{width:36px;height:36px;border-radius:10px;background:var(--bg);border:1px solid var(--line);font-size:15px;color:var(--ink-soft);flex-shrink:0;}
+.rx-filter-popover{position:absolute;top:calc(100% + 6px);right:0;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 28px rgba(22,33,62,.12);padding:10px;z-index:30;min-width:200px;}
+.rx-filter-popover label{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:500;color:var(--ink);padding:7px 6px;border-radius:7px;cursor:pointer;}
+.rx-filter-popover label:hover{background:var(--bg);}
+.results-count{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:12px;}
  
 /* ---------- Inventory section ---------- */
-.inv-wrap{max-width:1100px;margin:0 auto;padding:30px 20px 20px;}
+.inv-wrap{max-width:1100px;margin:0 auto;padding:22px 16px 20px;}
 .inv-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:16px;}
 .inv-head h2{font-size:24px;margin-top:4px;}
 .count-pill{background:var(--bg);border:1px solid var(--line);border-radius:20px;padding:7px 14px;font-size:12.5px;font-weight:600;color:var(--ink-soft);white-space:nowrap;}
@@ -107,6 +165,35 @@ input,textarea,select{font-family:var(--font-body);}
 .add-btn:disabled{background:var(--line);color:var(--muted);cursor:not-allowed;}
 .empty-state{text-align:center;padding:60px 20px;color:var(--muted);}
  
+/* ---------- Product list rows (new design) ---------- */
+.product-list{display:flex;flex-direction:column;gap:12px;}
+.product-row{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px;display:flex;gap:12px;position:relative;transition:box-shadow .15s;}
+.product-row:hover{box-shadow:0 8px 22px rgba(22,33,62,.08);}
+.product-row-image{width:128px;height:128px;border-radius:14px;background:var(--bg);flex-shrink:0;position:relative;display:flex;align-items:center;justify-content:center;font-size:46px;}
+.product-row-image img{width:100%;height:100%;object-fit:cover;border-radius:14px;}
+.pr-ribbon{position:absolute;top:8px;left:-26px;background:var(--green);color:#fff;font-size:9.5px;font-weight:800;padding:2px 26px;transform:rotate(-45deg);box-shadow:0 2px 4px rgba(0,0,0,.15);}
+.pr-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;}
+.pr-top-row{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+.pr-name{font-size:14px;font-weight:700;color:var(--ink);line-height:1.3;}
+.pr-company{font-size:11.5px;color:var(--ink-soft);margin-top:1px;}
+.pr-salt{font-size:11px;color:var(--muted);}
+.wishlist-heart{background:none;font-size:16px;color:var(--muted);flex-shrink:0;line-height:1;padding:2px;}
+.wishlist-heart.liked{color:var(--danger);}
+.pr-price-row{display:flex;align-items:baseline;gap:7px;margin-top:5px;flex-wrap:wrap;}
+.pr-mrp{font-size:11.5px;color:var(--muted);text-decoration:line-through;}
+.pr-price{font-size:17px;font-weight:800;color:var(--primary-dark);}
+.pr-save{font-size:10.5px;font-weight:700;color:var(--green);}
+.pr-info-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px;}
+.pr-info{font-size:10.5px;color:var(--ink-soft);display:flex;align-items:center;gap:3px;}
+.pr-info.warn{color:var(--danger);font-weight:600;}
+.pr-bottom-row{display:flex;align-items:center;gap:8px;margin-top:8px;}
+.pr-rx-tag{font-size:9.5px;font-weight:700;color:var(--warn);background:var(--warn-bg);padding:3px 8px;border-radius:8px;}
+.pr-deal-tag{font-size:9.5px;font-weight:700;color:#fff;background:#3D2B8C;padding:3px 8px;border-radius:8px;}
+.add-btn-2{padding:9px 14px;background:var(--primary);color:#fff;border-radius:9px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.add-btn-2:hover{background:var(--primary-dark);}
+.add-btn-2.added{background:var(--green);}
+.add-btn-2:disabled{background:var(--line);color:var(--muted);cursor:not-allowed;}
+ 
 /* ---------- Overlay / Drawer ---------- */
 .overlay{position:fixed;inset:0;background:rgba(16,24,50,.45);z-index:80;opacity:0;pointer-events:none;transition:opacity .2s;}
 .overlay.show{opacity:1;pointer-events:auto;}
@@ -144,6 +231,60 @@ input,textarea,select{font-family:var(--font-body);}
 .pay-method-card.active .pmc-label{color:var(--primary-dark);}
 .upi-screenshot-upload{margin-top:14px;text-align:left;}
 .upi-screenshot-upload label{display:block;font-size:12.5px;font-weight:600;color:var(--ink-soft);margin-bottom:5px;}
+ 
+/* ---------- Side menu drawer ---------- */
+.side-menu{position:fixed;top:0;left:0;height:100%;width:300px;max-width:85vw;background:var(--surface);z-index:95;transform:translateX(-100%);transition:transform .25s ease;display:flex;flex-direction:column;}
+.side-menu.show{transform:translateX(0);}
+.side-menu-header{padding:20px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:11px;}
+.side-menu-header .brand-mark{width:38px;height:38px;font-size:18px;}
+.side-menu-header .brand-name{font-size:19px;}
+.side-menu-close{margin-left:auto;background:var(--bg);width:30px;height:30px;border-radius:50%;font-size:14px;color:var(--ink-soft);flex-shrink:0;}
+.side-menu-list{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:3px;}
+.side-menu-item{display:flex;align-items:center;gap:13px;padding:13px 12px;border-radius:11px;font-size:14px;font-weight:600;color:var(--ink);text-align:left;background:none;width:100%;}
+.side-menu-item:hover{background:var(--bg);}
+.side-menu-item.active{background:#EAF1FE;color:var(--primary-dark);}
+.side-menu-item .smi-icon{font-size:17px;width:22px;text-align:center;flex-shrink:0;}
+ 
+/* ---------- Full-page views ---------- */
+.page-view{position:fixed;inset:0;background:var(--bg);z-index:60;display:none;flex-direction:column;}
+.page-view.show{display:flex;}
+.page-view-header{background:var(--surface);border-bottom:1px solid var(--line);padding:14px 16px;display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.page-back-btn{background:var(--bg);width:34px;height:34px;border-radius:50%;font-size:16px;color:var(--ink);flex-shrink:0;}
+.page-view-title{font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--ink);}
+.page-view-body{flex:1;overflow-y:auto;padding:18px 16px 40px;max-width:700px;margin:0 auto;width:100%;}
+.pv-empty{text-align:center;padding:60px 20px;color:var(--muted);}
+.pv-empty-icon{font-size:40px;margin-bottom:10px;}
+.pv-signin-btn{margin-top:14px;background:var(--primary);color:#fff;font-weight:700;padding:11px 22px;border-radius:10px;font-size:13.5px;}
+ 
+/* My Orders page */
+.order-slip-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px;}
+.order-slip-tag{display:inline-block;font-size:10px;font-weight:700;color:var(--primary-dark);background:#EAF1FE;padding:3px 9px;border-radius:8px;margin-bottom:8px;letter-spacing:.02em;}
+ 
+/* Account page */
+.account-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px;}
+.account-avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;font-weight:800;font-size:22px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
+.account-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px;}
+.account-row:last-child{border-bottom:none;}
+.account-row-label{color:var(--muted);}
+.account-row-value{font-weight:700;color:var(--ink);}
+.address-mini-card{background:var(--bg);border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:12.5px;color:var(--ink-soft);}
+.pin-eye-btn{background:var(--bg);border:1px solid var(--line);width:26px;height:26px;border-radius:50%;font-size:12px;color:var(--ink-soft);flex-shrink:0;}
+.pin-eye-btn:hover{background:#EAEFFC;}
+ 
+/* Saved items page */
+.saved-item-row{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;gap:12px;align-items:center;margin-bottom:12px;}
+.saved-item-img{width:56px;height:56px;border-radius:10px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;}
+.saved-item-info{flex:1;min-width:0;}
+.saved-item-name{font-size:13.5px;font-weight:700;}
+.saved-item-price{font-size:13px;font-weight:800;color:var(--primary-dark);margin-top:2px;}
+ 
+/* About page */
+.about-hero{text-align:center;padding:14px 10px 26px;}
+.about-hero .brand-mark{width:56px;height:56px;font-size:26px;margin:0 auto 12px;}
+.about-para{font-size:13.5px;color:var(--ink-soft);line-height:1.7;margin-bottom:14px;}
+.about-list{display:flex;flex-direction:column;gap:10px;margin-top:6px;}
+.about-list-item{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:12.5px;color:var(--ink-soft);}
+.about-list-item .ali-icon{font-size:17px;flex-shrink:0;}
  
 /* ---------- Modal ---------- */
 .modal-wrap{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:20px;}
@@ -290,58 +431,64 @@ input,textarea,select{font-family:var(--font-body);}
 <div id="storefront">
   <header class="site-header">
     <div class="header-inner">
+      <button class="hamburger-btn" onclick="openSideMenu()" aria-label="Menu">☰</button>
       <div class="brand" onclick="handleBrandClick()">
-        <div class="brand-mark">+</div>
+        <div class="brand-mark">✚</div>
         <div>
-          <div class="eyebrow" id="brandEyebrow">TRUSTED CARE</div>
           <div class="brand-name" id="brandName">Medico</div>
+          <div class="eyebrow" id="brandEyebrow">TRUSTED CARE</div>
         </div>
       </div>
       <div class="header-actions">
-        <button class="pill-btn" id="customerStatusBtn" onclick="openCustomerLogin()">Sign in</button>
-        <button class="pill-btn solid" onclick="openCart()">Cart <span class="cart-count" id="cartCount">0</span></button>
+        <button class="icon-btn account-btn" id="customerStatusBtn" onclick="openCustomerLogin()" aria-label="Account">👤<span id="customerStatusLabel">Sign in</span> <span class="chev">⌄</span></button>
+        <button class="icon-btn cart-btn" onclick="openCart()" aria-label="Cart">🛒<span class="cart-count" id="cartCount">0</span></button>
+      </div>
+    </div>
+    <div class="top-search-wrap">
+      <div class="top-search-row">
+        <span class="top-search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Search medicine, salt, brand or company..." oninput="renderProducts()">
+        <button class="top-search-mic" id="voiceBtn" onclick="startVoiceSearch()" aria-label="Voice search">🎙️</button>
       </div>
     </div>
   </header>
  
-  <div class="hero-wrap">
-    <div class="hero-card">
-      <div class="eyebrow" id="heroEyebrow">MODERN PHARMACY APP</div>
-      <h1 id="heroHeadline">Care at your fingertips</h1>
-      <p class="sub" id="heroSub">Browse medicines, upload prescriptions, pay via UPI, and track every order in one place.</p>
-      <div class="search-row">
-        <input type="text" id="searchInput" placeholder="Search by name, salt or company" oninput="renderProducts()">
-      </div>
-      <div class="filter-row">
-        <button class="voice-btn" id="voiceBtn" onclick="startVoiceSearch()">🎙️ Voice search</button>
-        <select id="categoryFilter" onchange="renderProducts()"></select>
-        <select id="rxFilter" onchange="renderProducts()">
-          <option value="all">All</option>
-          <option value="otc">No prescription</option>
-          <option value="rx">Prescription required</option>
-        </select>
-        <select id="sortFilter" onchange="renderProducts()">
-          <option value="featured">Featured</option>
-          <option value="priceLow">Price: Low to High</option>
-          <option value="priceHigh">Price: High to Low</option>
-          <option value="discount">Biggest discount</option>
-        </select>
-      </div>
+  <div class="offers-wrap" id="offersWrap" style="display:none;">
+    <div class="offers-head"><h2>Today's Best Offers</h2><a class="view-all-link" onclick="document.getElementById('inv-anchor').scrollIntoView({behavior:'smooth'})">View all</a></div>
+    <div class="offers-strip" id="offersStrip"></div>
+  </div>
+ 
+  <div class="trust-row-wrap">
+    <div class="trust-row">
+      <div class="trust-item"><span class="trust-icon">🛡️</span><span>100% Genuine<br>Medicines</span></div>
+      <div class="trust-item"><span class="trust-icon">🚚</span><span>Fast Delivery<br>On time, every time</span></div>
+      <div class="trust-item"><span class="trust-icon">🔒</span><span>Secure Payments<br>100% safe & secure</span></div>
+      <div class="trust-item"><span class="trust-icon">🎧</span><span>24x7 Support<br>We're here to help</span></div>
     </div>
   </div>
  
-  <div class="coupon-strip-wrap" id="couponStripWrap" style="display:none;">
-    <div class="coupon-strip" id="couponStrip"></div>
-  </div>
- 
-  <div class="inv-wrap">
-    <div class="inv-head">
-      <div>
-        <div class="eyebrow">INVENTORY</div>
-        <h2>Medicine catalog</h2>
+  <div class="inv-wrap" id="inv-anchor">
+    <div class="filter-bar-2">
+      <div class="filter-bar-2-search">
+        <span class="top-search-icon">🔍</span>
+        <input type="text" id="searchInput2" placeholder="Search in medicines" oninput="syncSearchFrom2()">
       </div>
-      <div class="count-pill" id="countPill">0 items</div>
+      <select id="categoryFilter" onchange="renderProducts()"></select>
+      <select id="companyFilter" onchange="renderProducts()"></select>
+      <select id="sortFilter" onchange="renderProducts()">
+        <option value="featured">Sort: Featured</option>
+        <option value="priceLow">Price: Low to High</option>
+        <option value="priceHigh">Price: High to Low</option>
+        <option value="discount">Biggest discount</option>
+      </select>
+      <button class="filter-icon-btn" onclick="toggleRxFilterPopover()" aria-label="Filters">⚙</button>
+      <div class="rx-filter-popover" id="rxFilterPopover" style="display:none;">
+        <label><input type="radio" name="rxFilterRadio" value="all" checked onchange="setRxFilter('all')"> All medicines</label>
+        <label><input type="radio" name="rxFilterRadio" value="otc" onchange="setRxFilter('otc')"> No prescription needed</label>
+        <label><input type="radio" name="rxFilterRadio" value="rx" onchange="setRxFilter('rx')"> Prescription required</label>
+      </div>
     </div>
+    <div class="results-count" id="countPill">0 items</div>
     <div id="productsArea"></div>
   </div>
  
@@ -357,6 +504,36 @@ input,textarea,select{font-family:var(--font-body);}
   </div>
   <div class="drawer-body" id="cartBody"></div>
   <div class="drawer-foot" id="cartFoot"></div>
+</div>
+ 
+<!-- Side Menu -->
+<div class="overlay" id="sideMenuOverlay" onclick="closeSideMenu()"></div>
+<div class="side-menu" id="sideMenu">
+  <div class="side-menu-header">
+    <div class="brand-mark">✚</div>
+    <div>
+      <div class="brand-name">MEDICO</div>
+      <div class="eyebrow" style="color:var(--ink-soft);">Trusted Care</div>
+    </div>
+    <button class="side-menu-close" onclick="closeSideMenu()">✕</button>
+  </div>
+  <div class="side-menu-list">
+    <button class="side-menu-item" data-page="home" onclick="sideMenuGoHome()"><span class="smi-icon">🏠</span> Home</button>
+    <button class="side-menu-item" data-page="orders" onclick="openMyOrdersPage()"><span class="smi-icon">📦</span> My Orders</button>
+    <button class="side-menu-item" data-page="account" onclick="openAccountPage()"><span class="smi-icon">👤</span> Account</button>
+    <button class="side-menu-item" data-page="saved" onclick="openSavedItemsPage()"><span class="smi-icon">♥</span> Saved Items</button>
+    <button class="side-menu-item" data-page="support" onclick="openSupportPage()"><span class="smi-icon">🆘</span> Support Center</button>
+    <button class="side-menu-item" data-page="about" onclick="openAboutPage()"><span class="smi-icon">ℹ️</span> About Us</button>
+  </div>
+</div>
+ 
+<!-- Full page view (My Orders / Account / Saved Items / Support / About) -->
+<div class="page-view" id="pageView">
+  <div class="page-view-header">
+    <button class="page-back-btn" onclick="closePage()">←</button>
+    <div class="page-view-title" id="pageViewTitle">Page</div>
+  </div>
+  <div class="page-view-body" id="pageViewBody"></div>
 </div>
  
 <!-- Checkout Modal -->
@@ -501,6 +678,31 @@ input,textarea,select{font-family:var(--font-body);}
   </div>
 </div>
  
+<!-- Change PIN Modal -->
+<div class="modal-wrap" id="changePinModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('changePinModal')">✕</button>
+    <h3 style="margin-bottom:4px;">Change your PIN</h3>
+    <p class="helper-text" style="margin-top:6px;">This is the PIN you use to sign in.</p>
+    <div class="field">
+      <label>Current PIN</label>
+      <input type="password" id="changePinCurrent" placeholder="4-digit current PIN" maxlength="4" inputmode="numeric" oninput="this.value=this.value.replace(/\D/g,'').slice(0,4)">
+      <div class="field-error" id="err-changePinCurrent">Incorrect current PIN</div>
+    </div>
+    <div class="field">
+      <label>New PIN</label>
+      <input type="password" id="changePinNew" placeholder="4-digit new PIN" maxlength="4" inputmode="numeric" oninput="this.value=this.value.replace(/\D/g,'').slice(0,4)">
+      <div class="field-error" id="err-changePinNew">Enter a valid 4-digit PIN</div>
+    </div>
+    <div class="field">
+      <label>Confirm New PIN</label>
+      <input type="password" id="changePinConfirm" placeholder="Re-enter new PIN" maxlength="4" inputmode="numeric" oninput="this.value=this.value.replace(/\D/g,'').slice(0,4)" onkeydown="if(event.key==='Enter')submitChangePin()">
+      <div class="field-error" id="err-changePinConfirm">PINs do not match</div>
+    </div>
+    <button class="primary-btn" onclick="submitChangePin()">Update PIN</button>
+  </div>
+</div>
+ 
 <!-- Complaint Modal -->
 <div class="modal-wrap" id="complaintModal">
   <div class="modal">
@@ -576,6 +778,7 @@ input,textarea,select{font-family:var(--font-body);}
     <div class="sheet-list">
       <button class="sheet-item" onclick="closeModal('moreModal');openTrack();"><span class="si-icon">📦</span> Track an order</button>
       <button class="sheet-item" onclick="closeModal('moreModal');openCart();"><span class="si-icon">🛒</span> View cart</button>
+      <button class="sheet-item" onclick="closeModal('moreModal');openSupportSheet();"><span class="si-icon">🆘</span> Help & Support</button>
       <button class="sheet-item" id="signupSheetItem" onclick="closeModal('moreModal');openCustomerLogin();"><span class="si-icon">👤</span> Sign up / Sign in</button>
       <button class="sheet-item" id="contactSheetItem"><span class="si-icon">📞</span> Contact us</button>
       <button class="sheet-item" id="logoutSheetItem" style="display:none;color:var(--danger);" onclick="logoutFromMoreSheet()"><span class="si-icon">🚪</span> Logout</button>
@@ -765,6 +968,19 @@ input,textarea,select{font-family:var(--font-body);}
         <button class="small-btn" onclick="saveUpiSettings()">Save UPI details</button>
       </div>
       <div class="admin-card">
+        <h3 style="margin-bottom:6px;">About Us page</h3>
+        <p class="helper-text" style="margin-top:8px;">This content is shown on the customer-facing "About Us" page (accessible from the side menu).</p>
+        <div class="field">
+          <label>About paragraph (shown after the shop name)</label>
+          <textarea id="setAboutText" rows="3" placeholder="e.g. is your neighbourhood online pharmacy..."></textarea>
+        </div>
+        <div class="field"><label>🛡️ Point 1</label><input type="text" id="setAboutPoint1" placeholder="e.g. 100% genuine medicines..."></div>
+        <div class="field"><label>🚚 Point 2</label><input type="text" id="setAboutPoint2" placeholder="e.g. Fast, reliable delivery..."></div>
+        <div class="field"><label>🔒 Point 3</label><input type="text" id="setAboutPoint3" placeholder="e.g. Secure payments..."></div>
+        <div class="field"><label>🎧 Point 4</label><input type="text" id="setAboutPoint4" placeholder="e.g. Our support team..."></div>
+        <button class="small-btn" onclick="saveAboutSettings()">Save About Us content</button>
+      </div>
+      <div class="admin-card">
         <h3 style="margin-bottom:10px;">Change admin password</h3>
         <div class="two-col">
           <div class="field"><label>New password</label><input type="password" id="newAdminPass"></div>
@@ -779,8 +995,8 @@ input,textarea,select{font-family:var(--font-body);}
 <!-- Bottom mobile nav -->
 <nav class="bottom-nav" id="bottomNav">
   <button class="nav-item active" data-nav="home" onclick="navHome()"><span class="nav-icon">🏠</span>Home</button>
-  <button class="nav-item" data-nav="support" onclick="openSupportSheet()"><span class="nav-icon">🆘</span>Support</button>
-  <button class="nav-item" data-nav="more" onclick="openMore()"><span class="nav-icon">⋯</span>More</button>
+  <button class="nav-item" data-nav="orders" onclick="openTrack()"><span class="nav-icon">📦</span>Orders</button>
+  <button class="nav-item" data-nav="cart" onclick="openCart()"><span class="nav-icon">🛒</span>Cart<span class="nav-badge" id="navCartBadge" style="display:none;">0</span></button>
 </nav>
  
 <div class="toast" id="toast"></div>
@@ -856,7 +1072,12 @@ const DEFAULT_SETTINGS = {
   footerNote:'Medico · by Ronnie Singh',
   adminPassword:'admin123',
   upiId:'',
-  upiQrImage:''
+  upiQrImage:'',
+  aboutText:"is your neighbourhood online pharmacy — bringing genuine medicines, everyday essentials and quick delivery right to your doorstep. We work directly with trusted manufacturers so you always know exactly what you're getting.",
+  aboutPoint1:'100% genuine medicines, sourced directly from licensed manufacturers.',
+  aboutPoint2:'Fast, reliable delivery — or pick up from our store at your convenience.',
+  aboutPoint3:'Secure payments via UPI or cash on delivery, every time.',
+  aboutPoint4:'Our support team is here for you round the clock.'
 };
  
 const DEFAULT_FAQS = [
@@ -983,6 +1204,13 @@ async function loadData(){
   renderCouponStrip();
   updateCartCount();
   renderCustomerStatus();
+  updateHeroMaxDiscount();
+}
+function updateHeroMaxDiscount(){
+  const el = document.getElementById('heroMaxDiscount');
+  if(!el) return;
+  const maxDisc = products.reduce((m,p)=>Math.max(m, discountPct(p, p.price)), 0);
+  el.textContent = (maxDisc>0 ? maxDisc : 20) + '%';
 }
  
 /* ---------------- Utility ---------------- */
@@ -998,9 +1226,6 @@ function escapeAttr(str){ return String(str||'').replace(/"/g,'&quot;'); }
 function applySettingsToDOM(){
   document.getElementById('brandEyebrow').textContent = settings.eyebrow;
   document.getElementById('brandName').textContent = settings.shopName;
-  document.getElementById('heroEyebrow').textContent = settings.heroEyebrow;
-  document.getElementById('heroHeadline').textContent = settings.headline;
-  document.getElementById('heroSub').textContent = settings.sub;
   document.getElementById('footerNote').textContent = settings.footerNote;
   document.getElementById('contactSheetItem').innerHTML = `<span class="si-icon">📞</span> Contact us · ${escapeHtml(settings.contact)}`;
   document.title = settings.shopName;
@@ -1020,14 +1245,15 @@ function maskPhone(phone){
 }
 function renderCustomerStatus(){
   const btn = document.getElementById('customerStatusBtn');
-  if(!btn) return;
+  const labelEl = document.getElementById('customerStatusLabel');
+  if(!btn || !labelEl) return;
   if(currentCustomerPhone){
     const hasSpecial = customerPricing.some(x=>x.phone===currentCustomerPhone);
     const label = currentCustomerName || maskPhone(currentCustomerPhone);
-    btn.textContent = hasSpecial ? `✓ ${label}` : label;
-    btn.onclick = openMore;
+    labelEl.textContent = hasSpecial ? `✓ ${label}` : label;
+    btn.onclick = openAccountPage;
   }else{
-    btn.textContent = 'Sign in';
+    labelEl.textContent = 'Sign in';
     btn.onclick = openCustomerLogin;
   }
   const logoutItem = document.getElementById('logoutSheetItem');
@@ -1151,6 +1377,7 @@ function logoutFromMoreSheet(){
   currentCustomerName = '';
   if(typeof localStorage!=='undefined') localStorage.removeItem('medico_customer_phone');
   closeModal('moreModal');
+  closePage();
   renderCustomerStatus();
   renderProducts();
   renderCartDrawer();
@@ -1161,26 +1388,54 @@ function logoutFromMoreSheet(){
 function populateCategoryFilter(){
   const cats = ['all', ...new Set(products.map(p=>p.category))];
   const sel = document.getElementById('categoryFilter');
-  sel.innerHTML = cats.map(c=>`<option value="${escapeAttr(c)}">${c==='all'?'All categories':c}</option>`).join('');
+  sel.innerHTML = cats.map(c=>`<option value="${escapeAttr(c)}">${c==='all'?'All Categories':c}</option>`).join('');
+  const companies = ['all', ...new Set(products.map(p=>p.company).filter(Boolean))];
+  const compSel = document.getElementById('companyFilter');
+  if(compSel) compSel.innerHTML = companies.map(c=>`<option value="${escapeAttr(c)}">${c==='all'?'All Brands':c}</option>`).join('');
+}
+function syncSearchFrom2(){
+  const v = document.getElementById('searchInput2').value;
+  document.getElementById('searchInput').value = v;
+  renderProducts();
+}
+function toggleRxFilterPopover(){
+  const pop = document.getElementById('rxFilterPopover');
+  pop.style.display = pop.style.display==='block' ? 'none' : 'block';
+}
+function setRxFilter(val){
+  currentRxFilter = val;
+  document.getElementById('rxFilterPopover').style.display = 'none';
+  renderProducts();
+}
+let currentRxFilter = 'all';
+let wishlist = {};
+function toggleWishlist(id){
+  wishlist[id] = !wishlist[id];
+  renderProducts();
 }
 function renderProducts(){
   const q = (document.getElementById('searchInput').value||'').toLowerCase().trim();
+  const search2 = document.getElementById('searchInput2');
+  if(search2 && search2.value !== document.getElementById('searchInput').value) search2.value = document.getElementById('searchInput').value;
   const cat = document.getElementById('categoryFilter').value;
-  const rxFilter = document.getElementById('rxFilter').value;
+  const companyFilterEl = document.getElementById('companyFilter');
+  const company = companyFilterEl ? companyFilterEl.value : 'all';
+  const rxFilter = currentRxFilter;
   const sort = document.getElementById('sortFilter').value;
  
   let list = products.filter(p=>{
     const matchesQ = !q || p.name.toLowerCase().includes(q) || (p.salt||'').toLowerCase().includes(q) || (p.company||'').toLowerCase().includes(q) || p.category.toLowerCase().includes(q);
     const matchesCat = cat==='all' || p.category===cat;
+    const matchesCompany = company==='all' || p.company===company;
     const matchesRx = rxFilter==='all' || (rxFilter==='rx' && p.rx) || (rxFilter==='otc' && !p.rx);
-    return matchesQ && matchesCat && matchesRx;
+    return matchesQ && matchesCat && matchesCompany && matchesRx;
   });
  
   if(sort==='priceLow') list = [...list].sort((a,b)=>getEffectivePrice(a)-getEffectivePrice(b));
   else if(sort==='priceHigh') list = [...list].sort((a,b)=>getEffectivePrice(b)-getEffectivePrice(a));
   else if(sort==='discount') list = [...list].sort((a,b)=>discountPct(b,getEffectivePrice(b))-discountPct(a,getEffectivePrice(a)));
  
-  document.getElementById('countPill').textContent = list.length + ' item' + (list.length!==1?'s':'');
+  document.getElementById('countPill').textContent = list.length + ' medicine' + (list.length!==1?'s':'') + ' found';
  
   const area = document.getElementById('productsArea');
   if(list.length===0){
@@ -1188,7 +1443,7 @@ function renderProducts(){
     return;
   }
   const lowStockThreshold = settings.lowStockThreshold || 10;
-  area.innerHTML = `<div class="grid">` + list.map(p=>{
+  area.innerHTML = `<div class="product-list">` + list.map(p=>{
     const qty = cart[p.id] || 0;
     const outOfStock = p.stock <= 0;
     const lowStock = !outOfStock && p.stock <= lowStockThreshold;
@@ -1197,36 +1452,41 @@ function renderProducts(){
     const disc = discountPct(p, effPrice);
     const dealActive = isDealActive(p);
     const expiryInfo = expiryLabel(p.expiryDate);
-    return `<div class="card">
-      <div class="card-image">
+    const liked = !!wishlist[p.id];
+    return `<div class="product-row">
+      <div class="product-row-image">
         ${p.imageUrl ? `<img src="${escapeAttr(p.imageUrl)}" alt="${escapeAttr(p.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">` : ''}
-        <span class="card-image-fallback" style="display:${p.imageUrl?'none':'flex'};position:absolute;inset:0;align-items:center;justify-content:center;font-size:52px;">${p.icon||'💊'}</span>
-        <div class="badge-row">
-          ${dealActive?`<span class="badge badge-deal">⚡ Deal</span>`:''}
-          ${disc>0?`<span class="badge badge-discount">${disc}% off</span>`:''}
-          ${p.rx?`<span class="badge badge-rx">Prescription required</span>`:''}
-          ${outOfStock?`<span class="badge badge-out">Out of stock</span>`:(lowStock?`<span class="badge badge-low">Low stock</span>`:'')}
-        </div>
+        <span class="card-image-fallback" style="display:${p.imageUrl?'none':'flex'};position:absolute;inset:0;align-items:center;justify-content:center;font-size:44px;">${p.icon||'💊'}</span>
+        ${disc>0?`<div class="pr-ribbon">${disc}% OFF</div>`:''}
       </div>
-      <div class="card-body">
-        <div class="card-name">${escapeHtml(p.name)}</div>
-        <div class="card-company">${escapeHtml(p.company||'')}</div>
-        <div class="card-meta">${escapeHtml(p.category)}${p.salt&&p.salt!=='—'?' · '+escapeHtml(p.salt):''}</div>
-        <div class="card-price-row">
-          <span class="card-price">${fmt(effPrice)}</span>
-          ${p.origPrice && p.origPrice>effPrice ? `<span class="card-price-orig">${fmt(p.origPrice)}</span>` : ''}
+      <div class="pr-body">
+        <div class="pr-top-row">
+          <div>
+            <div class="pr-name">${escapeHtml(p.name)}</div>
+            <div class="pr-company">${escapeHtml(p.company||'')}</div>
+            ${p.salt&&p.salt!=='—'?`<div class="pr-salt">${escapeHtml(p.salt)}</div>`:''}
+          </div>
+          <button class="wishlist-heart ${liked?'liked':''}" onclick="toggleWishlist('${p.id}')" aria-label="Wishlist">${liked?'♥':'♡'}</button>
         </div>
-        ${isSpecialPrice ? `<div class="card-expiry" style="color:var(--green);font-weight:700;">✓ Your price</div>` : ''}
-        <div class="card-stock">Stock: ${p.stock}</div>
-        ${expiryInfo ? `<div class="card-expiry ${expiryInfo.soon?'soon':''}">${expiryInfo.text}</div>` : ''}
-        ${dealActive ? `<div class="deal-strip"><span>⚡ Limited time deal</span><span class="deal-timer" data-deal-end="${escapeAttr(p.dealEndsAt)}">${dealCountdownText(p.dealEndsAt)}</span></div>` : ''}
-        <div class="card-bottom">
-          <div class="stepper">
+        <div class="pr-price-row">
+          ${p.origPrice && p.origPrice>effPrice ? `<span class="pr-mrp">MRP ${fmt(p.origPrice)}</span>` : ''}
+          <span class="pr-price">${fmt(effPrice)}</span>
+          ${p.origPrice && p.origPrice>effPrice ? `<span class="pr-save">You save ${fmt(p.origPrice-effPrice)} (${disc}%)</span>` : ''}
+        </div>
+        ${isSpecialPrice ? `<div class="pr-info" style="color:var(--green);font-weight:700;">✓ Your price</div>` : ''}
+        <div class="pr-info-row">
+          ${outOfStock?`<span class="pr-info warn">✕ Out of stock</span>`:(lowStock?`<span class="pr-info warn">⚠ In Stock (${p.stock})</span>`:`<span class="pr-info">✓ In Stock (${p.stock})</span>`)}
+          ${expiryInfo ? `<span class="pr-info ${expiryInfo.soon?'warn':''}">📅 ${expiryInfo.text}</span>` : ''}
+        </div>
+        ${dealActive ? `<div class="deal-strip" style="margin-top:6px;"><span>⚡ Limited time deal</span><span class="deal-timer" data-deal-end="${escapeAttr(p.dealEndsAt)}">${dealCountdownText(p.dealEndsAt)}</span></div>` : ''}
+        <div class="pr-bottom-row">
+          ${p.rx?`<span class="pr-rx-tag">Rx required</span>`:''}
+          <div class="stepper" style="margin-left:auto;">
             <button onclick="stepQty('${p.id}',-1)">−</button>
             <span id="qty-${p.id}">${qty}</span>
             <button onclick="stepQty('${p.id}',1)">+</button>
           </div>
-          <button class="add-btn" ${outOfStock?'disabled':''} onclick="addToCart('${p.id}')" id="addbtn-${p.id}">Add to cart</button>
+          <button class="add-btn-2" ${outOfStock?'disabled':''} onclick="addToCart('${p.id}')" id="addbtn-${p.id}">🛒 Add to Cart</button>
         </div>
       </div>
     </div>`;
@@ -1316,6 +1576,11 @@ function showAddedPopup(p, qty){
 function updateCartCount(){
   const count = Object.values(cart).reduce((a,b)=>a+b,0);
   document.getElementById('cartCount').textContent = count;
+  const navBadge = document.getElementById('navCartBadge');
+  if(navBadge){
+    navBadge.textContent = count;
+    navBadge.style.display = count>0 ? 'flex' : 'none';
+  }
 }
  
 /* ---------------- Cart drawer ---------------- */
@@ -1637,7 +1902,7 @@ function openTrack(){
   closeModal('moreModal');
   document.getElementById('trackModal').classList.add('show');
   document.getElementById('trackResult').innerHTML='';
-  setActiveNav('more');
+  setActiveNav('orders');
 }
 async function trackOrder(){
   const idFilter = document.getElementById('trackOrderId').value.trim().toUpperCase();
@@ -1681,16 +1946,11 @@ async function trackOrder(){
 }
  
 /* ---------------- Help & Support ---------------- */
-function renderFAQ(){
-  const list = document.getElementById('faqList');
-  if(!list) return;
-  if(faqs.length===0){
-    list.innerHTML = `<div class="empty-state">No FAQs added yet.</div>`;
-    return;
-  }
-  list.innerHTML = faqs.map((item,i)=>`
-    <div class="faq-item" id="faq-${i}">
-      <button class="faq-question" onclick="toggleFAQ(${i})">
+function buildFaqHtml(prefix){
+  if(faqs.length===0) return `<div class="empty-state">No FAQs added yet.</div>`;
+  return faqs.map((item,i)=>`
+    <div class="faq-item" id="${prefix}-${i}">
+      <button class="faq-question" onclick="toggleFAQGeneric('${prefix}',${i})">
         <span>${escapeHtml(item.q)}</span>
         <span class="faq-icon">+</span>
       </button>
@@ -1699,8 +1959,16 @@ function renderFAQ(){
       </div>
     </div>`).join('');
 }
+function toggleFAQGeneric(prefix, i){
+  document.getElementById(prefix+'-'+i).classList.toggle('open');
+}
+function renderFAQ(){
+  const list = document.getElementById('faqList');
+  if(!list) return;
+  list.innerHTML = buildFaqHtml('faq');
+}
 function toggleFAQ(i){
-  document.getElementById('faq-'+i).classList.toggle('open');
+  toggleFAQGeneric('faq', i);
 }
 function openComplaint(){
   document.getElementById('cmpType').value = 'Payment deducted but order not received';
@@ -1756,18 +2024,29 @@ function couponDiscountText(c){
   return c.minOrder>0 ? `${base} on orders above ${fmt(c.minOrder)}` : base;
 }
 function renderCouponStrip(){
-  const wrap = document.getElementById('couponStripWrap');
-  const strip = document.getElementById('couponStrip');
-  const active = coupons.filter(c=>c.active && !couponIsExpired(c) && !couponIsUsedUp(c));
+  const wrap = document.getElementById('offersWrap');
+  const strip = document.getElementById('offersStrip');
+  if(!wrap || !strip) return;
+  const active = coupons.filter(c=>c.active && !couponIsExpired(c) && !couponIsUsedUp(c)).slice(0,6);
   if(active.length===0){
     wrap.style.display = 'none';
     return;
   }
   wrap.style.display = 'block';
-  strip.innerHTML = active.map(c=>`
-    <div class="coupon-chip">
-      <div class="coupon-chip-code">${escapeHtml(c.code)}</div>
-      <div class="coupon-chip-desc">${escapeHtml(couponDiscountText(c))}</div>
+  const colorClasses = ['oc-green','oc-purple','oc-orange','oc-blue'];
+  const tagFor = c => c.type==='freedelivery' ? '🚚 FREE SHIPPING' : (c.type==='firstorder' ? '⭐ NEW USER' : (c.type==='flat' ? '💰 FLAT OFF' : '🎁 SAVE MORE'));
+  const titleFor = c => c.type==='freedelivery' ? 'Free Delivery' : (c.type==='flat' ? fmt(c.value)+' OFF' : c.value+'% OFF');
+  const descFor = c => {
+    if(c.type==='freedelivery') return c.minOrder>0 ? `On orders above ${fmt(c.minOrder)}` : 'On all home delivery orders';
+    if(c.type==='firstorder') return 'On your first order';
+    return c.minOrder>0 ? `On orders above ${fmt(c.minOrder)}` : 'For all customers';
+  };
+  strip.innerHTML = active.map((c,i)=>`
+    <div class="offer-card ${colorClasses[i%colorClasses.length]}">
+      <span class="offer-card-tag">${tagFor(c)}</span>
+      <div class="offer-card-title">${titleFor(c)}</div>
+      <div class="offer-card-desc">${escapeHtml(descFor(c))}</div>
+      <div class="offer-card-code">Use code: ${escapeHtml(c.code)}</div>
     </div>`).join('');
 }
 function couponDiscountAmount(c, subtotal, deliveryFee){
@@ -1870,12 +2149,253 @@ function startVoiceSearch(){
 /* ---------------- More sheet ---------------- */
 function openMore(){
   document.getElementById('moreModal').classList.add('show');
-  setActiveNav('more');
+  setActiveNav('account');
 }
 function openSupportSheet(){
   renderFAQ();
   document.getElementById('supportModal').classList.add('show');
-  setActiveNav('support');
+}
+
+/* ---------------- Side menu ---------------- */
+function openSideMenu(){
+  document.getElementById('sideMenu').classList.add('show');
+  document.getElementById('sideMenuOverlay').classList.add('show');
+}
+function closeSideMenu(){
+  document.getElementById('sideMenu').classList.remove('show');
+  document.getElementById('sideMenuOverlay').classList.remove('show');
+}
+function sideMenuGoHome(){
+  closeSideMenu();
+  closePage();
+  navHome();
+}
+function setSideMenuActive(key){
+  document.querySelectorAll('.side-menu-item').forEach(el=>el.classList.toggle('active', el.dataset.page===key));
+}
+
+/* ---------------- Full-page views ---------------- */
+function showPage(title, bodyHtml, activeKey){
+  document.getElementById('pageViewTitle').textContent = title;
+  document.getElementById('pageViewBody').innerHTML = bodyHtml;
+  document.getElementById('pageView').classList.add('show');
+  document.getElementById('storefront').style.display = 'none';
+  document.getElementById('bottomNav').style.display = 'none';
+  closeSideMenu();
+  if(activeKey) setSideMenuActive(activeKey);
+  window.scrollTo({top:0});
+}
+function closePage(){
+  document.getElementById('pageView').classList.remove('show');
+  document.getElementById('storefront').style.display = 'block';
+  document.getElementById('bottomNav').style.display = 'flex';
+  setSideMenuActive('home');
+  setActiveNav('home');
+}
+
+function renderOrderSlipCard(order){
+  const cls = 'st-'+String(order.status||'').toLowerCase().replace(/\s+/g,'');
+  return `<div class="order-slip-card">
+    <div class="slip-top" style="margin-bottom:10px;">
+      <div class="slip-order-id">${escapeHtml(order.id)}</div>
+      <span class="status-badge ${cls}" style="margin-top:6px;">${escapeHtml(order.status||'')}</span>
+    </div>
+    <div class="slip-divider"></div>
+    ${order.items.map(it=>`<div class="slip-row"><span>${escapeHtml(it.name)} × ${it.qty}</span><span>${fmt(it.price*it.qty)}</span></div>`).join('')}
+    <div class="slip-divider"></div>
+    <div class="slip-row"><span>${(order.fulfillment||'home')==='pickup'?'Pickup':'Home delivery'}</span><span>${(order.fulfillment||'home')==='pickup'?escapeHtml(order.pickupAddress||'Contact store'):escapeHtml((order.customer&&order.customer.address)||'')+', '+escapeHtml((order.customer&&order.customer.pincode)||'')}</span></div>
+    ${order.couponDiscount>0?`<div class="slip-row"><span>Coupon (${escapeHtml(order.couponCode)})</span><span>−${fmt(order.couponDiscount)}</span></div>`:''}
+    <div class="slip-row"><span>Placed on</span><span>${new Date(order.createdAt).toLocaleString('en-IN')}</span></div>
+    <div class="slip-row"><b>Total</b><b>${fmt(order.total)}</b></div>
+  </div>`;
+}
+
+function openMyOrdersPage(){
+  let body;
+  if(!currentCustomerPhone){
+    body = `<div class="pv-empty">
+      <div class="pv-empty-icon">📦</div>
+      <div>Sign in to see your order history and track your current orders.</div>
+      <button class="pv-signin-btn" onclick="closePage();openCustomerLogin();">Sign in</button>
+    </div>`;
+  }else{
+    const myOrders = orders.filter(o=>o.customer && o.customer.phone===currentCustomerPhone)
+      .slice().sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+    if(myOrders.length===0){
+      body = `<div class="pv-empty">
+        <div class="pv-empty-icon">📦</div>
+        <div>You haven't placed any orders yet.</div>
+      </div>`;
+    }else{
+      const current = myOrders[0];
+      const rest = myOrders.slice(1);
+      body = `<div class="order-slip-tag">Current Order</div>` + renderOrderSlipCard(current);
+      if(rest.length>0){
+        body += `<h3 style="font-size:15px;margin:22px 0 12px;">Order History</h3>` + rest.map(renderOrderSlipCard).join('');
+      }
+    }
+  }
+  showPage('My Orders', body, 'orders');
+}
+
+function openAccountPage(){
+  accountPinVisible = false;
+  if(!currentCustomerPhone){
+    showPage('Account', `<div class="pv-empty">
+      <div class="pv-empty-icon">👤</div>
+      <div>Sign in to view your account details.</div>
+      <button class="pv-signin-btn" onclick="closePage();openCustomerLogin();">Sign in</button>
+    </div>`, 'account');
+    return;
+  }
+  const cust = customers.find(c=>c.phone===currentCustomerPhone) || {};
+  const initial = (currentCustomerName||cust.name||'?').trim().charAt(0).toUpperCase();
+  const memberSince = cust.createdAt ? new Date(cust.createdAt).toLocaleDateString('en-IN', {day:'numeric',month:'short',year:'numeric'}) : '—';
+  const hasSpecial = customerPricing.some(x=>x.phone===currentCustomerPhone);
+
+  const myOrders = orders.filter(o=>o.customer && o.customer.phone===currentCustomerPhone);
+  const seenAddr = new Set();
+  const addresses = [];
+  myOrders.forEach(o=>{
+    if(o.fulfillment==='home' && o.customer && o.customer.address){
+      const key = o.customer.address+'|'+o.customer.pincode;
+      if(!seenAddr.has(key)){
+        seenAddr.add(key);
+        addresses.push({address:o.customer.address, pincode:o.customer.pincode});
+      }
+    }
+  });
+
+  const body = `
+    <div class="account-card" style="text-align:center;">
+      <div class="account-avatar" style="margin-left:auto;margin-right:auto;">${escapeHtml(initial)}</div>
+      <div style="font-size:16px;font-weight:800;">${escapeHtml(currentCustomerName||cust.name||'Customer')}</div>
+      ${hasSpecial?`<div style="font-size:11.5px;color:var(--green);font-weight:700;margin-top:4px;">✓ Special pricing active for you</div>`:''}
+    </div>
+    <div class="account-card">
+      <div class="account-row"><span class="account-row-label">Phone number</span><span class="account-row-value">${escapeHtml(currentCustomerPhone)}</span></div>
+      <div class="account-row"><span class="account-row-label">Member since</span><span class="account-row-value">${escapeHtml(memberSince)}</span></div>
+      <div class="account-row"><span class="account-row-label">Total orders</span><span class="account-row-value">${myOrders.length}</span></div>
+      <div class="account-row">
+        <span class="account-row-label">Login PIN</span>
+        <span class="account-row-value" style="display:flex;align-items:center;gap:8px;">
+          <span id="accountPinDisplay" style="letter-spacing:2px;">••••</span>
+          <button class="pin-eye-btn" onclick="toggleAccountPinVisibility()" id="accountPinEyeBtn" aria-label="Show PIN">👁</button>
+        </span>
+      </div>
+      <button class="pv-signin-btn" style="width:100%;margin-top:12px;" onclick="openChangePinModal();">Change PIN</button>
+    </div>
+    <div class="account-card">
+      <div style="font-size:13.5px;font-weight:700;margin-bottom:10px;">Delivery addresses</div>
+      ${addresses.length===0
+        ? `<div style="font-size:12px;color:var(--muted);">No saved addresses yet — they'll appear here after your first home delivery order.</div>`
+        : addresses.map(a=>`<div class="address-mini-card">📍 ${escapeHtml(a.address)}${a.pincode?', '+escapeHtml(a.pincode):''}</div>`).join('')}
+    </div>
+    <button class="pv-signin-btn" style="background:var(--danger-bg);color:var(--danger);width:100%;" onclick="logoutFromMoreSheet();">🚪 Logout</button>
+  `;
+  showPage('Account', body, 'account');
+}
+
+let accountPinVisible = false;
+function toggleAccountPinVisibility(){
+  const cust = customers.find(c=>c.phone===currentCustomerPhone);
+  if(!cust) return;
+  accountPinVisible = !accountPinVisible;
+  const display = document.getElementById('accountPinDisplay');
+  const btn = document.getElementById('accountPinEyeBtn');
+  if(!display || !btn) return;
+  if(accountPinVisible){
+    display.textContent = cust.pin || '----';
+    btn.textContent = '🙈';
+  }else{
+    display.textContent = '••••';
+    btn.textContent = '👁';
+  }
+}
+function openChangePinModal(){
+  accountPinVisible = false;
+  document.getElementById('changePinCurrent').value = '';
+  document.getElementById('changePinNew').value = '';
+  document.getElementById('changePinConfirm').value = '';
+  ['err-changePinCurrent','err-changePinNew','err-changePinConfirm'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById('changePinModal').classList.add('show');
+}
+async function submitChangePin(){
+  const cust = customers.find(c=>c.phone===currentCustomerPhone);
+  if(!cust) return;
+  const current = document.getElementById('changePinCurrent').value.trim();
+  const next = document.getElementById('changePinNew').value.trim();
+  const confirm = document.getElementById('changePinConfirm').value.trim();
+
+  const currentOk = current === cust.pin;
+  document.getElementById('err-changePinCurrent').style.display = currentOk ? 'none' : 'block';
+  const nextOk = /^\d{4}$/.test(next);
+  document.getElementById('err-changePinNew').style.display = nextOk ? 'none' : 'block';
+  const confirmOk = nextOk && next === confirm;
+  document.getElementById('err-changePinConfirm').style.display = confirmOk ? 'none' : 'block';
+  if(!currentOk || !nextOk || !confirmOk) return;
+
+  cust.pin = next;
+  saveCustomersCache();
+  const saved = await api('editCustomer', { id: cust.id, field:'pin', value:next, customer: cust });
+  if(saved === null) showToast('Updated locally — could not reach the server.');
+  closeModal('changePinModal');
+  showToast('PIN updated successfully');
+  openAccountPage();
+}
+
+function openSavedItemsPage(){
+  const ids = Object.keys(wishlist).filter(id=>wishlist[id]);
+  const items = ids.map(id=>products.find(p=>p.id===id)).filter(Boolean);
+  let body;
+  if(items.length===0){
+    body = `<div class="pv-empty">
+      <div class="pv-empty-icon">♥</div>
+      <div>You haven't saved any items yet. Tap the heart icon on a product to save it here.</div>
+    </div>`;
+  }else{
+    body = items.map(p=>{
+      const effPrice = getEffectivePrice(p);
+      return `<div class="saved-item-row">
+        <div class="saved-item-img">${p.imageUrl?`<img src="${escapeAttr(p.imageUrl)}" alt="${escapeAttr(p.name)}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;">`:(p.icon||'💊')}</div>
+        <div class="saved-item-info">
+          <div class="saved-item-name">${escapeHtml(p.name)}</div>
+          <div class="saved-item-price">${fmt(effPrice)}</div>
+        </div>
+        <button class="wishlist-heart liked" onclick="toggleWishlist('${p.id}');openSavedItemsPage();" aria-label="Remove">♥</button>
+        <button class="add-btn-2" onclick="addToCart('${p.id}')">🛒 Add</button>
+      </div>`;
+    }).join('');
+  }
+  showPage('Saved Items', body, 'saved');
+}
+
+function openSupportPage(){
+  const body = `
+    <p class="about-para">Answers to common questions, or raise a complaint below and our team will reach out to you.</p>
+    <div class="faq-list">${buildFaqHtml('faqpage')}</div>
+    <button class="pv-signin-btn" style="width:100%;margin-top:16px;" onclick="openComplaint();">Raise a Complaint</button>
+  `;
+  showPage('Support Center', body, 'support');
+}
+
+function openAboutPage(){
+  const body = `
+    <div class="about-hero">
+      <div class="brand-mark">✚</div>
+      <div style="font-family:var(--font-display);font-size:20px;font-weight:700;margin-top:8px;">${escapeHtml(settings.shopName||'Medico')}</div>
+      <div style="font-size:12px;color:var(--ink-soft);margin-top:2px;">Trusted Care</div>
+    </div>
+    <p class="about-para">${escapeHtml(settings.shopName||'Medico')} ${escapeHtml(settings.aboutText||'')}</p>
+    <div class="about-list">
+      <div class="about-list-item"><span class="ali-icon">🛡️</span><span>${escapeHtml(settings.aboutPoint1||'')}</span></div>
+      <div class="about-list-item"><span class="ali-icon">🚚</span><span>${escapeHtml(settings.aboutPoint2||'')}</span></div>
+      <div class="about-list-item"><span class="ali-icon">🔒</span><span>${escapeHtml(settings.aboutPoint3||'')}</span></div>
+      <div class="about-list-item"><span class="ali-icon">🎧</span><span>${escapeHtml(settings.aboutPoint4||'')}</span></div>
+    </div>
+    <p class="about-para" style="margin-top:18px;">Have a question? Reach us at <b>${escapeHtml(settings.contact||'')}</b>.</p>
+  `;
+  showPage('About Us', body, 'about');
 }
  
 /* ---------------- Admin ---------------- */
@@ -2385,6 +2905,11 @@ function fillSettingsForm(){
   document.getElementById('setUpiId').value = settings.upiId || '';
   document.getElementById('setUpiQrData').value = settings.upiQrImage || '';
   document.getElementById('setUpiQrPreview').innerHTML = settings.upiQrImage ? `<img src="${settings.upiQrImage}" class="img-preview-thumb" style="width:110px;height:110px;">` : '';
+  document.getElementById('setAboutText').value = settings.aboutText || '';
+  document.getElementById('setAboutPoint1').value = settings.aboutPoint1 || '';
+  document.getElementById('setAboutPoint2').value = settings.aboutPoint2 || '';
+  document.getElementById('setAboutPoint3').value = settings.aboutPoint3 || '';
+  document.getElementById('setAboutPoint4').value = settings.aboutPoint4 || '';
 }
 async function saveSettings(){
   settings.shopName = document.getElementById('setShopName').value.trim() || 'Medico';
@@ -2416,6 +2941,16 @@ async function saveUpiSettings(){
   const saved = await api('saveSettings', settings);
   if(saved === null) showToast('Saved locally — could not reach the server.');
   showToast('UPI details saved');
+}
+async function saveAboutSettings(){
+  settings.aboutText = document.getElementById('setAboutText').value.trim();
+  settings.aboutPoint1 = document.getElementById('setAboutPoint1').value.trim();
+  settings.aboutPoint2 = document.getElementById('setAboutPoint2').value.trim();
+  settings.aboutPoint3 = document.getElementById('setAboutPoint3').value.trim();
+  settings.aboutPoint4 = document.getElementById('setAboutPoint4').value.trim();
+  const saved = await api('saveSettings', settings);
+  if(saved === null) showToast('Saved locally — could not reach the server.');
+  showToast('About Us content saved');
 }
 async function changeAdminPassword(){
   const p1 = document.getElementById('newAdminPass').value;
