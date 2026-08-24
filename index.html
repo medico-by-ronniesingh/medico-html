@@ -232,6 +232,69 @@ input,textarea,select{font-family:var(--font-body);}
 .upi-screenshot-upload{margin-top:14px;text-align:left;}
 .upi-screenshot-upload label{display:block;font-size:12.5px;font-weight:600;color:var(--ink-soft);margin-bottom:5px;}
  
+/* ---------- Checkout v2 ---------- */
+.checkout-modal-v2{padding:0 !important;display:flex;flex-direction:column;height:100%;overflow:hidden !important;}
+.checkout-header-v2{background:linear-gradient(120deg,var(--primary),var(--primary-dark));color:#fff;padding:18px 20px 20px;text-align:center;position:relative;flex-shrink:0;}
+.checkout-close-v2{position:absolute;top:14px;right:16px;background:rgba(255,255,255,.2);color:#fff;width:30px;height:30px;border-radius:50%;font-size:14px;}
+.checkout-header-title{font-size:16px;font-weight:800;}
+.checkout-header-sub{font-size:11.5px;color:rgba(255,255,255,.85);margin-top:3px;}
+.checkout-steps-v2{display:flex;align-items:center;justify-content:center;gap:6px;padding:16px 20px;background:var(--surface);border-bottom:1px solid var(--line);flex-shrink:0;}
+.cstep{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.cstep-dot{width:26px;height:26px;border-radius:50%;background:var(--bg);border:2px solid var(--line);color:var(--muted);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.cstep.active .cstep-dot{background:var(--primary);border-color:var(--primary);color:#fff;}
+.cstep.done .cstep-dot{background:var(--green);border-color:var(--green);color:#fff;}
+.cstep-label{font-size:10px;font-weight:700;color:var(--muted);}
+.cstep.active .cstep-label{color:var(--primary-dark);}
+.cstep-line{width:36px;height:2px;background:var(--line);margin-top:-16px;}
+.checkout-body-v2{flex:1;overflow-y:auto;padding:18px 20px 10px;}
+.checkout-footer-v2{flex-shrink:0;padding:14px 20px;border-top:1px solid var(--line);background:var(--surface);}
+.checkout-footer-note{text-align:center;font-size:11px;color:var(--muted);margin-top:6px;}
+.checkout-place-btn{display:flex;align-items:center;justify-content:center;gap:6px;}
+.checkout-section-title-row{display:flex;justify-content:space-between;align-items:center;}
+.secure-pill{font-size:10.5px;font-weight:700;color:var(--green);background:var(--green-bg);padding:4px 10px;border-radius:12px;white-space:nowrap;}
+.icon-field{display:flex;align-items:flex-start;gap:8px;border:1px solid var(--line);border-radius:9px;background:var(--bg);padding:0 10px;}
+.icon-field-ic{padding-top:11px;font-size:13px;flex-shrink:0;}
+.icon-field input,.icon-field textarea{border:none;background:none;padding:11px 0;flex:1;font-size:14px;outline:none;}
+.icon-field:focus-within{border-color:var(--primary);background:#fff;}
+.product-details-box{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--bg);}
+.pd-head-row{display:flex;justify-content:space-between;font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;padding-bottom:6px;border-bottom:1px solid var(--line);margin-bottom:6px;}
+.pd-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:12.5px;}
+.pd-row-name{color:var(--ink);font-weight:600;}
+.pd-row-qty{color:var(--ink-soft);font-weight:700;}
+.pay-method-card-v2{display:flex;align-items:center;gap:10px;padding:12px;border:1.5px solid var(--line);border-radius:11px;background:var(--bg);cursor:pointer;position:relative;flex:1;}
+.pay-method-card-v2 input{position:absolute;opacity:0;width:0;height:0;}
+.pmc2-icon{font-size:20px;flex-shrink:0;}
+.pmc2-text{display:flex;flex-direction:column;gap:1px;flex:1;min-width:0;}
+.pmc2-text b{font-size:12.5px;color:var(--ink-soft);}
+.pmc2-text span{font-size:10.5px;color:var(--muted);}
+.pmc2-check{width:18px;height:18px;border-radius:50%;border:2px solid var(--line);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;}
+.pay-method-card-v2.active{border-color:var(--primary);background:#EAF1FE;}
+.pay-method-card-v2.active .pmc2-text b{color:var(--primary-dark);}
+.pay-method-card-v2.active .pmc2-check{background:var(--primary);border-color:var(--primary);color:#fff;}
+.coupon-box-v2{border:1px solid var(--line);border-radius:12px;padding:12px;background:#FFFBEF;}
+.coupon-box-v2-row{display:flex;align-items:center;gap:10px;cursor:pointer;}
+.coupon-box-v2-icon{font-size:17px;}
+.coupon-box-v2-text{flex:1;min-width:0;display:flex;flex-direction:column;}
+.coupon-box-v2-text b{font-size:12.5px;color:var(--ink);}
+.coupon-box-v2-text span{font-size:10.5px;color:var(--muted);}
+.coupon-box-v2-chev{font-size:13px;color:var(--muted);transition:transform .15s;flex-shrink:0;}
+.coupon-box-v2-chev.open{transform:rotate(180deg);}
+.coupon-offers-list{margin-top:10px;display:flex;flex-direction:column;gap:8px;}
+.coupon-offer-row{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:9px;padding:9px 10px;}
+.coupon-offer-row-text{flex:1;min-width:0;}
+.coupon-offer-row-code{font-family:var(--font-mono);font-size:12px;font-weight:700;color:var(--ink);}
+.coupon-offer-row-desc{font-size:10.5px;color:var(--muted);margin-top:1px;}
+.coupon-offer-apply-btn{background:var(--primary);color:#fff;font-size:11px;font-weight:700;padding:6px 12px;border-radius:7px;white-space:nowrap;flex-shrink:0;}
+.coupon-offer-need-more{font-size:10px;font-weight:700;color:var(--warn);background:var(--warn-bg);padding:6px 10px;border-radius:7px;white-space:nowrap;flex-shrink:0;}
+.upi-box-v2{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;text-align:center;}
+.upi-box-v2-qr{width:160px;height:160px;object-fit:contain;background:#fff;border-radius:12px;border:1px solid var(--line);padding:10px;margin:0 auto 12px;display:block;}
+.upi-box-v2-qr-placeholder{width:160px;height:160px;margin:0 auto 12px;border-radius:12px;border:2px dashed var(--line);display:flex;align-items:center;justify-content:center;font-size:32px;color:var(--muted);}
+.upi-box-v2-id-card{display:flex;align-items:center;gap:10px;background:var(--bg);border-radius:10px;padding:10px 12px;margin-top:4px;}
+.upi-box-v2-id-icon{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#5F259F,#8A4FDB);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.upi-box-v2-id-text{flex:1;min-width:0;text-align:left;}
+.upi-box-v2-id-label{font-size:10px;color:var(--muted);}
+.upi-box-v2-id-value{font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--ink);word-break:break-all;}
+ 
 /* ---------- Side menu drawer ---------- */
 .side-menu{position:fixed;top:0;left:0;height:100%;width:300px;max-width:85vw;background:var(--surface);z-index:95;transform:translateX(-100%);transition:transform .25s ease;display:flex;flex-direction:column;}
 .side-menu.show{transform:translateX(0);}
@@ -538,81 +601,105 @@ input,textarea,select{font-family:var(--font-body);}
  
 <!-- Checkout Modal -->
 <div class="modal-wrap fullscreen" id="checkoutModal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('checkoutModal')">✕</button>
-    <h3 style="margin-bottom:4px;">Delivery details</h3>
-    <p class="helper-text" style="margin-top:6px;">No account needed — just fill this in.</p>
-    <div id="rxNoteWrap"></div>
-    <div class="field">
-      <label>Full name</label>
-      <input type="text" id="custName" placeholder="e.g. Rahul Kumar">
-      <div class="field-error" id="err-custName">Please enter your name</div>
+  <div class="modal checkout-modal-v2">
+    <div class="checkout-header-v2">
+      <button class="checkout-close-v2" onclick="closeModal('checkoutModal')">✕</button>
+      <div class="checkout-header-title">🔒 Secure Checkout</div>
+      <div class="checkout-header-sub">Your details are safe with us</div>
     </div>
-    <div class="field">
-      <label>Phone number</label>
-      <input type="tel" id="custPhone" placeholder="10-digit mobile number">
-      <div class="field-error" id="err-custPhone">Enter a valid 10-digit number</div>
+    <div class="checkout-steps-v2">
+      <div class="cstep active" id="cstep-1"><div class="cstep-dot">1</div><div class="cstep-label">Delivery</div></div>
+      <div class="cstep-line"></div>
+      <div class="cstep" id="cstep-2"><div class="cstep-dot">2</div><div class="cstep-label">Payment</div></div>
+      <div class="cstep-line"></div>
+      <div class="cstep" id="cstep-3"><div class="cstep-dot">3</div><div class="cstep-label">Confirm</div></div>
     </div>
-    <div class="field">
-      <label>How would you like to get your order?</label>
-      <div class="pay-method-row">
-        <label class="pay-method-card active" id="fulfillCardPickup">
-          <input type="radio" name="fulfillRadio" value="pickup" checked onchange="selectFulfillment('pickup')">
-          <span class="pmc-icon">🏬</span>
-          <span class="pmc-label">Pickup from center</span>
-        </label>
-        <label class="pay-method-card" id="fulfillCardHome">
-          <input type="radio" name="fulfillRadio" value="home" onchange="selectFulfillment('home')">
-          <span class="pmc-icon">🚴</span>
-          <span class="pmc-label" id="fulfillHomeLabel">Home delivery</span>
-        </label>
+
+    <div class="checkout-body-v2">
+      <div class="checkout-section-title-row">
+        <h3 style="margin:0;">Delivery Details</h3>
+        <span class="secure-pill">✅ 100% Secure</span>
       </div>
-    </div>
-    <div id="pickupInfoBox"></div>
-    <div id="addressFieldsWrap" style="display:none;">
+      <p class="helper-text" style="margin-top:2px;">No account needed — just fill this in.</p>
+      <div id="rxNoteWrap"></div>
+
+      <div class="field">
+        <label>Full name</label>
+        <div class="icon-field"><span class="icon-field-ic">👤</span><input type="text" id="custName" placeholder="e.g. Rahul Kumar"></div>
+        <div class="field-error" id="err-custName">Please enter your name</div>
+      </div>
+      <div class="field">
+        <label>Phone number</label>
+        <div class="icon-field"><span class="icon-field-ic">📞</span><input type="tel" id="custPhone" placeholder="10-digit mobile number"></div>
+        <div class="field-error" id="err-custPhone">Enter a valid 10-digit number</div>
+      </div>
       <div class="field">
         <label>Delivery address</label>
-        <textarea id="custAddress" rows="3" placeholder="House no, street, area"></textarea>
+        <div class="icon-field"><span class="icon-field-ic">📍</span><textarea id="custAddress" rows="2" placeholder="House no, street, area"></textarea></div>
         <div class="field-error" id="err-custAddress">Please enter your address</div>
       </div>
       <div class="field">
         <label>Pincode</label>
-        <input type="text" id="custPincode" placeholder="6-digit pincode">
+        <div class="icon-field"><span class="icon-field-ic">#️⃣</span><input type="text" id="custPincode" placeholder="6-digit pincode"></div>
         <div class="field-error" id="err-custPincode">Enter a valid 6-digit pincode</div>
       </div>
-    </div>
-    <div class="field">
-      <label>Payment method</label>
-      <div class="pay-method-row">
-        <label class="pay-method-card active" id="payCardCOD">
-          <input type="radio" name="custPaymentRadio" value="COD" checked onchange="selectPaymentMethod('COD')">
-          <span class="pmc-icon">💵</span>
-          <span class="pmc-label">Cash on delivery</span>
-        </label>
-        <label class="pay-method-card" id="payCardUPI">
-          <input type="radio" name="custPaymentRadio" value="UPI" onchange="selectPaymentMethod('UPI')">
-          <span class="pmc-icon">📱</span>
-          <span class="pmc-label">UPI</span>
-        </label>
+
+      <div class="field">
+        <label>📦 Product Details</label>
+        <div class="product-details-box">
+          <div class="pd-head-row"><span>Product Name</span><span>Quantity</span></div>
+          <div id="checkoutProductDetails"></div>
+        </div>
       </div>
-    </div>
-    <div id="upiPayBox" style="display:none;"></div>
-    <div class="field">
-      <label>Notes for delivery (optional)</label>
-      <input type="text" id="custNotes" placeholder="e.g. landmark, preferred time">
-    </div>
-    <div class="field">
-      <label>Have a coupon code?</label>
-      <div class="coupon-apply-row">
-        <input type="text" id="couponCodeInput" placeholder="e.g. SAVE10">
-        <button type="button" class="coupon-apply-btn" onclick="applyCoupon()">Apply</button>
+
+      <div class="field">
+        <label>Payment method</label>
+        <div class="pay-method-row">
+          <label class="pay-method-card-v2 active" id="payCardCOD">
+            <input type="radio" name="custPaymentRadio" value="COD" checked onchange="selectPaymentMethod('COD')">
+            <span class="pmc2-icon">💵</span>
+            <div class="pmc2-text"><b>Cash on delivery</b><span>Pay when you receive</span></div>
+            <span class="pmc2-check">✓</span>
+          </label>
+          <label class="pay-method-card-v2" id="payCardUPI">
+            <input type="radio" name="custPaymentRadio" value="UPI" onchange="selectPaymentMethod('UPI')">
+            <span class="pmc2-icon">📱</span>
+            <div class="pmc2-text"><b>UPI</b><span>Pay securely via UPI</span></div>
+            <span class="pmc2-check">✓</span>
+          </label>
+        </div>
       </div>
-      <div class="coupon-error-text" id="couponError" style="display:none;"></div>
-      <div id="couponAppliedBox"></div>
+      <div id="upiPayBox" style="display:none;"></div>
+
+      <div class="field">
+        <label>Notes for delivery (optional)</label>
+        <input type="text" id="custNotes" placeholder="e.g. landmark, preferred time">
+      </div>
+
+      <div class="field">
+        <div class="coupon-box-v2">
+          <div class="coupon-box-v2-row" onclick="toggleCouponOffers()">
+            <span class="coupon-box-v2-icon">🏷️</span>
+            <div class="coupon-box-v2-text"><b>Have an offer or coupon code?</b><span>Tap to see running offers</span></div>
+            <span class="coupon-box-v2-chev" id="couponChev">⌄</span>
+          </div>
+          <div class="coupon-apply-row" style="margin-top:10px;">
+            <input type="text" id="couponCodeInput" placeholder="E.G. SAVE10" onfocus="openCouponOffersList()" onclick="openCouponOffersList()" oninput="renderCouponOffersList()">
+            <button type="button" class="coupon-apply-btn" onclick="applyCoupon()">Apply</button>
+          </div>
+          <div class="coupon-error-text" id="couponError" style="display:none;"></div>
+          <div id="couponAppliedBox"></div>
+          <div id="couponOffersList" class="coupon-offers-list" style="display:none;"></div>
+        </div>
+      </div>
+
+      <div id="rxCheckboxWrap"></div>
+      <div class="slip" id="checkoutSummary" style="margin-bottom:16px;"></div>
     </div>
-    <div id="rxCheckboxWrap"></div>
-    <div class="slip" id="checkoutSummary" style="margin-bottom:16px;"></div>
-    <button class="primary-btn" onclick="placeOrder()">Place order</button>
+    <div class="checkout-footer-v2">
+      <button class="primary-btn checkout-place-btn" onclick="placeOrder()">🔒 Place order</button>
+      <p class="checkout-footer-note">You will confirm on the next step</p>
+    </div>
   </div>
 </div>
  
@@ -961,7 +1048,7 @@ input,textarea,select{font-family:var(--font-body);}
         <div class="field"><label>Your UPI ID</label><input type="text" id="setUpiId" placeholder="e.g. yourshop@okaxis"></div>
         <div class="field">
           <label>UPI QR code image (choose from your device)</label>
-          <input type="file" accept="image/*" onchange="handleImageFile(this,'setUpiQrData','setUpiQrPreview')">
+          <input type="file" accept="image/*" onchange="handleQrImageFile(this,'setUpiQrData','setUpiQrPreview')">
           <div id="setUpiQrPreview" style="margin-top:8px;"></div>
           <input type="hidden" id="setUpiQrData">
         </div>
@@ -1013,7 +1100,7 @@ input,textarea,select{font-family:var(--font-body);}
 /* ==========================================================================
    BACKEND CONFIG — Google Apps Script + Google Sheets
    ========================================================================== */
-const API_URL = "https://script.google.com/macros/s/AKfycby1EhlGkb7Ld4T2sqrrnkafjffhtgRZN-CaBe3M15QR_bt4S5GQe-oTKL4gsCQwfJ0I/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxDmGzFeZ7S7X3bB6uA1dtNC6X66ubY-tz2MXVtK9nIQ19HMQ9CziVWTB0xfs3w_lu7/exec";
 
 /**
  * Generic helper to call the Google Apps Script Web App.
@@ -1050,7 +1137,7 @@ let settings = {};
 let cart = {};
 let currentTab = 'products';
 let currentPaymentMethod = 'COD';
-let currentFulfillment = 'pickup';
+let currentFulfillment = 'home';
 let customerPricing = [];
 let customers = [];
 let currentCustomerPhone = (typeof localStorage!=='undefined' && localStorage.getItem('medico_customer_phone')) || '';
@@ -1214,7 +1301,7 @@ function updateHeroMaxDiscount(){
 }
  
 /* ---------------- Utility ---------------- */
-function fmt(n){ return '₹' + Number(n).toLocaleString('en-IN'); }
+function fmt(n){ const num = Number(n); return '₹' + (isNaN(num) ? 0 : num).toLocaleString('en-IN'); }
 function showToast(msg){
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -1235,9 +1322,9 @@ function applySettingsToDOM(){
 function getEffectivePrice(p){
   if(currentCustomerPhone){
     const cp = customerPricing.find(x=>x.phone===currentCustomerPhone && x.productId===p.id);
-    if(cp) return cp.price;
+    if(cp && !isNaN(Number(cp.price))) return Number(cp.price);
   }
-  return p.price;
+  return Number(p.price) || 0;
 }
 function maskPhone(phone){
   if(!phone || phone.length<10) return phone;
@@ -1587,13 +1674,16 @@ function updateCartCount(){
 function cartTotal(){
   return Object.entries(cart).reduce((sum,[id,qty])=>{
     const p = products.find(x=>x.id===id);
-    return sum + (p ? getEffectivePrice(p)*qty : 0);
+    return sum + (p ? getEffectivePrice(p)*(Number(qty)||0) : 0);
   },0);
 }
 function homeDeliveryFeeFor(subtotal){
+  subtotal = Number(subtotal) || 0;
   if(subtotal<=0) return 0;
-  if(settings.freeAbove && subtotal>=settings.freeAbove) return 0;
-  return settings.deliveryFee || 0;
+  const freeAbove = Number(settings.freeAbove) || 0;
+  const deliveryFee = Number(settings.deliveryFee) || 0;
+  if(freeAbove>0 && subtotal>=freeAbove) return 0;
+  return deliveryFee;
 }
 function feeForFulfillment(fulfillment, subtotal){
   return fulfillment==='pickup' ? 0 : homeDeliveryFeeFor(subtotal);
@@ -1642,7 +1732,7 @@ function renderCartDrawer(){
   const subtotal = cartTotal();
   foot.innerHTML = `
     <div class="row-between"><span>Subtotal</span><span>${fmt(subtotal)}</span></div>
-    <p class="helper-text" style="margin:0 0 10px;">Pickup is free. Home delivery adds ₹${settings.deliveryFee||0}${settings.freeAbove?` (free above ${fmt(settings.freeAbove)})`:''} — choose this at checkout.</p>
+    <p class="helper-text" style="margin:0 0 10px;">Delivery adds ${fmt(settings.deliveryFee||0)}${settings.freeAbove?` (free above ${fmt(settings.freeAbove)})`:''}.</p>
     <button class="checkout-btn" onclick="openCheckout()">Proceed to checkout</button>`;
 }
 function changeCartQty(id, delta){
@@ -1692,6 +1782,35 @@ function setActiveNav(name){
 }
  
 /* ---------------- Checkout ---------------- */
+function renderCheckoutProductDetails(){
+  const wrap = document.getElementById('checkoutProductDetails');
+  if(!wrap) return;
+  const items = Object.entries(cart).filter(([id,qty])=>qty>0);
+  wrap.innerHTML = items.map(([id,qty])=>{
+    const p = products.find(x=>x.id===id);
+    if(!p) return '';
+    return `<div class="pd-row"><span class="pd-row-name">${escapeHtml(p.name)}</span><span class="pd-row-qty">${qty}</span></div>`;
+  }).join('');
+}
+function prefillCheckoutFromLastOrder(){
+  let saved = null;
+  try{
+    const raw = typeof localStorage!=='undefined' ? localStorage.getItem('medico_last_checkout') : null;
+    saved = raw ? JSON.parse(raw) : null;
+  }catch(e){ saved = null; }
+  if(!saved) return;
+  if(saved.name) document.getElementById('custName').value = saved.name;
+  if(saved.phone) document.getElementById('custPhone').value = saved.phone;
+  if(saved.address) document.getElementById('custAddress').value = saved.address;
+  if(saved.pincode) document.getElementById('custPincode').value = saved.pincode;
+}
+function saveCheckoutForNextTime(name, phone, address, pincode){
+  try{
+    if(typeof localStorage!=='undefined'){
+      localStorage.setItem('medico_last_checkout', JSON.stringify({name, phone, address, pincode}));
+    }
+  }catch(e){}
+}
 function openCheckout(){
   if(Object.keys(cart).length===0) return;
   closeCart();
@@ -1713,28 +1832,14 @@ function openCheckout(){
   document.getElementById('couponCodeInput').value = '';
   document.getElementById('couponError').style.display = 'none';
   renderCouponAppliedBox();
-  currentFulfillment = 'pickup';
-  document.getElementById('fulfillCardPickup').classList.add('active');
-  document.getElementById('fulfillCardHome').classList.remove('active');
-  document.querySelector('input[name="fulfillRadio"][value="pickup"]').checked = true;
-  document.getElementById('fulfillHomeLabel').textContent = `Home delivery (+${fmt(settings.deliveryFee||0)})`;
-  selectFulfillment('pickup');
-  document.getElementById('checkoutModal').classList.add('show');
-}
-function selectFulfillment(type){
-  currentFulfillment = type;
-  document.getElementById('fulfillCardPickup').classList.toggle('active', type==='pickup');
-  document.getElementById('fulfillCardHome').classList.toggle('active', type==='home');
-  document.getElementById('addressFieldsWrap').style.display = type==='home' ? 'block' : 'none';
-  const pickupBox = document.getElementById('pickupInfoBox');
-  if(type==='pickup'){
-    pickupBox.innerHTML = settings.pickupAddress
-      ? `<div class="upi-box" style="text-align:left;">📍 <b>Collect from:</b> ${escapeHtml(settings.pickupAddress)}</div>`
-      : `<div class="upi-box" style="text-align:left;">Pickup center address isn't set up yet — please call us before collecting.</div>`;
-  }else{
-    pickupBox.innerHTML = '';
-  }
+  document.getElementById('couponOffersList').style.display = 'none';
+  document.getElementById('couponChev').classList.remove('open');
+  currentFulfillment = 'home';
+  ['custName','custPhone','custAddress','custPincode','custNotes'].forEach(id=>document.getElementById(id).value='');
+  prefillCheckoutFromLastOrder();
+  renderCheckoutProductDetails();
   updateCheckoutSummary();
+  document.getElementById('checkoutModal').classList.add('show');
 }
 function updateCheckoutSummary(){
   const el = document.getElementById('checkoutSummary');
@@ -1742,10 +1847,10 @@ function updateCheckoutSummary(){
   const subtotal = cartTotal();
   const fee = feeForFulfillment(currentFulfillment, subtotal);
   const discount = appliedCoupon ? couponDiscountAmount(appliedCoupon, subtotal, fee) : 0;
-  const total = Math.max(0, subtotal + fee - discount);
+  const total = Math.max(0, Math.round(subtotal + fee - discount));
   el.innerHTML = `
     <div class="slip-row"><span>Subtotal</span><span>${fmt(subtotal)}</span></div>
-    <div class="slip-row"><span>${currentFulfillment==='pickup'?'Pickup':'Home delivery'}</span><span>${fee===0?'Free':fmt(fee)}</span></div>
+    <div class="slip-row"><span>Delivery</span><span>${fee===0?'Free':fmt(fee)}</span></div>
     ${discount>0?`<div class="slip-row"><span>Coupon (${escapeHtml(appliedCoupon.code)})</span><span>−${fmt(discount)}</span></div>`:''}
     <div class="slip-divider"></div>
     <div class="slip-row"><b>Total</b><b>${fmt(total)}</b></div>`;
@@ -1766,14 +1871,20 @@ function toggleUpiBox(){
   }
   if(!settings.upiId && !settings.upiQrImage){
     box.style.display = 'block';
-    box.innerHTML = `<div class="upi-box">Online UPI payment isn't set up yet — you can still place the order and pay via cash on delivery, or ask the shop for their UPI details.</div>`;
+    box.innerHTML = `<div class="upi-box-v2">Online UPI payment isn't set up yet — you can still place the order and pay via cash on delivery, or ask the shop for their UPI details.</div>`;
     return;
   }
   box.style.display = 'block';
-  box.innerHTML = `<div class="upi-box">
-    ${settings.upiQrImage ? `<img src="${settings.upiQrImage}" alt="UPI QR code">` : ''}
-    ${settings.upiId ? `<div class="upi-id-row"><span id="upiIdText">${escapeHtml(settings.upiId)}</span><button type="button" class="upi-copy-btn" onclick="copyUpiId()">Copy</button></div>` : ''}
-    <p class="helper-text">Scan the QR or pay to this UPI ID, then place your order.</p>
+  box.innerHTML = `<div class="upi-box-v2">
+    ${settings.upiQrImage
+      ? `<img class="upi-box-v2-qr" src="${settings.upiQrImage}" alt="UPI QR code" onerror="this.outerHTML='<div class=&quot;upi-box-v2-qr-placeholder&quot;>📷</div>';">`
+      : `<div class="upi-box-v2-qr-placeholder">📷</div>`}
+    ${settings.upiId ? `<div class="upi-box-v2-id-card">
+        <div class="upi-box-v2-id-icon">₹</div>
+        <div class="upi-box-v2-id-text"><div class="upi-box-v2-id-label">Pay to UPI ID</div><div class="upi-box-v2-id-value" id="upiIdText">${escapeHtml(settings.upiId)}</div></div>
+        <button type="button" class="upi-copy-btn" onclick="copyUpiId()">Copy</button>
+      </div>` : ''}
+    <p class="helper-text" style="margin-top:12px;">Scan the QR or pay to this UPI ID, then place your order.</p>
     <div class="upi-screenshot-upload">
       <label>Payment screenshot (optional, helps us confirm faster)</label>
       <input type="file" accept="image/*" id="custPaymentScreenshotFile" onchange="handleImageFile(this,'custPaymentScreenshotData','custPaymentScreenshotPreview')">
@@ -1795,8 +1906,8 @@ function validateField(id, isValid){
 async function placeOrder(){
   const name = document.getElementById('custName').value.trim();
   const phone = document.getElementById('custPhone').value.trim();
-  const address = currentFulfillment==='home' ? document.getElementById('custAddress').value.trim() : '';
-  const pincode = currentFulfillment==='home' ? document.getElementById('custPincode').value.trim() : '';
+  const address = document.getElementById('custAddress').value.trim();
+  const pincode = document.getElementById('custPincode').value.trim();
   const notes = document.getElementById('custNotes').value.trim();
   const payment = currentPaymentMethod;
   const screenshotEl = document.getElementById('custPaymentScreenshotData');
@@ -1805,10 +1916,8 @@ async function placeOrder(){
   let ok = true;
   ok = validateField('custName', name.length>=2) && ok;
   ok = validateField('custPhone', /^[6-9]\d{9}$/.test(phone)) && ok;
-  if(currentFulfillment==='home'){
-    ok = validateField('custAddress', address.length>=5) && ok;
-    ok = validateField('custPincode', /^\d{6}$/.test(pincode)) && ok;
-  }
+  ok = validateField('custAddress', address.length>=5) && ok;
+  ok = validateField('custPincode', /^\d{6}$/.test(pincode)) && ok;
   if(cartHasRx()){
     const rxBox = document.getElementById('rxConfirm');
     if(!rxBox || !rxBox.checked){ showToast('Please confirm you have a valid prescription'); ok=false; }
@@ -1822,17 +1931,17 @@ async function placeOrder(){
   if(items.length===0) return;
  
   const subtotal = cartTotal();
-  const fee = feeForFulfillment(currentFulfillment, subtotal);
+  const fee = feeForFulfillment('home', subtotal);
   const couponDiscount = appliedCoupon ? couponDiscountAmount(appliedCoupon, subtotal, fee) : 0;
-  const total = Math.max(0, subtotal + fee - couponDiscount);
+  const total = Math.max(0, Math.round(subtotal + fee - couponDiscount));
  
   const orderNum = 'MC-' + (1000 + orders.length + 1);
   const order = {
     id: orderNum,
     createdAt: new Date().toISOString(),
     customer: {name, phone, address, pincode, notes},
-    fulfillment: currentFulfillment,
-    pickupAddress: currentFulfillment==='pickup' ? (settings.pickupAddress||'') : '',
+    fulfillment: 'home',
+    pickupAddress: '',
     payment,
     paymentScreenshot,
     items, subtotal, deliveryFee: fee,
@@ -1861,6 +1970,8 @@ async function placeOrder(){
     await api('editCoupon', { id: appliedCoupon.id, field:'usedCount', value: appliedCoupon.usedCount, coupon: appliedCoupon });
   }
   appliedCoupon = null;
+
+  saveCheckoutForNextTime(name, phone, address, pincode);
  
   cart = {};
   updateCartCount();
@@ -2050,13 +2161,17 @@ function renderCouponStrip(){
     </div>`).join('');
 }
 function couponDiscountAmount(c, subtotal, deliveryFee){
-  deliveryFee = deliveryFee || 0;
-  if(subtotal < (c.minOrder||0)) return 0;
+  subtotal = Number(subtotal) || 0;
+  deliveryFee = Number(deliveryFee) || 0;
+  const minOrder = Number(c.minOrder) || 0;
+  const value = Number(c.value) || 0;
+  const maxDiscount = Number(c.maxDiscount) || 0;
+  if(subtotal < minOrder) return 0;
   if(c.type==='freedelivery') return deliveryFee;
-  if(c.type==='flat') return Math.min(c.value, subtotal);
+  if(c.type==='flat') return Math.min(value, subtotal);
   // percent or firstorder
-  let amt = Math.round(subtotal * c.value / 100);
-  if(c.maxDiscount>0) amt = Math.min(amt, c.maxDiscount);
+  let amt = Math.round(subtotal * value / 100);
+  if(maxDiscount>0) amt = Math.min(amt, maxDiscount);
   return amt;
 }
 function couponIsExpired(c){
@@ -2093,11 +2208,6 @@ function applyCoupon(){
     errEl.style.display = 'block';
     return;
   }
-  if(c.type==='freedelivery' && currentFulfillment==='pickup'){
-    errEl.textContent = 'This coupon only applies to home delivery orders';
-    errEl.style.display = 'block';
-    return;
-  }
   if(c.type==='firstorder'){
     const phone = document.getElementById('custPhone').value.trim();
     if(phone && orders.some(o=>o.customer.phone===phone)){
@@ -2110,11 +2220,70 @@ function applyCoupon(){
   input.value = '';
   renderCouponAppliedBox();
   updateCheckoutSummary();
+  renderCouponOffersList();
 }
 function removeCoupon(){
   appliedCoupon = null;
   renderCouponAppliedBox();
   updateCheckoutSummary();
+  renderCouponOffersList();
+}
+function toggleCouponOffers(){
+  const list = document.getElementById('couponOffersList');
+  const chev = document.getElementById('couponChev');
+  const isOpen = list.style.display === 'block';
+  if(isOpen){
+    list.style.display = 'none';
+    chev.classList.remove('open');
+  }else{
+    renderCouponOffersList();
+    list.style.display = 'block';
+    chev.classList.add('open');
+  }
+}
+function openCouponOffersList(){
+  const list = document.getElementById('couponOffersList');
+  const chev = document.getElementById('couponChev');
+  renderCouponOffersList();
+  list.style.display = 'block';
+  chev.classList.add('open');
+}
+function renderCouponOffersList(){
+  const list = document.getElementById('couponOffersList');
+  if(!list) return;
+  const subtotal = cartTotal();
+  const typed = (document.getElementById('couponCodeInput').value || '').trim().toUpperCase();
+  let active = coupons.filter(c=>c.active && !couponIsExpired(c) && !couponIsUsedUp(c));
+  if(typed) active = active.filter(c=>c.code.toUpperCase().includes(typed));
+  if(active.length===0){
+    list.innerHTML = `<div style="font-size:11.5px;color:var(--muted);text-align:center;padding:6px;">${typed ? 'No matching offers.' : 'No offers running right now.'}</div>`;
+    return;
+  }
+  list.innerHTML = active.map(c=>{
+    const minOrder = Number(c.minOrder) || 0;
+    const eligible = subtotal >= minOrder;
+    const isApplied = appliedCoupon && appliedCoupon.id === c.id;
+    let actionHtml;
+    if(isApplied){
+      actionHtml = `<span class="coupon-offer-need-more" style="color:var(--green);background:var(--green-bg);">✓ Applied</span>`;
+    }else if(eligible){
+      actionHtml = `<button type="button" class="coupon-offer-apply-btn" onclick="applyCouponFromOffer('${escapeAttr(c.code)}')">Apply</button>`;
+    }else{
+      const more = Math.max(0, Math.ceil(minOrder - subtotal));
+      actionHtml = `<span class="coupon-offer-need-more">Add ${fmt(more)} more</span>`;
+    }
+    return `<div class="coupon-offer-row">
+      <div class="coupon-offer-row-text">
+        <div class="coupon-offer-row-code">${escapeHtml(c.code)}</div>
+        <div class="coupon-offer-row-desc">${escapeHtml(couponDiscountText(c))}</div>
+      </div>
+      ${actionHtml}
+    </div>`;
+  }).join('');
+}
+function applyCouponFromOffer(code){
+  document.getElementById('couponCodeInput').value = code;
+  applyCoupon();
 }
 function renderCouponAppliedBox(){
   const box = document.getElementById('couponAppliedBox');
@@ -2989,11 +3158,59 @@ function readAndResizeImage(file, maxDim=640, quality=0.75){
     reader.readAsDataURL(file);
   });
 }
+// QR codes need sharp edges (JPEG compression blurs them and can make
+// them unscannable) but also need to stay small enough to fit in a
+// single Google Sheets cell (~50,000 characters) — so this resizes to
+// a smaller square and saves as PNG instead of JPEG.
+function readAndResizeQR(file, maxDim=340){
+  return new Promise((resolve, reject)=>{
+    if(!file) { reject(new Error('No file')); return; }
+    const reader = new FileReader();
+    reader.onload = (e)=>{
+      const img = new Image();
+      img.onload = ()=>{
+        let w = img.width, h = img.height;
+        if(w > h){ if(w > maxDim){ h = Math.round(h * maxDim / w); w = maxDim; } }
+        else{ if(h > maxDim){ w = Math.round(w * maxDim / h); h = maxDim; } }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0,0,w,h);
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/png'));
+      };
+      img.onerror = ()=>reject(new Error('Could not read image'));
+      img.src = e.target.result;
+    };
+    reader.onerror = ()=>reject(new Error('Could not read file'));
+    reader.readAsDataURL(file);
+  });
+}
 async function handleImageFile(inputEl, hiddenFieldId, previewId){
   const file = inputEl.files && inputEl.files[0];
   if(!file) return;
   try{
     const dataUrl = await readAndResizeImage(file);
+    document.getElementById(hiddenFieldId).value = dataUrl;
+    document.getElementById(previewId).innerHTML = `<img src="${dataUrl}" class="img-preview-thumb">`;
+  }catch(e){
+    showToast('Could not load that image — try another file');
+  }
+}
+async function handleQrImageFile(inputEl, hiddenFieldId, previewId){
+  const file = inputEl.files && inputEl.files[0];
+  if(!file) return;
+  try{
+    let dataUrl = await readAndResizeQR(file);
+    if(dataUrl.length > 45000){
+      // Still too big for a sheet cell — shrink further before giving up.
+      dataUrl = await readAndResizeQR(file, 220);
+    }
+    if(dataUrl.length > 45000){
+      showToast('This QR image is too detailed to save — try a simpler screenshot or a smaller image.');
+      return;
+    }
     document.getElementById(hiddenFieldId).value = dataUrl;
     document.getElementById(previewId).innerHTML = `<img src="${dataUrl}" class="img-preview-thumb">`;
   }catch(e){
