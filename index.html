@@ -3,6 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#2F6FED">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" id="pwaManifestLink">
 <title>Medico</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap');
@@ -503,6 +508,7 @@ input,textarea,select{font-family:var(--font-body);}
         </div>
       </div>
       <div class="header-actions">
+        <button class="icon-btn install-app-btn" id="installAppBtn" onclick="triggerInstallPrompt()" aria-label="Install app" style="display:none;">⬇️</button>
         <button class="icon-btn account-btn" id="customerStatusBtn" onclick="openCustomerLogin()" aria-label="Account">👤<span id="customerStatusLabel">Sign in</span> <span class="chev">⌄</span></button>
         <button class="icon-btn cart-btn" onclick="openCart()" aria-label="Cart">🛒<span class="cart-count" id="cartCount">0</span></button>
       </div>
@@ -587,6 +593,7 @@ input,textarea,select{font-family:var(--font-body);}
     <button class="side-menu-item" data-page="saved" onclick="openSavedItemsPage()"><span class="smi-icon">♥</span> Saved Items</button>
     <button class="side-menu-item" data-page="support" onclick="openSupportPage()"><span class="smi-icon">🆘</span> Support Center</button>
     <button class="side-menu-item" data-page="about" onclick="openAboutPage()"><span class="smi-icon">ℹ️</span> About Us</button>
+    <button class="side-menu-item" id="installAppMenuItem" onclick="triggerInstallPrompt()" style="display:none;"><span class="smi-icon">⬇️</span> Install App</button>
   </div>
 </div>
  
@@ -678,18 +685,17 @@ input,textarea,select{font-family:var(--font-body);}
 
       <div class="field">
         <div class="coupon-box-v2">
-          <div class="coupon-box-v2-row" onclick="toggleCouponOffers()">
+          <div class="coupon-box-v2-row" onclick="openCouponSelectPage()">
             <span class="coupon-box-v2-icon">🏷️</span>
             <div class="coupon-box-v2-text"><b>Have an offer or coupon code?</b><span>Tap to see running offers</span></div>
-            <span class="coupon-box-v2-chev" id="couponChev">⌄</span>
+            <span class="coupon-box-v2-chev">›</span>
           </div>
           <div class="coupon-apply-row" style="margin-top:10px;">
-            <input type="text" id="couponCodeInput" placeholder="E.G. SAVE10" onfocus="openCouponOffersList()" onclick="openCouponOffersList()" oninput="renderCouponOffersList()">
+            <input type="text" id="couponCodeInput" placeholder="E.G. SAVE10">
             <button type="button" class="coupon-apply-btn" onclick="applyCoupon()">Apply</button>
           </div>
           <div class="coupon-error-text" id="couponError" style="display:none;"></div>
           <div id="couponAppliedBox"></div>
-          <div id="couponOffersList" class="coupon-offers-list" style="display:none;"></div>
         </div>
       </div>
 
@@ -697,7 +703,7 @@ input,textarea,select{font-family:var(--font-body);}
       <div class="slip" id="checkoutSummary" style="margin-bottom:16px;"></div>
     </div>
     <div class="checkout-footer-v2">
-      <button class="primary-btn checkout-place-btn" onclick="placeOrder()">🔒 Place order</button>
+      <button class="primary-btn checkout-place-btn" onclick="placeOrder()" id="placeOrderBtn">🔒 Place order</button>
       <p class="checkout-footer-note">You will confirm on the next step</p>
     </div>
   </div>
@@ -787,6 +793,17 @@ input,textarea,select{font-family:var(--font-body);}
       <div class="field-error" id="err-changePinConfirm">PINs do not match</div>
     </div>
     <button class="primary-btn" onclick="submitChangePin()">Update PIN</button>
+  </div>
+</div>
+ 
+<!-- Coupon Select Page (opens on top of checkout) -->
+<div class="modal-wrap fullscreen" id="couponSelectModal">
+  <div class="modal" style="padding:0;display:flex;flex-direction:column;height:100%;">
+    <div class="page-view-header" style="flex-shrink:0;">
+      <button class="page-back-btn" onclick="closeModal('couponSelectModal')">←</button>
+      <div class="page-view-title">Available Offers</div>
+    </div>
+    <div class="page-view-body" id="couponSelectBody" style="flex:1;overflow-y:auto;"></div>
   </div>
 </div>
  
@@ -1106,10 +1123,11 @@ const API_URL = "https://script.google.com/macros/s/AKfycby1EhlGkb7Ld4T2sqrrnkaf
  * Generic helper to call the Google Apps Script Web App.
  * Sends { action, payload } as JSON in a POST body and expects
  * a JSON response of the shape { ok: true, data: ... } or { ok:false, error:"..." }.
- * Falls back gracefully (returns null) on network / parsing failure so the
- * UI can keep working with whatever it already has in memory.
+ * Retries a couple of times on transient failures (slow cold starts,
+ * dropped connections) before giving up, so the UI only falls back to
+ * its built-in sample data when the backend is genuinely unreachable.
  */
-async function api(action, data){
+async function api(action, data, attempt=1){
   try{
     const res = await fetch(API_URL, {
       method: "POST",
@@ -1121,7 +1139,11 @@ async function api(action, data){
     if(json && json.ok === false) throw new Error(json.error || "API error");
     return json && Object.prototype.hasOwnProperty.call(json,'data') ? json.data : json;
   }catch(err){
-    console.error(`API call failed [${action}]:`, err);
+    if(attempt < 3){
+      await new Promise(r=>setTimeout(r, 600*attempt));
+      return api(action, data, attempt+1);
+    }
+    console.error(`API call failed [${action}] after ${attempt} attempts:`, err);
     return null;
   }
 }
@@ -1832,8 +1854,6 @@ function openCheckout(){
   document.getElementById('couponCodeInput').value = '';
   document.getElementById('couponError').style.display = 'none';
   renderCouponAppliedBox();
-  document.getElementById('couponOffersList').style.display = 'none';
-  document.getElementById('couponChev').classList.remove('open');
   currentFulfillment = 'home';
   ['custName','custPhone','custAddress','custPincode','custNotes'].forEach(id=>document.getElementById(id).value='');
   prefillCheckoutFromLastOrder();
@@ -1903,7 +1923,9 @@ function validateField(id, isValid){
   document.getElementById('err-'+id).style.display = isValid ? 'none' : 'block';
   return isValid;
 }
+let isPlacingOrder = false;
 async function placeOrder(){
+  if(isPlacingOrder) return;
   const name = document.getElementById('custName').value.trim();
   const phone = document.getElementById('custPhone').value.trim();
   const address = document.getElementById('custAddress').value.trim();
@@ -1929,6 +1951,11 @@ async function placeOrder(){
     return {id, name:p?p.name:'Unknown', price:p?getEffectivePrice(p):0, qty, rx:p?p.rx:false, expiryDate:p?p.expiryDate:'', wasDeal:p?isDealActive(p):false};
   });
   if(items.length===0) return;
+
+  isPlacingOrder = true;
+  const placeBtn = document.getElementById('placeOrderBtn');
+  const placeBtnOriginalHtml = placeBtn ? placeBtn.innerHTML : '';
+  if(placeBtn){ placeBtn.disabled = true; placeBtn.innerHTML = '⏳ Placing order…'; }
  
   const subtotal = cartTotal();
   const fee = feeForFulfillment('home', subtotal);
@@ -1951,34 +1978,39 @@ async function placeOrder(){
     status: 'Pending'
   };
 
-  // Optimistically update local state so the UI feels instant.
-  orders.unshift(order);
-  items.forEach(it=>{
-    const p = products.find(x=>x.id===it.id);
-    if(p) p.stock = Math.max(0, p.stock - it.qty);
-  });
+  try{
+    // Optimistically update local state so the UI feels instant.
+    orders.unshift(order);
+    items.forEach(it=>{
+      const p = products.find(x=>x.id===it.id);
+      if(p) p.stock = Math.max(0, p.stock - it.qty);
+    });
 
-  // Persist the order (and the resulting stock levels) to Google Sheets.
-  const saved = await api('addOrder', order);
-  if(saved === null){
-    showToast('Order saved locally — could not reach the server. It will not sync.');
-  }
-  await api('updateProductsStock', { items });
+    // Persist the order (and the resulting stock levels) to Google Sheets.
+    const saved = await api('addOrder', order);
+    if(saved === null){
+      showToast('Order saved locally — could not reach the server. It will not sync.');
+    }
+    await api('updateProductsStock', { items });
 
-  if(appliedCoupon){
-    appliedCoupon.usedCount = (appliedCoupon.usedCount||0) + 1;
-    await api('editCoupon', { id: appliedCoupon.id, field:'usedCount', value: appliedCoupon.usedCount, coupon: appliedCoupon });
-  }
-  appliedCoupon = null;
+    if(appliedCoupon){
+      appliedCoupon.usedCount = (appliedCoupon.usedCount||0) + 1;
+      await api('editCoupon', { id: appliedCoupon.id, field:'usedCount', value: appliedCoupon.usedCount, coupon: appliedCoupon });
+    }
+    appliedCoupon = null;
 
-  saveCheckoutForNextTime(name, phone, address, pincode);
+    saveCheckoutForNextTime(name, phone, address, pincode);
  
-  cart = {};
-  updateCartCount();
-  renderProducts();
+    cart = {};
+    updateCartCount();
+    renderProducts();
  
-  closeModal('checkoutModal');
-  showReceipt(order);
+    closeModal('checkoutModal');
+    showReceipt(order);
+  } finally {
+    isPlacingOrder = false;
+    if(placeBtn){ placeBtn.disabled = false; placeBtn.innerHTML = placeBtnOriginalHtml; }
+  }
  
   ['custName','custPhone','custAddress','custPincode','custNotes'].forEach(id=>document.getElementById(id).value='');
 }
@@ -2220,46 +2252,28 @@ function applyCoupon(){
   input.value = '';
   renderCouponAppliedBox();
   updateCheckoutSummary();
-  renderCouponOffersList();
+  if(document.getElementById('couponSelectModal').classList.contains('show')) renderCouponSelectList();
 }
 function removeCoupon(){
   appliedCoupon = null;
   renderCouponAppliedBox();
   updateCheckoutSummary();
-  renderCouponOffersList();
+  if(document.getElementById('couponSelectModal').classList.contains('show')) renderCouponSelectList();
 }
-function toggleCouponOffers(){
-  const list = document.getElementById('couponOffersList');
-  const chev = document.getElementById('couponChev');
-  const isOpen = list.style.display === 'block';
-  if(isOpen){
-    list.style.display = 'none';
-    chev.classList.remove('open');
-  }else{
-    renderCouponOffersList();
-    list.style.display = 'block';
-    chev.classList.add('open');
-  }
+function openCouponSelectPage(){
+  renderCouponSelectList();
+  document.getElementById('couponSelectModal').classList.add('show');
 }
-function openCouponOffersList(){
-  const list = document.getElementById('couponOffersList');
-  const chev = document.getElementById('couponChev');
-  renderCouponOffersList();
-  list.style.display = 'block';
-  chev.classList.add('open');
-}
-function renderCouponOffersList(){
-  const list = document.getElementById('couponOffersList');
+function renderCouponSelectList(){
+  const list = document.getElementById('couponSelectBody');
   if(!list) return;
   const subtotal = cartTotal();
-  const typed = (document.getElementById('couponCodeInput').value || '').trim().toUpperCase();
-  let active = coupons.filter(c=>c.active && !couponIsExpired(c) && !couponIsUsedUp(c));
-  if(typed) active = active.filter(c=>c.code.toUpperCase().includes(typed));
+  const active = coupons.filter(c=>c.active && !couponIsExpired(c) && !couponIsUsedUp(c));
   if(active.length===0){
-    list.innerHTML = `<div style="font-size:11.5px;color:var(--muted);text-align:center;padding:6px;">${typed ? 'No matching offers.' : 'No offers running right now.'}</div>`;
+    list.innerHTML = `<div class="pv-empty"><div class="pv-empty-icon">🏷️</div><div>No offers running right now.</div></div>`;
     return;
   }
-  list.innerHTML = active.map(c=>{
+  list.innerHTML = `<div class="coupon-offers-list" style="display:flex;">` + active.map(c=>{
     const minOrder = Number(c.minOrder) || 0;
     const eligible = subtotal >= minOrder;
     const isApplied = appliedCoupon && appliedCoupon.id === c.id;
@@ -2279,11 +2293,14 @@ function renderCouponOffersList(){
       </div>
       ${actionHtml}
     </div>`;
-  }).join('');
+  }).join('') + `</div>`;
 }
 function applyCouponFromOffer(code){
   document.getElementById('couponCodeInput').value = code;
   applyCoupon();
+  if(appliedCoupon && appliedCoupon.code.toUpperCase() === code.toUpperCase()){
+    closeModal('couponSelectModal');
+  }
 }
 function renderCouponAppliedBox(){
   const box = document.getElementById('couponAppliedBox');
@@ -3229,6 +3246,81 @@ async function handleAdminProductImage(id, inputEl){
   }
 }
  
+/* ---------------- PWA install support ---------------- */
+// Builds the web app manifest at runtime (as a data: URI, so this works
+// from a single HTML file with no separate manifest.json to host) and
+// registers a minimal service worker. Chrome only offers the "Install"
+// icon / prompt when the page is served over HTTPS (or localhost) with
+// a valid manifest + a registered service worker — opening this file
+// directly from disk (file://) will not show an install option.
+function setupPwa(){
+  try{
+    const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="#2F6FED"/><path d="M45 25h10v20h20v10H55v20H45V55H25V45h20z" fill="#fff"/></svg>`;
+    const iconDataUri = 'data:image/svg+xml,' + encodeURIComponent(iconSvg);
+    const manifest = {
+      name: 'Medico - Trusted Care',
+      short_name: 'Medico',
+      start_url: '.',
+      display: 'standalone',
+      background_color: '#F5F7FC',
+      theme_color: '#2F6FED',
+      icons: [
+        { src: iconDataUri, sizes: 'any', type: 'image/svg+xml', purpose: 'any maskable' }
+      ]
+    };
+    const manifestLink = document.getElementById('pwaManifestLink');
+    if(manifestLink){
+      manifestLink.setAttribute('href', 'data:application/manifest+json,' + encodeURIComponent(JSON.stringify(manifest)));
+    }
+  }catch(e){ console.warn('PWA manifest setup failed', e); }
+
+  if('serviceWorker' in navigator){
+    try{
+      const swCode = `
+        self.addEventListener('install', e => self.skipWaiting());
+        self.addEventListener('activate', e => self.clients.claim());
+        self.addEventListener('fetch', e => {
+          e.respondWith(fetch(e.request).catch(() => new Response('Offline', {status:503})));
+        });
+      `;
+      const swBlob = new Blob([swCode], {type:'application/javascript'});
+      const swUrl = URL.createObjectURL(swBlob);
+      navigator.serviceWorker.register(swUrl).catch(err=>console.warn('Service worker registration failed', err));
+    }catch(e){ console.warn('Service worker setup failed', e); }
+  }
+}
+
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e)=>{
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  const btn = document.getElementById('installAppBtn');
+  const menuItem = document.getElementById('installAppMenuItem');
+  if(btn) btn.style.display = 'flex';
+  if(menuItem) menuItem.style.display = 'flex';
+});
+async function triggerInstallPrompt(){
+  if(!deferredInstallPrompt){
+    showToast('Open this page in Chrome and use "Install app" from the browser menu.');
+    return;
+  }
+  deferredInstallPrompt.prompt();
+  await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt = null;
+  const btn = document.getElementById('installAppBtn');
+  const menuItem = document.getElementById('installAppMenuItem');
+  if(btn) btn.style.display = 'none';
+  if(menuItem) menuItem.style.display = 'none';
+}
+window.addEventListener('appinstalled', ()=>{
+  const btn = document.getElementById('installAppBtn');
+  const menuItem = document.getElementById('installAppMenuItem');
+  if(btn) btn.style.display = 'none';
+  if(menuItem) menuItem.style.display = 'none';
+  showToast('Medico installed!');
+});
+setupPwa();
+
 /* ---------------- Init ---------------- */
 loadData();
 </script>
