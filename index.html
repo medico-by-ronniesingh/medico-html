@@ -7,7 +7,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<link rel="manifest" id="pwaManifestLink">
+<meta name="apple-mobile-web-app-title" content="Medico">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
 <title>Medico</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap');
@@ -173,6 +175,8 @@ input,textarea,select{font-family:var(--font-body);}
 /* ---------- Product list rows (new design) ---------- */
 .product-list{display:flex;flex-direction:column;gap:12px;}
 .product-row{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px;display:flex;gap:12px;position:relative;transition:box-shadow .15s;}
+.skeleton-row{height:152px;border-radius:16px;background:linear-gradient(90deg,var(--surface) 25%,var(--bg) 37%,var(--surface) 63%);background-size:400% 100%;animation:skeletonShine 1.4s ease infinite;border:1px solid var(--line);}
+@keyframes skeletonShine{0%{background-position:100% 50%;}100%{background-position:0 50%;}}
 .product-row:hover{box-shadow:0 8px 22px rgba(22,33,62,.08);}
 .product-row-image{width:128px;height:128px;border-radius:14px;background:var(--bg);flex-shrink:0;position:relative;display:flex;align-items:center;justify-content:center;font-size:46px;}
 .product-row-image img{width:100%;height:100%;object-fit:cover;border-radius:14px;}
@@ -336,6 +340,19 @@ input,textarea,select{font-family:var(--font-body);}
 .account-row-label{color:var(--muted);}
 .account-row-value{font-weight:700;color:var(--ink);}
 .address-mini-card{background:var(--bg);border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:12.5px;color:var(--ink-soft);}
+.saved-address-picker{display:flex;flex-direction:column;gap:8px;}
+.saved-address-card{display:flex;align-items:flex-start;gap:10px;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;background:var(--bg);}
+.saved-address-card.active{border-color:var(--primary);background:#EAF1FE;}
+.saved-address-card-icon{font-size:15px;flex-shrink:0;margin-top:1px;}
+.saved-address-card-text{flex:1;min-width:0;font-size:12px;color:var(--ink-soft);line-height:1.5;}
+.saved-address-card.active .saved-address-card-text{color:var(--ink);}
+.saved-address-card-check{width:16px;height:16px;border-radius:50%;border:2px solid var(--line);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;color:transparent;margin-top:1px;}
+.saved-address-card.active .saved-address-card-check{background:var(--primary);border-color:var(--primary);color:#fff;}
+.saved-address-new-btn{display:flex;align-items:center;gap:8px;border:1.5px dashed var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;background:none;font-size:12.5px;font-weight:600;color:var(--primary);}
+.biz-type-badge{font-size:10.5px;font-weight:700;padding:4px 10px;border-radius:12px;}
+.biz-type-badge.retail{background:#EAF1FE;color:var(--primary-dark);}
+.biz-type-badge.wholesale{background:#F1EBFF;color:#6A4E9C;}
+.biz-type-badge.special{background:var(--green-bg);color:var(--green);}
 .pin-eye-btn{background:var(--bg);border:1px solid var(--line);width:26px;height:26px;border-radius:50%;font-size:12px;color:var(--ink-soft);flex-shrink:0;}
 .pin-eye-btn:hover{background:#EAEFFC;}
  
@@ -348,6 +365,7 @@ input,textarea,select{font-family:var(--font-body);}
  
 /* About page */
 .about-hero{text-align:center;padding:14px 10px 26px;}
+.auth-hero{padding:20px 4px 6px;}
 .about-hero .brand-mark{width:56px;height:56px;font-size:26px;margin:0 auto 12px;}
 .about-para{font-size:13.5px;color:var(--ink-soft);line-height:1.7;margin-bottom:14px;}
 .about-list{display:flex;flex-direction:column;gap:10px;margin-top:6px;}
@@ -509,7 +527,7 @@ input,textarea,select{font-family:var(--font-body);}
       </div>
       <div class="header-actions">
         <button class="icon-btn install-app-btn" id="installAppBtn" onclick="triggerInstallPrompt()" aria-label="Install app" style="display:none;">⬇️</button>
-        <button class="icon-btn account-btn" id="customerStatusBtn" onclick="openCustomerLogin()" aria-label="Account">👤<span id="customerStatusLabel">Sign in</span> <span class="chev">⌄</span></button>
+        <button class="icon-btn account-btn" id="customerStatusBtn" onclick="openLoginPage()" aria-label="Account">👤<span id="customerStatusLabel">Sign in</span> <span class="chev">⌄</span></button>
         <button class="icon-btn cart-btn" onclick="openCart()" aria-label="Cart">🛒<span class="cart-count" id="cartCount">0</span></button>
       </div>
     </div>
@@ -558,7 +576,13 @@ input,textarea,select{font-family:var(--font-body);}
       </div>
     </div>
     <div class="results-count" id="countPill">0 items</div>
-    <div id="productsArea"></div>
+    <div id="productsArea">
+      <div class="product-list">
+        <div class="skeleton-row"></div>
+        <div class="skeleton-row"></div>
+        <div class="skeleton-row"></div>
+      </div>
+    </div>
   </div>
  
   <div class="footer-note" id="footerNote">Medico · by Ronnie Singh</div>
@@ -640,6 +664,10 @@ input,textarea,select{font-family:var(--font-body);}
         <div class="icon-field"><span class="icon-field-ic">📞</span><input type="tel" id="custPhone" placeholder="10-digit mobile number"></div>
         <div class="field-error" id="err-custPhone">Enter a valid 10-digit number</div>
       </div>
+      <div class="field" id="savedAddressPickerField" style="display:none;">
+        <label>Saved addresses</label>
+        <div id="savedAddressPicker" class="saved-address-picker"></div>
+      </div>
       <div class="field">
         <label>Delivery address</label>
         <div class="icon-field"><span class="icon-field-ic">📍</span><textarea id="custAddress" rows="2" placeholder="House no, street, area"></textarea></div>
@@ -685,13 +713,12 @@ input,textarea,select{font-family:var(--font-body);}
 
       <div class="field">
         <div class="coupon-box-v2">
-          <div class="coupon-box-v2-row" onclick="openCouponSelectPage()">
+          <div class="coupon-box-v2-row">
             <span class="coupon-box-v2-icon">🏷️</span>
-            <div class="coupon-box-v2-text"><b>Have an offer or coupon code?</b><span>Tap to see running offers</span></div>
-            <span class="coupon-box-v2-chev">›</span>
+            <div class="coupon-box-v2-text"><b>Have an offer or coupon code?</b><span>Tap the box below to see running offers</span></div>
           </div>
           <div class="coupon-apply-row" style="margin-top:10px;">
-            <input type="text" id="couponCodeInput" placeholder="E.G. SAVE10">
+            <input type="text" id="couponCodeInput" placeholder="E.G. SAVE10" onfocus="openCouponSelectPage()" onclick="openCouponSelectPage()">
             <button type="button" class="coupon-apply-btn" onclick="applyCoupon()">Apply</button>
           </div>
           <div class="coupon-error-text" id="couponError" style="display:none;"></div>
@@ -738,38 +765,6 @@ input,textarea,select{font-family:var(--font-body);}
   </div>
 </div>
  
-<!-- Customer Login Modal -->
-<div class="modal-wrap" id="customerLoginModal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('customerLoginModal')">✕</button>
-    <h3 style="margin-bottom:4px;" id="custLoginTitle">Sign in</h3>
-    <p class="helper-text" style="margin-top:6px;" id="custLoginSub">Enter your mobile number to continue.</p>
-
-    <div id="custLoginStep1">
-      <div class="field">
-        <label>Phone number</label>
-        <input type="tel" id="customerLoginPhone" placeholder="10-digit mobile number" maxlength="10" inputmode="numeric" oninput="this.value=this.value.replace(/\D/g,'').slice(0,10)" onkeydown="if(event.key==='Enter')checkCustomerPhone()">
-        <div class="field-error" id="err-customerLoginPhone">Enter a valid 10-digit number</div>
-      </div>
-      <button class="primary-btn" onclick="checkCustomerPhone()">Continue</button>
-    </div>
-
-    <div id="custLoginStep2" style="display:none;">
-      <div class="field" id="custLoginNameField" style="display:none;">
-        <label>Your name</label>
-        <input type="text" id="customerLoginName" placeholder="e.g. Rahul Kumar">
-        <div class="field-error" id="err-customerLoginName">Please enter your name</div>
-      </div>
-      <div class="field">
-        <label id="custLoginPinLabel">Enter your 4-digit PIN</label>
-        <input type="password" id="customerLoginPin" placeholder="4-digit PIN" maxlength="4" inputmode="numeric" oninput="this.value=this.value.replace(/\D/g,'').slice(0,4)" onkeydown="if(event.key==='Enter')submitCustomerLogin()">
-        <div class="field-error" id="err-customerLoginPin">Enter a valid 4-digit PIN</div>
-      </div>
-      <button class="primary-btn" onclick="submitCustomerLogin()" id="custLoginSubmitBtn">Sign in</button>
-      <button type="button" class="pill-btn" style="width:100%;margin-top:8px;text-align:center;" onclick="backToPhoneStep()">Use a different number</button>
-    </div>
-  </div>
-</div>
  
 <!-- Change PIN Modal -->
 <div class="modal-wrap" id="changePinModal">
@@ -883,7 +878,7 @@ input,textarea,select{font-family:var(--font-body);}
       <button class="sheet-item" onclick="closeModal('moreModal');openTrack();"><span class="si-icon">📦</span> Track an order</button>
       <button class="sheet-item" onclick="closeModal('moreModal');openCart();"><span class="si-icon">🛒</span> View cart</button>
       <button class="sheet-item" onclick="closeModal('moreModal');openSupportSheet();"><span class="si-icon">🆘</span> Help & Support</button>
-      <button class="sheet-item" id="signupSheetItem" onclick="closeModal('moreModal');openCustomerLogin();"><span class="si-icon">👤</span> Sign up / Sign in</button>
+      <button class="sheet-item" id="signupSheetItem" onclick="closeModal('moreModal');openLoginPage();"><span class="si-icon">👤</span> Sign up / Sign in</button>
       <button class="sheet-item" id="contactSheetItem"><span class="si-icon">📞</span> Contact us</button>
       <button class="sheet-item" id="logoutSheetItem" style="display:none;color:var(--danger);" onclick="logoutFromMoreSheet()"><span class="si-icon">🚪</span> Logout</button>
     </div>
@@ -1163,9 +1158,22 @@ let currentFulfillment = 'home';
 let customerPricing = [];
 let customers = [];
 let currentCustomerPhone = (typeof localStorage!=='undefined' && localStorage.getItem('medico_customer_phone')) || '';
-let currentCustomerName = '';
+let currentCustomerName = (typeof localStorage!=='undefined' && localStorage.getItem('medico_customer_name')) || '';
 let pendingLoginPhone = '';
 let pendingLoginIsNew = false;
+let customersLoadedPromise = null;
+async function ensureCustomersLoaded(){
+  if(!customersLoadedPromise){ customersLoadedPromise = loadCustomers(); }
+  await customersLoadedPromise;
+}
+function saveLoggedInCustomerCache(phone, name){
+  try{
+    if(typeof localStorage!=='undefined'){
+      localStorage.setItem('medico_customer_phone', phone);
+      localStorage.setItem('medico_customer_name', name||'');
+    }
+  }catch(e){}
+}
  
 const DEFAULT_SETTINGS = {
   shopName:'Medico',
@@ -1228,7 +1236,8 @@ const DEFAULT_PRODUCTS = [
    ========================================================================== */
 async function loadProducts(){
   const data = await api('getProducts');
-  products = (Array.isArray(data) && data.length) ? data : DEFAULT_PRODUCTS;
+  products = (Array.isArray(data) && data.length) ? data : (readCache('medico_cache_products') || DEFAULT_PRODUCTS);
+  writeCache('medico_cache_products', products);
   return products;
 }
 async function loadOrders(){
@@ -1238,7 +1247,9 @@ async function loadOrders(){
 }
 async function loadSettings(){
   const data = await api('getSettings');
-  settings = (data && typeof data === 'object') ? { ...DEFAULT_SETTINGS, ...data } : { ...DEFAULT_SETTINGS };
+  const base = (data && typeof data === 'object') ? data : (readCache('medico_cache_settings') || {});
+  settings = { ...DEFAULT_SETTINGS, ...base };
+  writeCache('medico_cache_settings', data && typeof data === 'object' ? data : base);
   return settings;
 }
 async function loadComplaints(){
@@ -1248,12 +1259,14 @@ async function loadComplaints(){
 }
 async function loadFaqs(){
   const data = await api('getFaqs');
-  faqs = (Array.isArray(data) && data.length) ? data : DEFAULT_FAQS;
+  faqs = (Array.isArray(data) && data.length) ? data : (readCache('medico_cache_faqs') || DEFAULT_FAQS);
+  writeCache('medico_cache_faqs', faqs);
   return faqs;
 }
 async function loadCoupons(){
   const data = await api('getCoupons');
-  coupons = (Array.isArray(data) && data.length) ? data : DEFAULT_COUPONS;
+  coupons = (Array.isArray(data) && data.length) ? data : (readCache('medico_cache_coupons') || DEFAULT_COUPONS);
+  writeCache('medico_cache_coupons', coupons);
   return coupons;
 }
 async function loadCustomerPricing(){
@@ -1261,31 +1274,60 @@ async function loadCustomerPricing(){
   customerPricing = Array.isArray(data) ? data : [];
   return customerPricing;
 }
+function readCache(key){
+  try{
+    if(typeof localStorage==='undefined') return null;
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : null;
+  }catch(e){ return null; }
+}
+function writeCache(key, value){
+  try{
+    if(typeof localStorage!=='undefined') localStorage.setItem(key, JSON.stringify(value));
+  }catch(e){}
+}
 function saveCustomersCache(){
   try{ if(typeof localStorage!=='undefined') localStorage.setItem('medico_customers', JSON.stringify(customers)); }catch(e){}
 }
 async function loadCustomers(){
-  let cached = [];
-  try{
-    const c = typeof localStorage!=='undefined' ? localStorage.getItem('medico_customers') : null;
-    cached = c ? JSON.parse(c) : [];
-  }catch(e){ cached = []; }
-
   const data = await api('getCustomers');
-  const remote = Array.isArray(data) ? data : [];
-
-  // Merge remote + local cache (local wins for anything the server doesn't
-  // know about yet) so a locally-created account is never lost on refresh.
-  const merged = [...remote];
-  cached.forEach(localCust=>{
-    if(!merged.some(c=>c.phone===localCust.phone)) merged.push(localCust);
-  });
-  customers = merged;
+  if(Array.isArray(data)){
+    customers = data;
+  }else{
+    customers = readCache('medico_customers') || [];
+  }
   saveCustomersCache();
   return customers;
 }
 
+function fastPaintFromCache(){
+  // Renders whatever we already have cached from a previous visit
+  // immediately, before the network calls below even resolve, so the
+  // app never sits on a blank/empty screen while it's loading.
+  const cachedProducts = readCache('medico_cache_products');
+  const cachedSettings = readCache('medico_cache_settings');
+  const cachedCoupons = readCache('medico_cache_coupons');
+  const cachedFaqs = readCache('medico_cache_faqs');
+  if(cachedSettings) settings = { ...DEFAULT_SETTINGS, ...cachedSettings };
+  if(cachedProducts && cachedProducts.length){
+    products = cachedProducts;
+    applySettingsToDOM();
+    populateCategoryFilter();
+    renderProducts();
+  }
+  if(cachedCoupons && cachedCoupons.length){
+    coupons = cachedCoupons;
+    renderCouponStrip();
+  }
+  if(cachedFaqs && cachedFaqs.length){
+    faqs = cachedFaqs;
+  }
+  renderCustomerStatus();
+}
+
 async function loadData(){
+  fastPaintFromCache();
+  customersLoadedPromise = loadCustomers();
   await Promise.all([
     loadProducts(),
     loadOrders(),
@@ -1294,7 +1336,7 @@ async function loadData(){
     loadFaqs(),
     loadCoupons(),
     loadCustomerPricing(),
-    loadCustomers()
+    customersLoadedPromise
   ]);
 
   // If a phone was remembered from a previous visit, keep the session going.
@@ -1363,128 +1405,240 @@ function renderCustomerStatus(){
     btn.onclick = openAccountPage;
   }else{
     labelEl.textContent = 'Sign in';
-    btn.onclick = openCustomerLogin;
+    btn.onclick = openLoginPage;
   }
   const logoutItem = document.getElementById('logoutSheetItem');
   if(logoutItem) logoutItem.style.display = currentCustomerPhone ? 'flex' : 'none';
   const signupItem = document.getElementById('signupSheetItem');
   if(signupItem) signupItem.style.display = currentCustomerPhone ? 'none' : 'flex';
 }
-function openCustomerLogin(){
-  document.getElementById('customerLoginPhone').value = '';
-  document.getElementById('customerLoginName').value = '';
-  document.getElementById('customerLoginPin').value = '';
-  ['err-customerLoginPhone','err-customerLoginName','err-customerLoginPin'].forEach(id=>document.getElementById(id).style.display='none');
-  document.getElementById('custLoginStep1').style.display = 'block';
-  document.getElementById('custLoginStep2').style.display = 'none';
-  document.getElementById('custLoginTitle').textContent = 'Sign in';
-  document.getElementById('custLoginSub').textContent = 'Enter your mobile number to continue.';
-  document.getElementById('customerLoginModal').classList.add('show');
-  setTimeout(()=>{ const el=document.getElementById('customerLoginPhone'); if(el) el.focus(); }, 50);
+function openLoginPage(){
+  renderLoginPhoneStep();
 }
-function checkCustomerPhone(){
-  const phone = document.getElementById('customerLoginPhone').value.trim();
+function renderLoginPhoneStep(){
+  const body = `
+    <div class="auth-hero">
+      <div class="brand-mark" style="width:56px;height:56px;font-size:26px;margin:0 auto 14px;">✚</div>
+      <h3 style="text-align:center;">Sign in to Medico</h3>
+      <p class="helper-text" style="text-align:center;margin-top:4px;margin-bottom:20px;">Enter your mobile number to continue.</p>
+    </div>
+    <div class="field">
+      <label>Phone number</label>
+      <div class="icon-field"><span class="icon-field-ic">📞</span><input type="tel" id="authPhone" placeholder="10-digit mobile number" maxlength="10" inputmode="numeric" oninput="this.value=this.value.replace(/\\D/g,'').slice(0,10)" onkeydown="if(event.key==='Enter')authCheckPhone()"></div>
+      <div class="field-error" id="err-authPhone">Enter a valid 10-digit number</div>
+    </div>
+    <button class="primary-btn" id="authContinueBtn" onclick="authCheckPhone()">Continue</button>
+  `;
+  showPage('Sign In', body, null);
+  setTimeout(()=>{ const el=document.getElementById('authPhone'); if(el) el.focus(); }, 50);
+}
+async function authCheckPhone(){
+  const phone = document.getElementById('authPhone').value.trim();
   if(!/^[6-9]\d{9}$/.test(phone)){
-    document.getElementById('err-customerLoginPhone').style.display = 'block';
+    document.getElementById('err-authPhone').style.display = 'block';
     return;
   }
-  document.getElementById('err-customerLoginPhone').style.display = 'none';
+  document.getElementById('err-authPhone').style.display = 'none';
+
+  const btn = document.getElementById('authContinueBtn');
+  if(btn){ btn.disabled = true; btn.textContent = 'Checking…'; }
+  // Always confirm against the freshest possible customer list before
+  // deciding new-vs-existing, so a slow/late backend response can never
+  // trick us into thinking an existing account is new (which is what was
+  // creating duplicate accounts for the same number).
+  await ensureCustomersLoaded();
+  if(btn){ btn.disabled = false; btn.textContent = 'Continue'; }
+
   pendingLoginPhone = phone;
   const existing = customers.find(c=>c.phone===phone);
   pendingLoginIsNew = !existing;
-
-  document.getElementById('custLoginStep1').style.display = 'none';
-  document.getElementById('custLoginStep2').style.display = 'block';
-  document.getElementById('customerLoginPin').value = '';
-  document.getElementById('customerLoginName').value = '';
-  ['err-customerLoginName','err-customerLoginPin'].forEach(id=>document.getElementById(id).style.display='none');
-
   if(pendingLoginIsNew){
-    document.getElementById('custLoginTitle').textContent = 'Create your account';
-    document.getElementById('custLoginSub').textContent = `We don't have an account for ${phone} yet — set your name and a 4-digit PIN to create one.`;
-    document.getElementById('custLoginNameField').style.display = 'block';
-    document.getElementById('custLoginPinLabel').textContent = 'Set a 4-digit PIN';
-    document.getElementById('custLoginSubmitBtn').textContent = 'Create account & sign in';
+    renderSignupStep(phone);
   }else{
-    document.getElementById('custLoginTitle').textContent = 'Welcome back';
-    document.getElementById('custLoginSub').textContent = `Enter the PIN for ${phone}.`;
-    document.getElementById('custLoginNameField').style.display = 'none';
-    document.getElementById('custLoginPinLabel').textContent = 'Enter your 4-digit PIN';
-    document.getElementById('custLoginSubmitBtn').textContent = 'Sign in';
+    renderPinStep(phone, existing);
   }
-  setTimeout(()=>{
-    const el = pendingLoginIsNew ? document.getElementById('customerLoginName') : document.getElementById('customerLoginPin');
-    if(el) el.focus();
-  }, 50);
 }
-function backToPhoneStep(){
-  document.getElementById('custLoginStep1').style.display = 'block';
-  document.getElementById('custLoginStep2').style.display = 'none';
-  document.getElementById('custLoginTitle').textContent = 'Sign in';
-  document.getElementById('custLoginSub').textContent = 'Enter your mobile number to continue.';
+function renderPinStep(phone, existing){
+  const initial = ((existing && existing.name) || '?').trim().charAt(0).toUpperCase();
+  const body = `
+    <div class="auth-hero">
+      <div class="account-avatar" style="margin:0 auto 14px;">${escapeHtml(initial)}</div>
+      <h3 style="text-align:center;">Welcome back${existing && existing.name ? ', '+escapeHtml(existing.name) : ''}</h3>
+      <p class="helper-text" style="text-align:center;margin-top:4px;margin-bottom:20px;">Enter the PIN for ${escapeHtml(phone)}.</p>
+    </div>
+    <div class="field">
+      <label>4-digit PIN</label>
+      <div class="icon-field"><span class="icon-field-ic">🔒</span><input type="password" id="authPinLogin" placeholder="4-digit PIN" maxlength="4" inputmode="numeric" oninput="this.value=this.value.replace(/\\D/g,'').slice(0,4)" onkeydown="if(event.key==='Enter')authSubmitLogin('${escapeAttr(phone)}')"></div>
+      <div class="field-error" id="err-authPinLogin">Incorrect PIN</div>
+    </div>
+    <button class="primary-btn" onclick="authSubmitLogin('${escapeAttr(phone)}')">Sign In</button>
+    <button type="button" class="pill-btn" style="width:100%;margin-top:8px;text-align:center;" onclick="renderLoginPhoneStep()">Use a different number</button>
+  `;
+  showPage('Sign In', body, null);
+  setTimeout(()=>{ const el=document.getElementById('authPinLogin'); if(el) el.focus(); }, 50);
 }
-async function submitCustomerLogin(){
-  const phone = pendingLoginPhone;
-  const pin = document.getElementById('customerLoginPin').value.trim();
-  const pinOk = /^\d{4}$/.test(pin);
-  document.getElementById('err-customerLoginPin').textContent = 'Enter a valid 4-digit PIN';
-  document.getElementById('err-customerLoginPin').style.display = pinOk ? 'none' : 'block';
-  if(!pinOk) return;
-
-  if(pendingLoginIsNew){
-    const name = document.getElementById('customerLoginName').value.trim();
-    const nameOk = name.length>=2;
-    document.getElementById('err-customerLoginName').style.display = nameOk ? 'none' : 'block';
-    if(!nameOk) return;
-
-    const customer = {id:'cu'+Date.now(), phone, name, pin, createdAt:new Date().toISOString()};
-    customers.push(customer);
-    saveCustomersCache();
-    const saved = await api('addCustomer', customer);
-    if(saved === null) showToast('Account created locally — could not reach the server.');
-
-    currentCustomerPhone = phone;
-    currentCustomerName = name;
-    if(typeof localStorage!=='undefined') localStorage.setItem('medico_customer_phone', phone);
-    closeModal('customerLoginModal');
-    renderCustomerStatus();
-    renderProducts();
-    renderCartDrawer();
-    showToast(`Account created — welcome, ${name}!`);
-    return;
-  }
-
+function authSubmitLogin(phone){
+  const pin = document.getElementById('authPinLogin').value.trim();
   const existing = customers.find(c=>c.phone===phone);
   if(!existing || existing.pin !== pin){
-    document.getElementById('err-customerLoginPin').textContent = 'Incorrect PIN';
-    document.getElementById('err-customerLoginPin').style.display = 'block';
+    document.getElementById('err-authPinLogin').style.display = 'block';
     return;
   }
-
   currentCustomerPhone = phone;
   currentCustomerName = existing.name;
-  if(typeof localStorage!=='undefined') localStorage.setItem('medico_customer_phone', phone);
-  closeModal('customerLoginModal');
+  saveLoggedInCustomerCache(phone, existing.name);
+  closePage();
   renderCustomerStatus();
   renderProducts();
   renderCartDrawer();
   const hasSpecial = customerPricing.some(x=>x.phone===phone);
   showToast(hasSpecial ? `Welcome back, ${existing.name} — your special prices are showing` : `Welcome back, ${existing.name}`);
 }
+function renderSignupStep(phone){
+  const body = `
+    <div class="auth-hero">
+      <div class="brand-mark" style="width:56px;height:56px;font-size:26px;margin:0 auto 14px;">✚</div>
+      <h3 style="text-align:center;">Create your account</h3>
+      <p class="helper-text" style="text-align:center;margin-top:4px;margin-bottom:20px;">for ${escapeHtml(phone)}</p>
+    </div>
+    <div class="field">
+      <label>Full name</label>
+      <div class="icon-field"><span class="icon-field-ic">👤</span><input type="text" id="authName" placeholder="e.g. Rahul Kumar"></div>
+      <div class="field-error" id="err-authName">Please enter your name</div>
+    </div>
+    <div class="field">
+      <label>Email (optional)</label>
+      <div class="icon-field"><span class="icon-field-ic">✉️</span><input type="email" id="authEmail" placeholder="e.g. rahul@email.com"></div>
+    </div>
+    <div class="field">
+      <label>Set a 4-digit PIN</label>
+      <div class="icon-field"><span class="icon-field-ic">🔒</span><input type="password" id="authPin" placeholder="4-digit PIN" maxlength="4" inputmode="numeric" oninput="this.value=this.value.replace(/\\D/g,'').slice(0,4)"></div>
+      <div class="field-error" id="err-authPin">Enter a valid 4-digit PIN</div>
+    </div>
+    <div class="field">
+      <label>Account type</label>
+      <div class="pay-method-row">
+        <label class="pay-method-card-v2 active" id="bizCardRetail">
+          <input type="radio" name="authBizType" value="retail" checked onchange="selectBizType('retail')">
+          <span class="pmc2-icon">🛍️</span>
+          <div class="pmc2-text"><b>Retail</b><span>For personal use</span></div>
+          <span class="pmc2-check">✓</span>
+        </label>
+        <label class="pay-method-card-v2" id="bizCardWholesale">
+          <input type="radio" name="authBizType" value="wholesale" onchange="selectBizType('wholesale')">
+          <span class="pmc2-icon">🏭</span>
+          <div class="pmc2-text"><b>Wholesale</b><span>For business/resale</span></div>
+          <span class="pmc2-check">✓</span>
+        </label>
+      </div>
+    </div>
+    <div id="wholesaleFieldsWrap" style="display:none;">
+      <div class="field">
+        <label>Drug license no.</label>
+        <div class="icon-field"><span class="icon-field-ic">📄</span><input type="text" id="authDrugLicense" placeholder="e.g. DL-12345"></div>
+        <div class="field-error" id="err-authDrugLicense">Please enter your drug license number</div>
+      </div>
+      <div class="field">
+        <label>Company name</label>
+        <div class="icon-field"><span class="icon-field-ic">🏢</span><input type="text" id="authCompanyName" placeholder="e.g. Sharma Medical Distributors"></div>
+        <div class="field-error" id="err-authCompanyName">Please enter your company name</div>
+      </div>
+    </div>
+    <button class="primary-btn" id="authSubmitBtn" onclick="authSubmitSignup('${escapeAttr(phone)}')">Confirm & Create Account</button>
+    <button type="button" class="pill-btn" style="width:100%;margin-top:8px;text-align:center;" onclick="renderLoginPhoneStep()">Use a different number</button>
+  `;
+  showPage('Create Account', body, null);
+  setTimeout(()=>{ const el=document.getElementById('authName'); if(el) el.focus(); }, 50);
+}
+function selectBizType(type){
+  document.getElementById('bizCardRetail').classList.toggle('active', type==='retail');
+  document.getElementById('bizCardWholesale').classList.toggle('active', type==='wholesale');
+  document.getElementById('wholesaleFieldsWrap').style.display = type==='wholesale' ? 'block' : 'none';
+}
+async function authSubmitSignup(phone){
+  const name = document.getElementById('authName').value.trim();
+  const email = document.getElementById('authEmail').value.trim();
+  const pin = document.getElementById('authPin').value.trim();
+  const bizTypeEl = document.querySelector('input[name="authBizType"]:checked');
+  const bizType = bizTypeEl ? bizTypeEl.value : 'retail';
+  const drugLicense = bizType==='wholesale' ? document.getElementById('authDrugLicense').value.trim() : '';
+  const companyName = bizType==='wholesale' ? document.getElementById('authCompanyName').value.trim() : '';
+
+  let ok = true;
+  const nameOk = name.length>=2;
+  document.getElementById('err-authName').style.display = nameOk ? 'none' : 'block';
+  ok = ok && nameOk;
+  const pinOk = /^\d{4}$/.test(pin);
+  document.getElementById('err-authPin').style.display = pinOk ? 'none' : 'block';
+  ok = ok && pinOk;
+  if(bizType==='wholesale'){
+    const dlOk = drugLicense.length>=3;
+    document.getElementById('err-authDrugLicense').style.display = dlOk ? 'none' : 'block';
+    ok = ok && dlOk;
+    const cnOk = companyName.length>=2;
+    document.getElementById('err-authCompanyName').style.display = cnOk ? 'none' : 'block';
+    ok = ok && cnOk;
+  }
+  if(!ok) return;
+
+  const btn = document.getElementById('authSubmitBtn');
+  if(btn){ btn.disabled = true; btn.textContent = 'Creating account…'; }
+
+  // Final safety check right before writing, in case another device
+  // created an account for this number in the last few seconds.
+  await ensureCustomersLoaded();
+  const alreadyExists = customers.find(c=>c.phone===phone);
+  if(alreadyExists){
+    if(btn){ btn.disabled = false; btn.textContent = 'Confirm & Create Account'; }
+    showToast('An account already exists for this number — please sign in.');
+    renderPinStep(phone, alreadyExists);
+    return;
+  }
+
+  const customer = {id:'cu'+Date.now(), phone, name, email, pin, businessType:bizType, drugLicense, companyName, createdAt:new Date().toISOString()};
+  const saved = await api('addCustomer', customer);
+  // The backend is idempotent — if an account for this phone already
+  // existed there, it returns that record instead of creating a duplicate.
+  const finalCustomer = (saved && saved.phone) ? saved : customer;
+  if(!customers.some(c=>c.phone===finalCustomer.phone)){
+    customers.push(finalCustomer);
+  }
+  saveCustomersCache();
+  if(saved === null) showToast('Account created locally — could not reach the server.');
+
+  currentCustomerPhone = finalCustomer.phone;
+  currentCustomerName = finalCustomer.name;
+  saveLoggedInCustomerCache(finalCustomer.phone, finalCustomer.name);
+  closePage();
+  renderCustomerStatus();
+  renderProducts();
+  renderCartDrawer();
+  showToast(`Account created — welcome, ${finalCustomer.name}!`);
+}
 function switchCustomerNumber(){
   currentCustomerPhone = '';
   currentCustomerName = '';
-  if(typeof localStorage!=='undefined') localStorage.removeItem('medico_customer_phone');
+  try{
+    if(typeof localStorage!=='undefined'){
+      localStorage.removeItem('medico_customer_phone');
+      localStorage.removeItem('medico_customer_name');
+    }
+  }catch(e){}
   renderCustomerStatus();
   renderProducts();
   renderCartDrawer();
   showToast('Signed out');
-  openCustomerLogin();
+  openLoginPage();
 }
 function logoutFromMoreSheet(){
   currentCustomerPhone = '';
   currentCustomerName = '';
-  if(typeof localStorage!=='undefined') localStorage.removeItem('medico_customer_phone');
+  try{
+    if(typeof localStorage!=='undefined'){
+      localStorage.removeItem('medico_customer_phone');
+      localStorage.removeItem('medico_customer_name');
+    }
+  }catch(e){}
   closeModal('moreModal');
   closePage();
   renderCustomerStatus();
@@ -1833,6 +1987,57 @@ function saveCheckoutForNextTime(name, phone, address, pincode){
     }
   }catch(e){}
 }
+function getSavedAddressesForCheckout(){
+  const phone = currentCustomerPhone || (document.getElementById('custPhone') ? document.getElementById('custPhone').value.trim() : '');
+  if(!phone) return [];
+  const seen = new Set();
+  const list = [];
+  orders.filter(o=>o.customer && o.customer.phone===phone && o.customer.address).forEach(o=>{
+    const key = o.customer.address+'|'+o.customer.pincode;
+    if(!seen.has(key)){
+      seen.add(key);
+      list.push({address:o.customer.address, pincode:o.customer.pincode});
+    }
+  });
+  return list.reverse(); // most recently used first
+}
+function renderSavedAddressPicker(){
+  const field = document.getElementById('savedAddressPickerField');
+  const wrap = document.getElementById('savedAddressPicker');
+  if(!field || !wrap) return;
+  const list = getSavedAddressesForCheckout();
+  if(list.length < 2){
+    field.style.display = 'none';
+    wrap.innerHTML = '';
+    return;
+  }
+  const currentAddress = document.getElementById('custAddress').value.trim();
+  const currentPincode = document.getElementById('custPincode').value.trim();
+  field.style.display = 'block';
+  wrap.innerHTML = list.map((a,i)=>{
+    const isActive = a.address===currentAddress && a.pincode===currentPincode;
+    return `<div class="saved-address-card ${isActive?'active':''}" onclick="selectSavedAddress(${i})">
+      <span class="saved-address-card-icon">📍</span>
+      <span class="saved-address-card-text">${escapeHtml(a.address)}${a.pincode?', '+escapeHtml(a.pincode):''}</span>
+      <span class="saved-address-card-check">✓</span>
+    </div>`;
+  }).join('') + `<button type="button" class="saved-address-new-btn" onclick="selectNewAddress()">➕ Enter a new address</button>`;
+}
+function selectSavedAddress(index){
+  const list = getSavedAddressesForCheckout();
+  const a = list[index];
+  if(!a) return;
+  document.getElementById('custAddress').value = a.address;
+  document.getElementById('custPincode').value = a.pincode || '';
+  renderSavedAddressPicker();
+}
+function selectNewAddress(){
+  document.getElementById('custAddress').value = '';
+  document.getElementById('custPincode').value = '';
+  renderSavedAddressPicker();
+  const el = document.getElementById('custAddress');
+  if(el) el.focus();
+}
 function openCheckout(){
   if(Object.keys(cart).length===0) return;
   closeCart();
@@ -1857,6 +2062,11 @@ function openCheckout(){
   currentFulfillment = 'home';
   ['custName','custPhone','custAddress','custPincode','custNotes'].forEach(id=>document.getElementById(id).value='');
   prefillCheckoutFromLastOrder();
+  if(currentCustomerPhone){
+    document.getElementById('custPhone').value = currentCustomerPhone;
+    if(currentCustomerName) document.getElementById('custName').value = currentCustomerName;
+  }
+  renderSavedAddressPicker();
   renderCheckoutProductDetails();
   updateCheckoutSummary();
   document.getElementById('checkoutModal').classList.add('show');
@@ -2402,7 +2612,7 @@ function openMyOrdersPage(){
     body = `<div class="pv-empty">
       <div class="pv-empty-icon">📦</div>
       <div>Sign in to see your order history and track your current orders.</div>
-      <button class="pv-signin-btn" onclick="closePage();openCustomerLogin();">Sign in</button>
+      <button class="pv-signin-btn" onclick="closePage();openLoginPage();">Sign in</button>
     </div>`;
   }else{
     const myOrders = orders.filter(o=>o.customer && o.customer.phone===currentCustomerPhone)
@@ -2430,7 +2640,7 @@ function openAccountPage(){
     showPage('Account', `<div class="pv-empty">
       <div class="pv-empty-icon">👤</div>
       <div>Sign in to view your account details.</div>
-      <button class="pv-signin-btn" onclick="closePage();openCustomerLogin();">Sign in</button>
+      <button class="pv-signin-btn" onclick="closePage();openLoginPage();">Sign in</button>
     </div>`, 'account');
     return;
   }
@@ -2438,28 +2648,22 @@ function openAccountPage(){
   const initial = (currentCustomerName||cust.name||'?').trim().charAt(0).toUpperCase();
   const memberSince = cust.createdAt ? new Date(cust.createdAt).toLocaleDateString('en-IN', {day:'numeric',month:'short',year:'numeric'}) : '—';
   const hasSpecial = customerPricing.some(x=>x.phone===currentCustomerPhone);
+  const isWholesale = cust.businessType === 'wholesale';
 
   const myOrders = orders.filter(o=>o.customer && o.customer.phone===currentCustomerPhone);
-  const seenAddr = new Set();
-  const addresses = [];
-  myOrders.forEach(o=>{
-    if(o.fulfillment==='home' && o.customer && o.customer.address){
-      const key = o.customer.address+'|'+o.customer.pincode;
-      if(!seenAddr.has(key)){
-        seenAddr.add(key);
-        addresses.push({address:o.customer.address, pincode:o.customer.pincode});
-      }
-    }
-  });
 
   const body = `
     <div class="account-card" style="text-align:center;">
       <div class="account-avatar" style="margin-left:auto;margin-right:auto;">${escapeHtml(initial)}</div>
       <div style="font-size:16px;font-weight:800;">${escapeHtml(currentCustomerName||cust.name||'Customer')}</div>
-      ${hasSpecial?`<div style="font-size:11.5px;color:var(--green);font-weight:700;margin-top:4px;">✓ Special pricing active for you</div>`:''}
+      <div style="margin-top:6px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;">
+        <span class="biz-type-badge ${isWholesale?'wholesale':'retail'}">${isWholesale?'🏭 Wholesale':'🛍️ Retail'}</span>
+        ${hasSpecial?`<span class="biz-type-badge special">✓ Special pricing</span>`:''}
+      </div>
     </div>
     <div class="account-card">
       <div class="account-row"><span class="account-row-label">Phone number</span><span class="account-row-value">${escapeHtml(currentCustomerPhone)}</span></div>
+      ${cust.email?`<div class="account-row"><span class="account-row-label">Email</span><span class="account-row-value">${escapeHtml(cust.email)}</span></div>`:''}
       <div class="account-row"><span class="account-row-label">Member since</span><span class="account-row-value">${escapeHtml(memberSince)}</span></div>
       <div class="account-row"><span class="account-row-label">Total orders</span><span class="account-row-value">${myOrders.length}</span></div>
       <div class="account-row">
@@ -2471,12 +2675,11 @@ function openAccountPage(){
       </div>
       <button class="pv-signin-btn" style="width:100%;margin-top:12px;" onclick="openChangePinModal();">Change PIN</button>
     </div>
-    <div class="account-card">
-      <div style="font-size:13.5px;font-weight:700;margin-bottom:10px;">Delivery addresses</div>
-      ${addresses.length===0
-        ? `<div style="font-size:12px;color:var(--muted);">No saved addresses yet — they'll appear here after your first home delivery order.</div>`
-        : addresses.map(a=>`<div class="address-mini-card">📍 ${escapeHtml(a.address)}${a.pincode?', '+escapeHtml(a.pincode):''}</div>`).join('')}
-    </div>
+    ${isWholesale ? `<div class="account-card">
+      <div style="font-size:13.5px;font-weight:700;margin-bottom:10px;">🏭 Business details</div>
+      <div class="account-row"><span class="account-row-label">Company name</span><span class="account-row-value">${escapeHtml(cust.companyName||'—')}</span></div>
+      <div class="account-row"><span class="account-row-label">Drug license no.</span><span class="account-row-value">${escapeHtml(cust.drugLicense||'—')}</span></div>
+    </div>` : ''}
     <button class="pv-signin-btn" style="background:var(--danger-bg);color:var(--danger);width:100%;" onclick="logoutFromMoreSheet();">🚪 Logout</button>
   `;
   showPage('Account', body, 'account');
@@ -3247,46 +3450,14 @@ async function handleAdminProductImage(id, inputEl){
 }
  
 /* ---------------- PWA install support ---------------- */
-// Builds the web app manifest at runtime (as a data: URI, so this works
-// from a single HTML file with no separate manifest.json to host) and
-// registers a minimal service worker. Chrome only offers the "Install"
-// icon / prompt when the page is served over HTTPS (or localhost) with
-// a valid manifest + a registered service worker — opening this file
-// directly from disk (file://) will not show an install option.
+// Now that this is hosted on GitHub Pages (HTTPS), we register the real
+// manifest.json + sw.js files sitting alongside medico.html instead of
+// the earlier Blob-URL trick — this is what makes Chrome treat it as a
+// genuine installable app (no more Chrome-logo badge on the icon) and
+// launch it standalone, without the browser address bar.
 function setupPwa(){
-  try{
-    const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="#2F6FED"/><path d="M45 25h10v20h20v10H55v20H45V55H25V45h20z" fill="#fff"/></svg>`;
-    const iconDataUri = 'data:image/svg+xml,' + encodeURIComponent(iconSvg);
-    const manifest = {
-      name: 'Medico - Trusted Care',
-      short_name: 'Medico',
-      start_url: '.',
-      display: 'standalone',
-      background_color: '#F5F7FC',
-      theme_color: '#2F6FED',
-      icons: [
-        { src: iconDataUri, sizes: 'any', type: 'image/svg+xml', purpose: 'any maskable' }
-      ]
-    };
-    const manifestLink = document.getElementById('pwaManifestLink');
-    if(manifestLink){
-      manifestLink.setAttribute('href', 'data:application/manifest+json,' + encodeURIComponent(JSON.stringify(manifest)));
-    }
-  }catch(e){ console.warn('PWA manifest setup failed', e); }
-
   if('serviceWorker' in navigator){
-    try{
-      const swCode = `
-        self.addEventListener('install', e => self.skipWaiting());
-        self.addEventListener('activate', e => self.clients.claim());
-        self.addEventListener('fetch', e => {
-          e.respondWith(fetch(e.request).catch(() => new Response('Offline', {status:503})));
-        });
-      `;
-      const swBlob = new Blob([swCode], {type:'application/javascript'});
-      const swUrl = URL.createObjectURL(swBlob);
-      navigator.serviceWorker.register(swUrl).catch(err=>console.warn('Service worker registration failed', err));
-    }catch(e){ console.warn('Service worker setup failed', e); }
+    navigator.serviceWorker.register('sw.js').catch(err=>console.warn('Service worker registration failed', err));
   }
 }
 
