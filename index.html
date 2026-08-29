@@ -35,7 +35,8 @@
   --font-mono:'IBM Plex Mono', monospace;
 }
 *{box-sizing:border-box;}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);-webkit-font-smoothing:antialiased;padding-bottom:78px;}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);-webkit-font-smoothing:antialiased;padding-bottom:78px;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;}
+input,textarea,select{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default;}
 h1,h2,h3,h4{font-family:var(--font-display);margin:0;font-weight:700;color:var(--ink);}
 p{margin:0;}
 button{font-family:var(--font-body);cursor:pointer;border:none;}
@@ -164,8 +165,10 @@ input,textarea,select{font-family:var(--font-body);}
 .card-stock{font-size:11px;color:var(--muted);margin-top:2px;}
 .card-bottom{display:flex;align-items:center;gap:8px;margin-top:12px;}
 .stepper{display:flex;align-items:center;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex-shrink:0;}
-.stepper button{width:28px;height:32px;background:var(--bg);color:var(--primary-dark);font-size:15px;font-weight:700;}
+.stepper button{width:28px;height:32px;background:var(--bg);color:var(--primary-dark);font-size:15px;font-weight:700;flex-shrink:0;}
 .stepper span{width:26px;text-align:center;font-size:13px;font-weight:600;}
+.bulk-qty-input{width:40px;height:32px;text-align:center;font-size:13px;font-weight:700;border:none;border-left:1px solid var(--line);border-right:1px solid var(--line);background:#fff;color:var(--ink);-moz-appearance:textfield;}
+.bulk-qty-input::-webkit-outer-spin-button,.bulk-qty-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
 .add-btn{flex:1;padding:9px;background:var(--primary);color:#fff;border-radius:8px;font-size:12.5px;font-weight:700;transition:background .15s;}
 .add-btn:hover{background:var(--primary-dark);}
 .add-btn.added{background:var(--green);}
@@ -268,7 +271,12 @@ input,textarea,select{font-family:var(--font-body);}
 .product-details-box{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--bg);}
 .pd-head-row{display:flex;justify-content:space-between;font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;padding-bottom:6px;border-bottom:1px solid var(--line);margin-bottom:6px;}
 .pd-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:12.5px;}
-.pd-row-name{color:var(--ink);font-weight:600;}
+.pd-row-v2{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);}
+.pd-row-v2:last-child{border-bottom:none;}
+.pd-row-v2-info{min-width:0;flex:1;}
+.pd-row-price{font-size:11px;color:var(--ink-soft);margin-top:2px;}
+.pd-row-coupon{font-size:10.5px;font-weight:700;color:var(--green);margin-top:2px;}
+.pd-row-name{color:var(--ink);font-weight:600;font-size:13px;}
 .pd-row-qty{color:var(--ink-soft);font-weight:700;}
 .pay-method-card-v2{display:flex;align-items:center;gap:10px;padding:12px;border:1.5px solid var(--line);border-radius:11px;background:var(--bg);cursor:pointer;position:relative;flex:1;}
 .pay-method-card-v2 input{position:absolute;opacity:0;width:0;height:0;}
@@ -372,15 +380,48 @@ input,textarea,select{font-family:var(--font-body);}
 .about-list-item{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:12.5px;color:var(--ink-soft);}
  
 /* Bulk order / quotation page */
-.bulk-product-list{max-height:340px;overflow-y:auto;border:1px solid var(--line);border-radius:10px;padding:6px 10px;background:var(--bg);}
-.bulk-product-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 2px;border-bottom:1px solid var(--line);}
-.bulk-product-row:last-child{border-bottom:none;}
-.bulk-product-info{min-width:0;flex:1;}
-.bulk-product-name{font-size:12.5px;font-weight:700;color:var(--ink);}
-.bulk-product-meta{font-size:11px;color:var(--muted);margin-top:1px;}
-.manual-bulk-item-row{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:10px;}
-.manual-bulk-item-row input{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;font-size:12.5px;background:#fff;}
+.bulk-hero-row{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}
+.bulk-rate-card{display:flex;align-items:flex-start;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;}
+.bulk-rate-card-icon{font-size:20px;flex-shrink:0;}
+.bulk-rate-card b{display:block;font-size:12.5px;color:var(--ink);}
+.bulk-rate-card span{display:block;font-size:11px;color:var(--muted);margin-top:2px;line-height:1.4;}
+.bulk-add-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:16px;}
+.bulk-add-form{display:flex;flex-direction:column;gap:10px;}
+.bulk-add-field{position:relative;}
+.bulk-add-field input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:9px;font-size:13px;background:var(--bg);outline:none;}
+.bulk-add-field input:focus{border-color:var(--primary);background:#fff;}
+.bulk-add-btn{width:100%;padding:12px;background:var(--primary);color:#fff;border-radius:10px;font-size:13.5px;font-weight:700;}
+.bulk-add-btn:hover{background:var(--primary-dark);}
+@media(min-width:520px){
+  .bulk-add-form{display:grid;grid-template-columns:1.4fr 1fr;gap:10px;}
+  .bulk-add-btn{grid-column:1 / -1;width:auto;}
+}
+.bulk-search-results{position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:20;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface);box-shadow:0 10px 24px rgba(22,33,62,.12);max-height:260px;overflow-y:auto;}
+.bulk-search-result-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 14px;cursor:pointer;border-bottom:1px solid var(--line);transition:background .12s;}
+.bulk-search-result-row:last-child{border-bottom:none;}
+.bulk-search-result-row:hover{background:var(--bg);}
+.bulk-search-result-text{min-width:0;flex:1;}
+.bulk-search-add-tag{font-size:11px;font-weight:700;color:var(--primary);flex-shrink:0;}
+.bulk-product-name{font-size:13px;font-weight:700;color:var(--ink);}
+.bulk-product-meta{font-size:11px;color:var(--muted);margin-top:2px;}
+.bulk-list-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:16px;}
+.bulk-table-scroll{overflow-x:auto;}
+.bulk-products-table{width:100%;border-collapse:collapse;min-width:480px;}
+.bulk-products-table th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--line);}
+.bulk-products-table td{padding:10px;border-bottom:1px solid var(--line);vertical-align:middle;font-size:12.5px;}
+.bulk-products-table tr:last-child td{border-bottom:none;}
+.bulk-row-delete-btn{background:var(--danger-bg);color:var(--danger);width:30px;height:30px;border-radius:8px;font-size:13px;}
+.bulk-howitworks{display:flex;gap:10px;align-items:flex-start;background:#EAF1FE;border-radius:14px;padding:14px 16px;margin-bottom:16px;}
+.bulk-howitworks-icon{font-size:17px;flex-shrink:0;}
+.bulk-howitworks b{display:block;font-size:12.5px;color:var(--primary-dark);}
+.bulk-howitworks span{display:block;font-size:11.5px;color:var(--ink-soft);margin-top:3px;line-height:1.5;}
+.bulk-send-btn{display:flex;align-items:center;justify-content:center;gap:8px;}
 .bulk-admin-response{margin-top:8px;background:#EAF1FE;color:var(--primary-dark);font-size:11.5px;padding:8px 10px;border-radius:8px;line-height:1.5;}
+.order-slip-card.has-new-reply{border:1.5px solid var(--primary);box-shadow:0 0 0 3px #EAF1FE;}
+.bulk-new-reply-tag{display:inline-block;background:var(--danger);color:#fff;font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:8px;margin-bottom:4px;}
+.nav-notify-dot{position:absolute;top:0px;right:calc(50% - 24px);min-width:16px;height:16px;border-radius:9px;background:var(--danger);border:1.5px solid var(--surface);color:#fff;font-size:9.5px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 3px;}
+.side-menu-item{position:relative;}
+.side-menu-notify-badge{margin-left:auto;background:var(--danger);color:#fff;font-size:10px;font-weight:800;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 5px;}
 .about-list-item .ali-icon{font-size:17px;flex-shrink:0;}
  
 /* ---------- Modal ---------- */
@@ -513,9 +554,6 @@ input,textarea,select{font-family:var(--font-body);}
 .cart-popup-view{background:var(--bg);border:1px solid var(--line);color:var(--primary-dark);font-size:12px;font-weight:700;padding:8px 12px;border-radius:8px;flex-shrink:0;white-space:nowrap;}
 .cart-popup-view:hover{background:#EAEFFC;}
 @media(max-width:640px){ .cart-popup{top:12px;} }
-.bulk-order-fab{position:fixed;right:16px;bottom:84px;z-index:65;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#3D2B8C,#6A4E9C);color:#fff;box-shadow:0 8px 22px rgba(61,43,140,.4);display:flex;align-items:center;justify-content:center;font-size:22px;}
-.bulk-order-fab:hover{filter:brightness(1.08);}
-.bulk-order-fab-icon{line-height:1;}
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 @media(max-width:640px){
   .hero-card{padding:22px;}
@@ -627,6 +665,7 @@ input,textarea,select{font-family:var(--font-body);}
   <div class="side-menu-list">
     <button class="side-menu-item" data-page="home" onclick="sideMenuGoHome()"><span class="smi-icon">🏠</span> Home</button>
     <button class="side-menu-item" data-page="orders" onclick="openMyOrdersPage()"><span class="smi-icon">📦</span> My Orders</button>
+    <button class="side-menu-item" id="bulkOrderMenuItem" data-page="bulkorders" onclick="openBulkQuotePage()" style="display:none;"><span class="smi-icon">📋</span> Bulk Orders / Quotes</button>
     <button class="side-menu-item" data-page="account" onclick="openAccountPage()"><span class="smi-icon">👤</span> Account</button>
     <button class="side-menu-item" data-page="saved" onclick="openSavedItemsPage()"><span class="smi-icon">♥</span> Saved Items</button>
     <button class="side-menu-item" data-page="support" onclick="openSupportPage()"><span class="smi-icon">🆘</span> Support Center</button>
@@ -727,12 +766,13 @@ input,textarea,select{font-family:var(--font-body);}
 
       <div class="field">
         <div class="coupon-box-v2">
-          <div class="coupon-box-v2-row">
+          <div class="coupon-box-v2-row" onclick="openCouponSelectPage()" style="cursor:pointer;">
             <span class="coupon-box-v2-icon">🏷️</span>
-            <div class="coupon-box-v2-text"><b>Have an offer or coupon code?</b><span>Tap the box below to see running offers</span></div>
+            <div class="coupon-box-v2-text"><b>Have an offer or coupon code?</b><span>Tap here to see running offers</span></div>
+            <span class="coupon-box-v2-chev">›</span>
           </div>
           <div class="coupon-apply-row" style="margin-top:10px;">
-            <input type="text" id="couponCodeInput" placeholder="E.G. SAVE10" onfocus="openCouponSelectPage()" onclick="openCouponSelectPage()">
+            <input type="text" id="couponCodeInput" placeholder="E.G. SAVE10">
             <button type="button" class="coupon-apply-btn" onclick="applyCoupon()">Apply</button>
           </div>
           <div class="coupon-error-text" id="couponError" style="display:none;"></div>
@@ -1013,6 +1053,22 @@ input,textarea,select{font-family:var(--font-body);}
         </div>
         <div class="field"><label>Expiry date (optional)</label><input type="date" id="newCouponExpiry"></div>
         <p class="helper-text" id="couponTypeHelp" style="margin-top:-4px;">Customers get a percentage off their order total.</p>
+        <div class="field">
+          <label>Add this coupon for a specific phone number (optional)</label>
+          <input type="tel" id="newCouponPhone" placeholder="10-digit mobile number — leave blank for all customers" maxlength="10" inputmode="numeric" oninput="this.value=this.value.replace(/\D/g,'').slice(0,10)">
+        </div>
+        <p class="helper-text" style="margin-top:-6px;">If you add a number here, only that customer (once signed in) will see or be able to use this coupon.</p>
+        <div class="two-col">
+          <div class="field">
+            <label>Exclude categories (optional)</label>
+            <select id="newCouponExcludeCategories" multiple size="4"></select>
+          </div>
+          <div class="field">
+            <label>Exclude specific products (optional)</label>
+            <select id="newCouponExcludeProducts" multiple size="4"></select>
+          </div>
+        </div>
+        <p class="helper-text" style="margin-top:-6px;">Ctrl/Cmd-click to select more than one. If a cart contains any excluded category/product, this coupon won't apply.</p>
         <button class="small-btn" onclick="addCoupon()">Create coupon</button>
       </div>
       <div class="admin-card">
@@ -1111,15 +1167,10 @@ input,textarea,select{font-family:var(--font-body);}
   </div>
 </div>
  
-<!-- Wholesale-only floating "Bulk Order" button -->
-<button class="bulk-order-fab" id="bulkOrderFab" onclick="openBulkQuotePage()" style="display:none;" aria-label="Bulk order / get quote">
-  <span class="bulk-order-fab-icon">📋</span>
-</button>
- 
 <!-- Bottom mobile nav -->
 <nav class="bottom-nav" id="bottomNav">
   <button class="nav-item active" data-nav="home" onclick="navHome()"><span class="nav-icon">🏠</span>Home</button>
-  <button class="nav-item" data-nav="orders" onclick="openTrack()"><span class="nav-icon">📦</span>Orders</button>
+  <button class="nav-item" data-nav="orders" id="navMiddleBtn" onclick="openTrack()"><span class="nav-icon" id="navMiddleIcon">📦</span><span id="navMiddleLabel">Orders</span></button>
   <button class="nav-item" data-nav="cart" onclick="openCart()"><span class="nav-icon">🛒</span>Cart<span class="nav-badge" id="navCartBadge" style="display:none;">0</span></button>
 </nav>
  
@@ -1233,11 +1284,11 @@ const DEFAULT_FAQS = [
 ];
 
 const DEFAULT_COUPONS = [
-  {id:'c1', code:'SAVE10', type:'percent', value:10, minOrder:0, maxDiscount:0, expiryDate:'', usageLimit:0, usedCount:0, active:true},
-  {id:'c2', code:'SAVE40', type:'percent', value:40, minOrder:999, maxDiscount:150, expiryDate:'', usageLimit:0, usedCount:0, active:true},
-  {id:'c3', code:'EXTRA10', type:'flat', value:10, minOrder:499, maxDiscount:0, expiryDate:'', usageLimit:0, usedCount:0, active:true},
-  {id:'c4', code:'FREEDEL', type:'freedelivery', value:0, minOrder:299, maxDiscount:0, expiryDate:'', usageLimit:0, usedCount:0, active:true},
-  {id:'c5', code:'WELCOME20', type:'firstorder', value:20, minOrder:0, maxDiscount:100, expiryDate:'', usageLimit:0, usedCount:0, active:true}
+  {id:'c1', code:'SAVE10', type:'percent', value:10, minOrder:0, maxDiscount:0, expiryDate:'', usageLimit:0, usedCount:0, active:true, targetPhone:'', excludeCategories:'[]', excludeProductIds:'[]'},
+  {id:'c2', code:'SAVE40', type:'percent', value:40, minOrder:999, maxDiscount:150, expiryDate:'', usageLimit:0, usedCount:0, active:true, targetPhone:'', excludeCategories:'[]', excludeProductIds:'[]'},
+  {id:'c3', code:'EXTRA10', type:'flat', value:10, minOrder:499, maxDiscount:0, expiryDate:'', usageLimit:0, usedCount:0, active:true, targetPhone:'', excludeCategories:'[]', excludeProductIds:'[]'},
+  {id:'c4', code:'FREEDEL', type:'freedelivery', value:0, minOrder:299, maxDiscount:0, expiryDate:'', usageLimit:0, usedCount:0, active:true, targetPhone:'', excludeCategories:'[]', excludeProductIds:'[]'},
+  {id:'c5', code:'WELCOME20', type:'firstorder', value:20, minOrder:0, maxDiscount:100, expiryDate:'', usageLimit:0, usedCount:0, active:true, targetPhone:'', excludeCategories:'[]', excludeProductIds:'[]'}
 ];
 
 const DEFAULT_PRODUCTS = [
@@ -1389,13 +1440,54 @@ async function loadData(){
   renderCustomerStatus();
   updateHeroMaxDiscount();
   updateBulkOrderFabVisibility();
+  restoreLastPageIfAny();
 }
 function updateBulkOrderFabVisibility(){
-  const fab = document.getElementById('bulkOrderFab');
-  if(!fab) return;
   const cust = customers.find(c=>c.phone===currentCustomerPhone);
   const isWholesale = !!(currentCustomerPhone && cust && cust.businessType === 'wholesale');
-  fab.style.display = isWholesale ? 'flex' : 'none';
+  const unseenCount = isWholesale ? countUnseenBulkResponses() : 0;
+
+  const menuItem = document.getElementById('bulkOrderMenuItem');
+  if(menuItem){
+    menuItem.style.display = isWholesale ? 'flex' : 'none';
+    let badge = menuItem.querySelector('.side-menu-notify-badge');
+    if(unseenCount > 0){
+      if(!badge){
+        badge = document.createElement('span');
+        badge.className = 'side-menu-notify-badge';
+        menuItem.appendChild(badge);
+      }
+      badge.textContent = unseenCount;
+    }else if(badge){
+      badge.remove();
+    }
+  }
+
+  const navIcon = document.getElementById('navMiddleIcon');
+  const navLabel = document.getElementById('navMiddleLabel');
+  const navBtn = document.getElementById('navMiddleBtn');
+  if(navBtn && navIcon && navLabel){
+    if(isWholesale){
+      navIcon.textContent = '📋';
+      navLabel.textContent = 'Bulk Order';
+      navBtn.setAttribute('onclick', 'openBulkQuotePage()');
+    }else{
+      navIcon.textContent = '📦';
+      navLabel.textContent = 'Orders';
+      navBtn.setAttribute('onclick', 'openTrack()');
+    }
+    let dot = navBtn.querySelector('.nav-notify-dot');
+    if(unseenCount > 0){
+      if(!dot){
+        dot = document.createElement('span');
+        dot.className = 'nav-notify-dot';
+        navBtn.appendChild(dot);
+      }
+      dot.textContent = unseenCount;
+    }else if(dot){
+      dot.remove();
+    }
+  }
 }
 function updateHeroMaxDiscount(){
   const el = document.getElementById('heroMaxDiscount');
@@ -1414,6 +1506,13 @@ function showToast(msg){
 }
 function escapeHtml(str){ return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 function escapeAttr(str){ return String(str||'').replace(/"/g,'&quot;'); }
+function parseMaybeJson(val){
+  if(Array.isArray(val)) return val;
+  if(typeof val === 'string'){
+    try{ return JSON.parse(val || '[]'); }catch(e){ return []; }
+  }
+  return [];
+}
 function applySettingsToDOM(){
   document.getElementById('brandEyebrow').textContent = settings.eyebrow;
   document.getElementById('brandName').textContent = settings.shopName;
@@ -2006,11 +2105,53 @@ function renderCheckoutProductDetails(){
   const wrap = document.getElementById('checkoutProductDetails');
   if(!wrap) return;
   const items = Object.entries(cart).filter(([id,qty])=>qty>0);
+  if(items.length===0){
+    wrap.innerHTML = `<div style="font-size:11.5px;color:var(--muted);padding:6px 2px;">Your cart is empty.</div>`;
+    return;
+  }
+  const subtotal = cartTotal();
+  const fee = feeForFulfillment('home', subtotal);
+  const totalCouponDiscount = appliedCoupon ? couponDiscountAmount(appliedCoupon, subtotal, fee) : 0;
+  const couponBlocked = appliedCoupon ? cartHasExcludedItem(appliedCoupon) : false;
   wrap.innerHTML = items.map(([id,qty])=>{
     const p = products.find(x=>x.id===id);
     if(!p) return '';
-    return `<div class="pd-row"><span class="pd-row-name">${escapeHtml(p.name)}</span><span class="pd-row-qty">${qty}</span></div>`;
+    const effPrice = getEffectivePrice(p);
+    const lineTotal = effPrice*qty;
+    let couponLine = '';
+    if(totalCouponDiscount>0 && !couponBlocked && subtotal>0){
+      const itemShare = totalCouponDiscount * (lineTotal/subtotal);
+      const perPieceDiscount = itemShare / qty;
+      if(perPieceDiscount>0){
+        couponLine = `<div class="pd-row-coupon">🏷️ Coupon: −${fmt(Math.round(perPieceDiscount*100)/100)}/piece</div>`;
+      }
+    }
+    return `<div class="pd-row-v2">
+      <div class="pd-row-v2-info">
+        <div class="pd-row-name">${escapeHtml(p.name)}</div>
+        <div class="pd-row-price">${fmt(effPrice)}/piece</div>
+        ${couponLine}
+      </div>
+      <div class="stepper">
+        <button onclick="checkoutStepQty('${id}',-1)">−</button>
+        <span id="checkoutQty-${id}">${qty}</span>
+        <button onclick="checkoutStepQty('${id}',1)">+</button>
+      </div>
+    </div>`;
   }).join('');
+}
+function checkoutStepQty(id, delta){
+  cart[id] = (cart[id]||0) + delta;
+  if(cart[id] <= 0) delete cart[id];
+  updateCartCount();
+  renderCheckoutProductDetails();
+  updateCheckoutSummary();
+  renderCartDrawer();
+  renderProducts();
+  if(Object.keys(cart).length===0){
+    closeModal('checkoutModal');
+    showToast('Your cart is empty');
+  }
 }
 function prefillCheckoutFromLastOrder(){
   let saved = null;
@@ -2405,6 +2546,11 @@ async function submitComplaint(){
 }
 
 /* ---------------- Coupons ---------------- */
+function couponVisibleToCurrentCustomer(c){
+  // A coupon with targetPhone set is private to that one customer.
+  if(c.targetPhone) return currentCustomerPhone === c.targetPhone;
+  return true;
+}
 function couponDiscountText(c){
   let base;
   if(c.type==='freedelivery'){
@@ -2424,7 +2570,7 @@ function renderCouponStrip(){
   const wrap = document.getElementById('offersWrap');
   const strip = document.getElementById('offersStrip');
   if(!wrap || !strip) return;
-  const active = coupons.filter(c=>c.active && !couponIsExpired(c) && !couponIsUsedUp(c)).slice(0,6);
+  const active = coupons.filter(c=>c.active && !couponIsExpired(c) && !couponIsUsedUp(c) && couponVisibleToCurrentCustomer(c)).slice(0,6);
   if(active.length===0){
     wrap.style.display = 'none';
     return;
@@ -2466,6 +2612,17 @@ function couponIsExpired(c){
 function couponIsUsedUp(c){
   return !!(c.usageLimit>0 && (c.usedCount||0) >= c.usageLimit);
 }
+function cartHasExcludedItem(c){
+  let excludeCats = []; try{ excludeCats = JSON.parse(c.excludeCategories||'[]'); }catch(e){}
+  let excludeProdIds = []; try{ excludeProdIds = JSON.parse(c.excludeProductIds||'[]'); }catch(e){}
+  if(excludeCats.length===0 && excludeProdIds.length===0) return false;
+  return Object.keys(cart).some(id=>{
+    if(!(cart[id]>0)) return false;
+    if(excludeProdIds.includes(id)) return true;
+    const p = products.find(x=>x.id===id);
+    return p && excludeCats.includes(p.category);
+  });
+}
 function applyCoupon(){
   const input = document.getElementById('couponCodeInput');
   const code = input.value.trim().toUpperCase();
@@ -2476,6 +2633,11 @@ function applyCoupon(){
   const subtotal = cartTotal();
   if(!c || !c.active){
     errEl.textContent = 'Invalid or inactive coupon code';
+    errEl.style.display = 'block';
+    return;
+  }
+  if(c.targetPhone && c.targetPhone !== currentCustomerPhone){
+    errEl.textContent = 'This coupon is reserved for a specific customer account';
     errEl.style.display = 'block';
     return;
   }
@@ -2494,6 +2656,11 @@ function applyCoupon(){
     errEl.style.display = 'block';
     return;
   }
+  if(cartHasExcludedItem(c)){
+    errEl.textContent = "This coupon doesn't apply to one or more items in your cart";
+    errEl.style.display = 'block';
+    return;
+  }
   if(c.type==='firstorder'){
     const phone = document.getElementById('custPhone').value.trim();
     if(phone && orders.some(o=>o.customer.phone===phone)){
@@ -2506,12 +2673,14 @@ function applyCoupon(){
   input.value = '';
   renderCouponAppliedBox();
   updateCheckoutSummary();
+  renderCheckoutProductDetails();
   if(document.getElementById('couponSelectModal').classList.contains('show')) renderCouponSelectList();
 }
 function removeCoupon(){
   appliedCoupon = null;
   renderCouponAppliedBox();
   updateCheckoutSummary();
+  renderCheckoutProductDetails();
   if(document.getElementById('couponSelectModal').classList.contains('show')) renderCouponSelectList();
 }
 function openCouponSelectPage(){
@@ -2522,7 +2691,7 @@ function renderCouponSelectList(){
   const list = document.getElementById('couponSelectBody');
   if(!list) return;
   const subtotal = cartTotal();
-  const active = coupons.filter(c=>c.active && !couponIsExpired(c) && !couponIsUsedUp(c));
+  const active = coupons.filter(c=>c.active && !couponIsExpired(c) && !couponIsUsedUp(c) && couponVisibleToCurrentCustomer(c));
   if(active.length===0){
     list.innerHTML = `<div class="pv-empty"><div class="pv-empty-icon">🏷️</div><div>No offers running right now.</div></div>`;
     return;
@@ -2530,10 +2699,13 @@ function renderCouponSelectList(){
   list.innerHTML = `<div class="coupon-offers-list" style="display:flex;">` + active.map(c=>{
     const minOrder = Number(c.minOrder) || 0;
     const eligible = subtotal >= minOrder;
+    const excluded = cartHasExcludedItem(c);
     const isApplied = appliedCoupon && appliedCoupon.id === c.id;
     let actionHtml;
     if(isApplied){
       actionHtml = `<span class="coupon-offer-need-more" style="color:var(--green);background:var(--green-bg);">✓ Applied</span>`;
+    }else if(excluded){
+      actionHtml = `<span class="coupon-offer-need-more">Not valid for this cart</span>`;
     }else if(eligible){
       actionHtml = `<button type="button" class="coupon-offer-apply-btn" onclick="applyCouponFromOffer('${escapeAttr(c.code)}')">Apply</button>`;
     }else{
@@ -2542,7 +2714,7 @@ function renderCouponSelectList(){
     }
     return `<div class="coupon-offer-row">
       <div class="coupon-offer-row-text">
-        <div class="coupon-offer-row-code">${escapeHtml(c.code)}</div>
+        <div class="coupon-offer-row-code">${escapeHtml(c.code)}${c.targetPhone?' <span style="font-size:10px;color:var(--primary-dark);">(just for you)</span>':''}</div>
         <div class="coupon-offer-row-desc">${escapeHtml(couponDiscountText(c))}</div>
       </div>
       ${actionHtml}
@@ -2615,6 +2787,14 @@ function setSideMenuActive(key){
 }
 
 /* ---------------- Full-page views ---------------- */
+const PAGE_RESTORE_FUNCTIONS = {
+  orders: 'openMyOrdersPage',
+  account: 'openAccountPage',
+  saved: 'openSavedItemsPage',
+  support: 'openSupportPage',
+  about: 'openAboutPage',
+  bulkorders: 'openBulkQuotePage'
+};
 function showPage(title, bodyHtml, activeKey){
   document.getElementById('pageViewTitle').textContent = title;
   document.getElementById('pageViewBody').innerHTML = bodyHtml;
@@ -2624,6 +2804,11 @@ function showPage(title, bodyHtml, activeKey){
   closeSideMenu();
   if(activeKey) setSideMenuActive(activeKey);
   window.scrollTo({top:0});
+  try{
+    if(activeKey && PAGE_RESTORE_FUNCTIONS[activeKey]){
+      localStorage.setItem('medico_restore_page', activeKey);
+    }
+  }catch(e){}
 }
 function closePage(){
   document.getElementById('pageView').classList.remove('show');
@@ -2631,7 +2816,66 @@ function closePage(){
   document.getElementById('bottomNav').style.display = 'flex';
   setSideMenuActive('home');
   setActiveNav('home');
+  try{ localStorage.removeItem('medico_restore_page'); }catch(e){}
 }
+function restoreLastPageIfAny(){
+  try{
+    const key = localStorage.getItem('medico_restore_page');
+    if(key && PAGE_RESTORE_FUNCTIONS[key] && typeof window[PAGE_RESTORE_FUNCTIONS[key]] === 'function'){
+      window[PAGE_RESTORE_FUNCTIONS[key]]();
+    }
+  }catch(e){}
+}
+
+/* ---------------- Back-button handling ----------------
+ * Without this, pressing the phone's back button while a modal, page,
+ * drawer or side-menu is open would exit the whole app (since nothing
+ * was ever added to browser history for those views). This watches for
+ * any overlay becoming visible and pushes one history entry for it, so
+ * the back button just closes that overlay instead of leaving the app —
+ * only pressing back with nothing open actually exits, same as any
+ * normal app. */
+let uiHistoryPushed = false;
+function isAnyOverlayOpen(){
+  const pv = document.getElementById('pageView');
+  const sm = document.getElementById('sideMenu');
+  const cd = document.getElementById('cartDrawer');
+  return (pv && pv.classList.contains('show'))
+    || (sm && sm.classList.contains('show'))
+    || (cd && cd.classList.contains('show'))
+    || document.querySelector('.modal-wrap.show') !== null;
+}
+function syncHistoryWithUiState(){
+  const open = isAnyOverlayOpen();
+  if(open && !uiHistoryPushed){
+    uiHistoryPushed = true;
+    history.pushState({medicoOverlay:true}, '', location.href);
+  }
+}
+window.addEventListener('popstate', function(){
+  uiHistoryPushed = false;
+  const pv = document.getElementById('pageView');
+  if(pv && pv.classList.contains('show')){ closePage(); return; }
+  const sm = document.getElementById('sideMenu');
+  if(sm && sm.classList.contains('show')){ closeSideMenu(); return; }
+  const cd = document.getElementById('cartDrawer');
+  if(cd && cd.classList.contains('show')){ closeCart(); return; }
+  const openModal = document.querySelector('.modal-wrap.show');
+  if(openModal){ openModal.classList.remove('show'); return; }
+  // Nothing of ours was open — let the browser handle back normally.
+});
+try{
+  const watchedOverlayEls = [
+    document.getElementById('pageView'),
+    document.getElementById('sideMenu'),
+    document.getElementById('cartDrawer'),
+    ...document.querySelectorAll('.modal-wrap')
+  ].filter(Boolean);
+  const historyObserver = new MutationObserver(()=>{ syncHistoryWithUiState(); });
+  watchedOverlayEls.forEach(el=>{
+    historyObserver.observe(el, {attributes:true, attributeFilter:['class']});
+  });
+}catch(e){}
 
 function renderOrderSlipCard(order){
   const cls = 'st-'+String(order.status||'').toLowerCase().replace(/\s+/g,'');
@@ -2832,112 +3076,194 @@ function openAboutPage(){
 }
 
 /* ---------------- Bulk Order / Quotation requests (wholesale only) ---------------- */
-let bulkQty = {};
-let manualBulkItems = [];
+let selectedBulkItems = [];
 function openBulkQuotePage(){
-  bulkQty = {};
-  manualBulkItems = [];
+  selectedBulkItems = [];
   renderBulkQuotePage();
+  markBulkQuotesSeen();
 }
-function renderBulkQuotePage(){
-  const productRows = products.map(p=>{
-    const qty = bulkQty[p.id] || 0;
-    return `<div class="bulk-product-row">
-      <div class="bulk-product-info">
+function bulkNameInputHandler(value){
+  const list = document.getElementById('bulkNameSuggestions');
+  if(!list) return;
+  const q = value.trim().toLowerCase();
+  if(!q){ list.innerHTML = ''; list.style.display = 'none'; return; }
+  const matches = products.filter(p=>
+    p.name.toLowerCase().includes(q) || (p.salt||'').toLowerCase().includes(q) || (p.company||'').toLowerCase().includes(q)
+  ).slice(0, 6);
+  if(matches.length===0){ list.innerHTML = ''; list.style.display = 'none'; return; }
+  list.innerHTML = matches.map(p=>`
+    <div class="bulk-search-result-row" onclick="pickBulkNameSuggestion('${p.id}')">
+      <div class="bulk-search-result-text">
         <div class="bulk-product-name">${escapeHtml(p.name)}</div>
         <div class="bulk-product-meta">${escapeHtml(p.company||'')} · ${fmt(p.price)}</div>
       </div>
-      <div class="stepper">
-        <button onclick="stepBulkQty('${p.id}',-1)">−</button>
-        <span id="bulkqty-${p.id}">${qty}</span>
-        <button onclick="stepBulkQty('${p.id}',1)">+</button>
-      </div>
-    </div>`;
-  }).join('');
+      <span class="bulk-search-add-tag">Select</span>
+    </div>`).join('');
+  list.style.display = 'block';
+}
+function pickBulkNameSuggestion(productId){
+  const p = products.find(x=>x.id===productId);
+  if(!p) return;
+  document.getElementById('bulkAddName').value = p.name;
+  document.getElementById('bulkAddName').dataset.productId = p.id;
+  document.getElementById('bulkAddCompany').value = p.company || '';
+  document.getElementById('bulkNameSuggestions').style.display = 'none';
+  document.getElementById('bulkNameSuggestions').innerHTML = '';
+  const rateEl = document.getElementById('bulkAddRate');
+  if(rateEl && !rateEl.value) rateEl.placeholder = 'e.g. ' + p.price;
+  document.getElementById('bulkAddQty').focus();
+}
+function addBulkProductRow(){
+  const nameEl = document.getElementById('bulkAddName');
+  const name = nameEl.value.trim();
+  const company = document.getElementById('bulkAddCompany').value.trim();
+  const qty = Number(document.getElementById('bulkAddQty').value) || 0;
+  const rate = document.getElementById('bulkAddRate').value.trim();
+  const productId = nameEl.dataset.productId || '';
 
+  if(!name){ showToast('Enter a product / medicine name'); return; }
+  if(qty <= 0){ showToast('Enter a quantity'); return; }
+
+  const matchedProduct = productId ? products.find(p=>p.id===productId && p.name===name) : null;
+  if(matchedProduct){
+    selectedBulkItems.push({localId:'sel'+Date.now()+Math.random().toString(36).slice(2,6), type:'catalog', productId:matchedProduct.id, name:matchedProduct.name, company: company || matchedProduct.company, price:matchedProduct.price, qty, expectedRate:rate});
+  }else{
+    selectedBulkItems.push({localId:'sel'+Date.now()+Math.random().toString(36).slice(2,6), type:'manual', name, company, brand:'', qty, expectedRate:rate});
+  }
+
+  nameEl.value = '';
+  nameEl.dataset.productId = '';
+  document.getElementById('bulkAddCompany').value = '';
+  document.getElementById('bulkAddQty').value = '';
+  document.getElementById('bulkAddRate').value = '';
+  document.getElementById('bulkNameSuggestions').style.display = 'none';
+  renderSelectedBulkItemsList();
+  nameEl.focus();
+}
+function removeSelectedBulkItem(localId){
+  selectedBulkItems = selectedBulkItems.filter(i=>i.localId!==localId);
+  renderSelectedBulkItemsList();
+}
+function renderSelectedBulkItemsList(){
+  const wrap = document.getElementById('selectedBulkItemsWrap');
+  const emptyMsg = document.getElementById('bulkListEmptyMsg');
+  if(!wrap) return;
+  if(selectedBulkItems.length===0){
+    wrap.innerHTML = '';
+    if(emptyMsg) emptyMsg.style.display = 'block';
+    return;
+  }
+  if(emptyMsg) emptyMsg.style.display = 'none';
+  wrap.innerHTML = selectedBulkItems.map(item=>`
+    <tr>
+      <td>
+        <div class="bulk-product-name">${escapeHtml(item.name)}</div>
+        <div class="bulk-product-meta">${item.type==='manual' ? 'Manual entry' : escapeHtml(item.company||'')}</div>
+      </td>
+      <td>${escapeHtml(item.company||'—')}</td>
+      <td>${item.qty}</td>
+      <td>${item.expectedRate ? '₹'+escapeHtml(String(item.expectedRate)) : '—'}</td>
+      <td><button type="button" class="bulk-row-delete-btn" onclick="removeSelectedBulkItem('${item.localId}')" aria-label="Remove">🗑️</button></td>
+    </tr>
+  `).join('');
+}
+function markBulkQuotesSeen(){
+  try{ localStorage.setItem('medico_bulkquotes_last_seen', new Date().toISOString()); }catch(e){}
+  updateBulkOrderFabVisibility();
+}
+function getBulkQuoteLastSeen(){
+  try{ return localStorage.getItem('medico_bulkquotes_last_seen') || ''; }catch(e){ return ''; }
+}
+function countUnseenBulkResponses(){
+  if(!currentCustomerPhone) return 0;
+  const lastSeen = getBulkQuoteLastSeen();
+  return bulkQuotes.filter(q=>{
+    if(q.phone !== currentCustomerPhone) return false;
+    if(!q.respondedAt) return false;
+    if(!lastSeen) return true;
+    return new Date(q.respondedAt) > new Date(lastSeen);
+  }).length;
+}
+function renderBulkQuotePage(){
+  const lastSeenBeforeThisView = getBulkQuoteLastSeen();
   const myRequests = bulkQuotes.filter(q=>q.phone===currentCustomerPhone).slice().sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
   const statusClassMap = {'Pending':'st-pending','Quoted':'st-confirmed','Accepted':'st-delivered','Rejected':'st-cancelled'};
   const historyHtml = myRequests.length ? myRequests.map(q=>{
-    let items = [];
-    try{ items = JSON.parse(q.items||'[]'); }catch(e){}
-    let customItems = [];
-    try{ customItems = JSON.parse(q.customItems||'[]'); }catch(e){}
-    const allNames = [...items.map(i=>`${i.name} × ${i.qty}`), ...customItems.map(i=>`${i.name} × ${i.qty}`)].join(', ');
-    return `<div class="order-slip-card">
+    const items = parseMaybeJson(q.items);
+    const customItems = parseMaybeJson(q.customItems);
+    const allNames = [...items.map(i=>`${i.name} × ${i.qty}${i.expectedRate?` (₹${i.expectedRate}/pc expected)`:''}`), ...customItems.map(i=>`${i.name} × ${i.qty}${i.expectedRate?` (₹${i.expectedRate}/pc expected)`:''}`)].join(', ');
+    const isNew = q.respondedAt && (!lastSeenBeforeThisView || new Date(q.respondedAt) > new Date(lastSeenBeforeThisView));
+    return `<div class="order-slip-card ${isNew?'has-new-reply':''}">
       <div class="slip-top" style="margin-bottom:8px;">
         <div class="slip-order-id" style="font-size:14px;">${new Date(q.createdAt).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}</div>
         <span class="status-badge ${statusClassMap[q.status]||'st-pending'}">${escapeHtml(q.status||'Pending')}</span>
       </div>
       <div style="font-size:12px;color:var(--ink-soft);">${escapeHtml(allNames || 'No items listed')}</div>
-      ${q.adminResponse ? `<div class="bulk-admin-response">💬 ${escapeHtml(q.adminResponse)}</div>` : ''}
+      ${q.adminResponse ? `<div class="bulk-admin-response">${isNew?'<span class="bulk-new-reply-tag">🔔 New reply</span> ':''}💬 ${escapeHtml(q.adminResponse)}</div>` : ''}
     </div>`;
   }).join('') : `<div class="pv-empty" style="padding:30px 20px;"><div>No requests yet.</div></div>`;
 
   const body = `
-    <p class="helper-text" style="margin-top:0;">Select products and quantities for your bulk order, or add items not listed below. Our team will get back to you with pricing.</p>
-    <div class="field">
-      <label>📋 Select products</label>
-      <div class="bulk-product-list">${productRows}</div>
+    <div class="bulk-hero-row">
+      <div>
+        <p class="helper-text" style="margin-top:0;margin-bottom:0;">Send your requirement and get the best wholesale quotes.</p>
+      </div>
+      <div class="bulk-rate-card">
+        <span class="bulk-rate-card-icon">📄</span>
+        <div>
+          <b>Get Best Rates</b>
+          <span>Multiple quotes from our team</span>
+        </div>
+      </div>
     </div>
-    <div class="field">
-      <label>➕ Can't find a product? Add it manually</label>
-      <div id="manualBulkItemsWrap"></div>
-      <button type="button" class="saved-address-new-btn" style="width:100%;justify-content:center;" onclick="addManualBulkItemRow()">➕ Add another item</button>
+
+    <div class="bulk-add-card">
+      <h3 style="font-size:14.5px;margin-bottom:12px;">Add Product</h3>
+      <div class="bulk-add-form">
+        <div class="bulk-add-field" style="position:relative;">
+          <div class="icon-field"><span class="icon-field-ic">🔍</span><input type="text" id="bulkAddName" placeholder="Product / Medicine name" oninput="bulkNameInputHandler(this.value);this.dataset.productId='';"></div>
+          <div id="bulkNameSuggestions" class="bulk-search-results" style="display:none;"></div>
+        </div>
+        <div class="bulk-add-field"><input type="text" id="bulkAddCompany" placeholder="Company" list="bulkCompanyList"></div>
+        <div class="bulk-add-field"><input type="number" id="bulkAddQty" placeholder="Quantity — e.g. 10" min="1"></div>
+        <div class="bulk-add-field"><input type="number" id="bulkAddRate" placeholder="Expected rate (₹) — e.g. 120.00" min="0"></div>
+        <button type="button" class="bulk-add-btn" onclick="addBulkProductRow()">➕ Add</button>
+      </div>
+      <datalist id="bulkCompanyList">${[...new Set(products.map(p=>p.company).filter(Boolean))].map(c=>`<option value="${escapeAttr(c)}">`).join('')}</datalist>
     </div>
-    <button class="primary-btn" id="bulkQuoteSubmitBtn" onclick="submitBulkQuoteRequest()">Submit Request</button>
+
+    <div class="bulk-list-card">
+      <h3 style="font-size:14.5px;margin-bottom:12px;">Your Products List</h3>
+      <div id="bulkListEmptyMsg" style="font-size:11.5px;color:var(--muted);padding:6px 2px 12px;">No products added yet — use the form above.</div>
+      <div class="bulk-table-scroll">
+        <table class="bulk-products-table">
+          <thead><tr><th>Product / Medicine</th><th>Company</th><th>Quantity</th><th>Expected Rate (₹)</th><th></th></tr></thead>
+          <tbody id="selectedBulkItemsWrap"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="bulk-howitworks">
+      <span class="bulk-howitworks-icon">ℹ️</span>
+      <div>
+        <b>How it works?</b>
+        <span>We'll review your request and get back to you with the best pricing — you'll see the reply right here once it's ready.</span>
+      </div>
+    </div>
+
+    <button class="primary-btn bulk-send-btn" id="bulkQuoteSubmitBtn" onclick="submitBulkQuoteRequest()">📨 Send Quote Request</button>
     <h3 style="font-size:15px;margin:26px 0 12px;">Your previous requests</h3>
     ${historyHtml}
   `;
-  showPage('Bulk Order / Get Quote', body, null);
-  renderManualBulkItems();
-}
-function stepBulkQty(id, delta){
-  bulkQty[id] = Math.max(0, (bulkQty[id]||0) + delta);
-  const el = document.getElementById('bulkqty-'+id);
-  if(el) el.textContent = bulkQty[id];
-}
-function addManualBulkItemRow(){
-  manualBulkItems.push({id:'mb'+Date.now()+Math.random().toString(36).slice(2,6), name:'', brand:'', qty:1, company:''});
-  renderManualBulkItems();
-}
-function removeManualBulkItemRow(rowId){
-  manualBulkItems = manualBulkItems.filter(r=>r.id!==rowId);
-  renderManualBulkItems();
-}
-function updateManualBulkItemField(rowId, field, value){
-  const row = manualBulkItems.find(r=>r.id===rowId);
-  if(row) row[field] = value;
-}
-function renderManualBulkItems(){
-  const wrap = document.getElementById('manualBulkItemsWrap');
-  if(!wrap) return;
-  if(manualBulkItems.length===0){
-    wrap.innerHTML = `<div style="font-size:11.5px;color:var(--muted);margin-bottom:8px;">No manual items added.</div>`;
-    return;
-  }
-  wrap.innerHTML = manualBulkItems.map(row=>`
-    <div class="manual-bulk-item-row">
-      <div class="two-col" style="margin-bottom:8px;">
-        <input type="text" placeholder="Product name" value="${escapeAttr(row.name)}" oninput="updateManualBulkItemField('${row.id}','name',this.value)">
-        <input type="text" placeholder="Brand" value="${escapeAttr(row.brand)}" oninput="updateManualBulkItemField('${row.id}','brand',this.value)">
-      </div>
-      <div class="two-col">
-        <input type="text" placeholder="Company" value="${escapeAttr(row.company)}" oninput="updateManualBulkItemField('${row.id}','company',this.value)">
-        <input type="number" placeholder="Quantity" min="1" value="${row.qty}" oninput="updateManualBulkItemField('${row.id}','qty',Number(this.value)||1)">
-      </div>
-      <button type="button" class="remove-link" style="margin-top:6px;" onclick="removeManualBulkItemRow('${row.id}')">Remove</button>
-    </div>
-  `).join('');
+  showPage('Bulk Order', body, 'bulkorders');
+  renderSelectedBulkItemsList();
 }
 async function submitBulkQuoteRequest(){
-  const catalogItems = Object.entries(bulkQty).filter(([id,qty])=>qty>0).map(([id,qty])=>{
-    const p = products.find(x=>x.id===id);
-    return p ? {productId:id, name:p.name, company:p.company, price:p.price, qty} : null;
-  }).filter(Boolean);
-  const customItems = manualBulkItems.filter(r=>r.name.trim().length>0).map(r=>({name:r.name.trim(), brand:r.brand.trim(), company:r.company.trim(), qty:r.qty||1}));
+  const catalogItems = selectedBulkItems.filter(i=>i.type==='catalog').map(i=>({productId:i.productId, name:i.name, company:i.company, price:i.price, qty:i.qty, expectedRate:i.expectedRate||''}));
+  const customItems = selectedBulkItems.filter(i=>i.type==='manual').map(i=>({name:i.name, brand:i.brand, company:i.company, qty:i.qty, expectedRate:i.expectedRate||''}));
 
   if(catalogItems.length===0 && customItems.length===0){
-    showToast('Please select at least one product or add a manual item');
+    showToast('Please add at least one product before submitting');
     return;
   }
   if(!currentCustomerPhone){
@@ -2965,9 +3291,8 @@ async function submitBulkQuoteRequest(){
   const saved = await api('addBulkQuote', request);
   if(saved === null) showToast('Saved locally — could not reach the server.');
 
-  if(btn){ btn.disabled = false; btn.textContent = 'Submit Request'; }
-  bulkQty = {};
-  manualBulkItems = [];
+  if(btn){ btn.disabled = false; btn.textContent = '📨 Send Quote Request'; }
+  selectedBulkItems = [];
   showToast('✅ Your request has been submitted — our team will get in touch with you shortly.');
   renderBulkQuotePage();
 }
@@ -3174,12 +3499,10 @@ function renderAdminBulkQuotes(){
   const clsMap = {'Pending':'cmp-open','Quoted':'cmp-inprogress','Accepted':'cmp-resolved','Rejected':'cmp-open'};
   const sorted = bulkQuotes.slice().sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
   wrap.innerHTML = sorted.map(q=>{
-    let items = [];
-    try{ items = JSON.parse(q.items||'[]'); }catch(e){}
-    let customItems = [];
-    try{ customItems = JSON.parse(q.customItems||'[]'); }catch(e){}
-    const catalogHtml = items.map(i=>`<div>${escapeHtml(i.name)} (${escapeHtml(i.company||'—')}) × ${i.qty} — ${fmt(i.price)}/unit</div>`).join('');
-    const customHtml = customItems.map(i=>`<div>📝 ${escapeHtml(i.name)}${i.brand?' ('+escapeHtml(i.brand)+')':''}${i.company?' — '+escapeHtml(i.company):''} × ${i.qty}</div>`).join('');
+    const items = parseMaybeJson(q.items);
+    const customItems = parseMaybeJson(q.customItems);
+    const catalogHtml = items.map(i=>`<div>${escapeHtml(i.name)} (${escapeHtml(i.company||'—')}) × ${i.qty} — MRP ${fmt(i.price)}/unit${i.expectedRate?` <b style="color:var(--primary-dark);">· Expected: ₹${escapeHtml(String(i.expectedRate))}/unit</b>`:''}</div>`).join('');
+    const customHtml = customItems.map(i=>`<div>📝 ${escapeHtml(i.name)}${i.brand?' ('+escapeHtml(i.brand)+')':''}${i.company?' — '+escapeHtml(i.company):''} × ${i.qty}${i.expectedRate?` <b style="color:var(--primary-dark);">· Expected: ₹${escapeHtml(String(i.expectedRate))}/unit</b>`:''}</div>`).join('');
     return `<div class="order-card">
       <div class="order-head">
         <div>
@@ -3299,8 +3622,17 @@ function onCouponTypeChange(){
     help.textContent = "Percentage off, valid only on a customer's very first order (checked using their phone number).";
   }
 }
+function populateCouponRestrictionSelects(){
+  const catSel = document.getElementById('newCouponExcludeCategories');
+  const prodSel = document.getElementById('newCouponExcludeProducts');
+  if(!catSel || !prodSel) return;
+  const cats = [...new Set(products.map(p=>p.category))];
+  catSel.innerHTML = cats.map(c=>`<option value="${escapeAttr(c)}">${escapeHtml(c)}</option>`).join('');
+  prodSel.innerHTML = products.map(p=>`<option value="${p.id}">${escapeHtml(p.name)}</option>`).join('');
+}
 function renderAdminCoupons(){
   onCouponTypeChange();
+  populateCouponRestrictionSelects();
   document.getElementById('couponCountLabel').textContent = coupons.length + ' coupon(s)';
   const wrap = document.getElementById('adminCouponsList');
   if(coupons.length===0){
@@ -3312,12 +3644,18 @@ function renderAdminCoupons(){
     const expired = couponIsExpired(c);
     const usedUp = couponIsUsedUp(c);
     const usageText = c.usageLimit>0 ? `${c.usedCount||0} / ${c.usageLimit} used` : `${c.usedCount||0} used so far`;
+    let excludeCats = []; try{ excludeCats = JSON.parse(c.excludeCategories||'[]'); }catch(e){}
+    let excludeProdIds = []; try{ excludeProdIds = JSON.parse(c.excludeProductIds||'[]'); }catch(e){}
+    const excludeProdNames = excludeProdIds.map(id=>{ const p = products.find(x=>x.id===id); return p ? p.name : id; });
     return `<div class="order-card">
       <div class="order-head">
         <div>
           <div class="order-id">${escapeHtml(c.code)} <span class="footer-note" style="display:inline;padding:0;">· ${typeLabels[c.type]||c.type}</span></div>
           <div class="order-meta">${escapeHtml(couponDiscountText(c))}</div>
           <div class="order-meta">${usageText}${c.expiryDate?` · Expires ${new Date(c.expiryDate).toLocaleDateString('en-IN')}`:''}${expired?' <b style="color:var(--danger);">(expired)</b>':''}${!expired&&usedUp?' <b style="color:var(--danger);">(limit reached)</b>':''}</div>
+          ${c.targetPhone ? `<div class="order-meta">🔒 Only for ${escapeHtml(c.targetPhone)}</div>` : ''}
+          ${excludeCats.length ? `<div class="order-meta">🚫 Excludes categories: ${escapeHtml(excludeCats.join(', '))}</div>` : ''}
+          ${excludeProdNames.length ? `<div class="order-meta">🚫 Excludes products: ${escapeHtml(excludeProdNames.join(', '))}</div>` : ''}
         </div>
         <div class="admin-toggle-row">
           <label class="admin-toggle-row"><input type="checkbox" ${c.active?'checked':''} onchange="toggleCouponActive('${c.id}',this.checked)"> Active</label>
@@ -3335,11 +3673,15 @@ async function addCoupon(){
   const minOrder = Number(document.getElementById('newCouponMinOrder').value) || 0;
   const usageLimit = Number(document.getElementById('newCouponUsageLimit').value) || 0;
   const expiryDate = document.getElementById('newCouponExpiry').value;
+  const targetPhone = document.getElementById('newCouponPhone').value.trim();
+  const excludeCategories = Array.from(document.getElementById('newCouponExcludeCategories').selectedOptions).map(o=>o.value);
+  const excludeProductIds = Array.from(document.getElementById('newCouponExcludeProducts').selectedOptions).map(o=>o.value);
   if(!code){ showToast('Enter a coupon code'); return; }
   if(type!=='freedelivery' && value<=0){ showToast('Enter a discount value'); return; }
+  if(targetPhone && !/^[6-9]\d{9}$/.test(targetPhone)){ showToast('Enter a valid 10-digit phone number, or leave it blank'); return; }
   if(coupons.some(c=>c.code.toUpperCase()===code)){ showToast('A coupon with this code already exists'); return; }
   const id = 'c' + Date.now();
-  const coupon = {id, code, type, value, minOrder, maxDiscount, expiryDate, usageLimit, usedCount:0, active:true};
+  const coupon = {id, code, type, value, minOrder, maxDiscount, expiryDate, usageLimit, usedCount:0, active:true, targetPhone, excludeCategories: JSON.stringify(excludeCategories), excludeProductIds: JSON.stringify(excludeProductIds)};
   coupons.push(coupon);
   const saved = await api('addCoupon', coupon);
   if(saved === null) showToast('Added locally — could not reach the server.');
@@ -3349,6 +3691,9 @@ async function addCoupon(){
   document.getElementById('newCouponMinOrder').value = '';
   document.getElementById('newCouponUsageLimit').value = '';
   document.getElementById('newCouponExpiry').value = '';
+  document.getElementById('newCouponPhone').value = '';
+  document.getElementById('newCouponExcludeCategories').selectedIndex = -1;
+  document.getElementById('newCouponExcludeProducts').selectedIndex = -1;
   document.getElementById('newCouponType').value = 'percent';
   onCouponTypeChange();
   renderAdminCoupons();
