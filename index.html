@@ -10,6 +10,8 @@
 <meta name="apple-mobile-web-app-title" content="Medico">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js"></script>
 <title>Medico</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap');
@@ -276,6 +278,7 @@ input,textarea,select{font-family:var(--font-body);}
 .pd-row-v2-info{min-width:0;flex:1;}
 .pd-row-price{font-size:11px;color:var(--ink-soft);margin-top:2px;}
 .pd-row-coupon{font-size:10.5px;font-weight:700;color:var(--green);margin-top:2px;}
+.checkout-savings-tag{margin-top:10px;background:var(--green-bg);color:var(--green);font-size:12px;font-weight:700;padding:8px 10px;border-radius:8px;text-align:center;}
 .pd-row-name{color:var(--ink);font-weight:600;font-size:13px;}
 .pd-row-qty{color:var(--ink-soft);font-weight:700;}
 .pay-method-card-v2{display:flex;align-items:center;gap:10px;padding:12px;border:1.5px solid var(--line);border-radius:11px;background:var(--bg);cursor:pointer;position:relative;flex:1;}
@@ -670,6 +673,7 @@ input,textarea,select{font-family:var(--font-body);}
     <button class="side-menu-item" data-page="saved" onclick="openSavedItemsPage()"><span class="smi-icon">♥</span> Saved Items</button>
     <button class="side-menu-item" data-page="support" onclick="openSupportPage()"><span class="smi-icon">🆘</span> Support Center</button>
     <button class="side-menu-item" data-page="about" onclick="openAboutPage()"><span class="smi-icon">ℹ️</span> About Us</button>
+    <button class="side-menu-item" onclick="enableNotifications()"><span class="smi-icon">🔔</span> <span id="notifyMenuLabel">Enable Notifications</span></button>
     <button class="side-menu-item" id="installAppMenuItem" onclick="triggerInstallPrompt()" style="display:none;"><span class="smi-icon">⬇️</span> Install App</button>
   </div>
 </div>
@@ -1156,6 +1160,14 @@ input,textarea,select{font-family:var(--font-body);}
         <button class="small-btn" onclick="saveAboutSettings()">Save About Us content</button>
       </div>
       <div class="admin-card">
+        <h3 style="margin-bottom:6px;">🔔 Send Notification</h3>
+        <p class="helper-text" style="margin-top:8px;">Send a push notification to a specific customer, or broadcast to everyone who has notifications enabled. Requires one-time Firebase setup — see the Code.gs file for instructions.</p>
+        <div class="field"><label>Title</label><input type="text" id="notifyTitle" placeholder="e.g. Your order is on the way!"></div>
+        <div class="field"><label>Message</label><textarea id="notifyBody" rows="2" placeholder="Write your message here"></textarea></div>
+        <div class="field"><label>Send to (leave blank to send to everyone)</label><input type="tel" id="notifyPhone" placeholder="10-digit phone number — optional" maxlength="10" inputmode="numeric" oninput="this.value=this.value.replace(/\D/g,'').slice(0,10)"></div>
+        <button class="small-btn" onclick="sendAdminNotification()">Send Notification</button>
+      </div>
+      <div class="admin-card">
         <h3 style="margin-bottom:10px;">Change admin password</h3>
         <div class="two-col">
           <div class="field"><label>New password</label><input type="password" id="newAdminPass"></div>
@@ -1633,6 +1645,7 @@ function authSubmitLogin(phone){
   updateBulkOrderFabVisibility();
   const hasSpecial = customerPricing.some(x=>x.phone===phone);
   showToast(hasSpecial ? `Welcome back, ${existing.name} — your special prices are showing` : `Welcome back, ${existing.name}`);
+  if(notificationPermissionState()==='granted') enableNotifications(false);
 }
 function renderSignupStep(phone){
   const body = `
@@ -1755,6 +1768,7 @@ async function authSubmitSignup(phone){
   renderCartDrawer();
   updateBulkOrderFabVisibility();
   showToast(`Account created — welcome, ${finalCustomer.name}!`);
+  if(notificationPermissionState()==='granted') enableNotifications(false);
 }
 function switchCustomerNumber(){
   currentCustomerPhone = '';
@@ -2118,19 +2132,24 @@ function renderCheckoutProductDetails(){
     if(!p) return '';
     const effPrice = getEffectivePrice(p);
     const lineTotal = effPrice*qty;
-    let couponLine = '';
+    let perPieceCouponDiscount = 0;
     if(totalCouponDiscount>0 && !couponBlocked && subtotal>0){
       const itemShare = totalCouponDiscount * (lineTotal/subtotal);
-      const perPieceDiscount = itemShare / qty;
-      if(perPieceDiscount>0){
-        couponLine = `<div class="pd-row-coupon">🏷️ Coupon: −${fmt(Math.round(perPieceDiscount*100)/100)}/piece</div>`;
-      }
+      perPieceCouponDiscount = itemShare / qty;
     }
+    // Whatever "before" price we should strike through: the product's own
+    // MRP if it's already discounted, otherwise just the effective price
+    // (so a coupon-only discount still gets a visible strike-through).
+    const mrpBase = (p.origPrice && p.origPrice > effPrice) ? p.origPrice : effPrice;
+    const finalPrice = Math.max(0, effPrice - perPieceCouponDiscount);
+    const hasAnyDiscount = mrpBase > finalPrice + 0.004; // avoid float noise
+    const priceHtml = hasAnyDiscount
+      ? `<span style="text-decoration:line-through;color:var(--muted);">${fmt(mrpBase)}</span> <b style="color:var(--green);">${fmt(Math.round(finalPrice*100)/100)}</b>/piece`
+      : `${fmt(finalPrice)}/piece`;
     return `<div class="pd-row-v2">
       <div class="pd-row-v2-info">
         <div class="pd-row-name">${escapeHtml(p.name)}</div>
-        <div class="pd-row-price">${fmt(effPrice)}/piece</div>
-        ${couponLine}
+        <div class="pd-row-price">${priceHtml}</div>
       </div>
       <div class="stepper">
         <button onclick="checkoutStepQty('${id}',-1)">−</button>
@@ -2263,12 +2282,14 @@ function updateCheckoutSummary(){
   const fee = feeForFulfillment(currentFulfillment, subtotal);
   const discount = appliedCoupon ? couponDiscountAmount(appliedCoupon, subtotal, fee) : 0;
   const total = Math.max(0, Math.round(subtotal + fee - discount));
+  const discountPercent = (discount>0 && subtotal>0) ? Math.round((discount/subtotal)*100) : 0;
   el.innerHTML = `
     <div class="slip-row"><span>Subtotal</span><span>${fmt(subtotal)}</span></div>
     <div class="slip-row"><span>Delivery</span><span>${fee===0?'Free':fmt(fee)}</span></div>
     ${discount>0?`<div class="slip-row"><span>Coupon (${escapeHtml(appliedCoupon.code)})</span><span>−${fmt(discount)}</span></div>`:''}
     <div class="slip-divider"></div>
-    <div class="slip-row"><b>Total</b><b>${fmt(total)}</b></div>`;
+    <div class="slip-row"><b>Total</b><b>${fmt(total)}</b></div>
+    ${discount>0?`<div class="checkout-savings-tag">🎉 You save ${fmt(discount)}${discountPercent>0?` (${discountPercent}%)`:''}</div>`:''}`;
 }
 function selectPaymentMethod(method){
   currentPaymentMethod = method;
@@ -2772,6 +2793,7 @@ function openSupportSheet(){
 function openSideMenu(){
   document.getElementById('sideMenu').classList.add('show');
   document.getElementById('sideMenuOverlay').classList.add('show');
+  updateNotificationMenuLabel();
 }
 function closeSideMenu(){
   document.getElementById('sideMenu').classList.remove('show');
@@ -3534,7 +3556,7 @@ async function saveBulkQuoteResponse(id){
   q.status = statusEl ? statusEl.value : q.status;
   q.adminResponse = responseEl ? responseEl.value.trim() : q.adminResponse;
   q.respondedAt = new Date().toISOString();
-  const saved = await api('updateBulkQuoteStatus', { id, status: q.status, adminResponse: q.adminResponse, respondedAt: q.respondedAt });
+  const saved = await api('updateBulkQuoteStatus', { id, phone: q.phone, status: q.status, adminResponse: q.adminResponse, respondedAt: q.respondedAt });
   if(saved === null) showToast('Updated locally — could not reach the server.');
   showToast('Response saved');
 }
@@ -3925,6 +3947,22 @@ async function saveAboutSettings(){
   if(saved === null) showToast('Saved locally — could not reach the server.');
   showToast('About Us content saved');
 }
+async function sendAdminNotification(){
+  const title = document.getElementById('notifyTitle').value.trim();
+  const body = document.getElementById('notifyBody').value.trim();
+  const phone = document.getElementById('notifyPhone').value.trim();
+  if(!title || !body){ showToast('Enter both a title and a message'); return; }
+  if(phone && !/^[6-9]\d{9}$/.test(phone)){ showToast('Enter a valid 10-digit phone number, or leave it blank'); return; }
+  const result = await api('sendNotification', { title, body, phone });
+  if(result === null){
+    showToast('Could not reach the server — check Firebase setup in Code.gs');
+    return;
+  }
+  document.getElementById('notifyTitle').value = '';
+  document.getElementById('notifyBody').value = '';
+  document.getElementById('notifyPhone').value = '';
+  showToast(phone ? 'Notification sent!' : `Notification sent to ${result.sent||0} device(s)`);
+}
 async function changeAdminPassword(){
   const p1 = document.getElementById('newAdminPass').value;
   const p2 = document.getElementById('confirmAdminPass').value;
@@ -4056,6 +4094,68 @@ function setupPwa(){
   }
 }
 
+/* ---------------- Push notifications (Firebase Cloud Messaging) ---------------- */
+const firebaseConfig = {
+  apiKey: "AIzaSyDqqdZGhq6Kh7zjtOjzhwnJom2A8bLArAA",
+  authDomain: "medico-0506.firebaseapp.com",
+  projectId: "medico-0506",
+  storageBucket: "medico-0506.firebasestorage.app",
+  messagingSenderId: "562619645249",
+  appId: "1:562619645249:web:2b30976a6f2406924bf5c0",
+  measurementId: "G-GX01FZQ10L"
+};
+const FCM_VAPID_KEY = "BCwg1fGajBtbAYuGZJwJACQOTjeF-H5A_nRzvjpVU87vXOdNU9JY-lY1gl7k1yEIbxZft5AuTuqLmAIYrV25eYk";
+let fcmMessaging = null;
+function initFirebaseMessaging(){
+  try{
+    if(typeof firebase === 'undefined') return;
+    if(!firebase.apps || firebase.apps.length===0){
+      firebase.initializeApp(firebaseConfig);
+    }
+    fcmMessaging = firebase.messaging();
+    // Show a toast if a notification arrives while the app is open
+    // (background notifications are handled by the service worker instead).
+    fcmMessaging.onMessage((payload)=>{
+      const title = (payload.notification && payload.notification.title) || 'Medico';
+      const body = (payload.notification && payload.notification.body) || '';
+      showToast(`🔔 ${title}${body ? ' — '+body : ''}`);
+    });
+  }catch(e){ console.warn('Firebase init failed', e); }
+}
+function notificationPermissionState(){
+  return ('Notification' in window) ? Notification.permission : 'unsupported';
+}
+async function enableNotifications(showFeedback=true){
+  if(!('Notification' in window) || !('serviceWorker' in navigator)){
+    if(showFeedback) showToast('Notifications are not supported on this device/browser');
+    return;
+  }
+  try{
+    const permission = await Notification.requestPermission();
+    if(permission !== 'granted'){
+      if(showFeedback) showToast('Notifications permission was not granted');
+      return;
+    }
+    if(!fcmMessaging) initFirebaseMessaging();
+    const registration = await navigator.serviceWorker.getRegistration();
+    const token = await fcmMessaging.getToken({ vapidKey: FCM_VAPID_KEY, serviceWorkerRegistration: registration });
+    if(token){
+      await api('saveNotificationToken', { phone: currentCustomerPhone || '', token });
+      try{ localStorage.setItem('medico_push_token', token); }catch(e){}
+      if(showFeedback) showToast('🔔 Notifications enabled!');
+      updateNotificationMenuLabel();
+    }
+  }catch(e){
+    console.warn('Could not enable notifications', e);
+    if(showFeedback) showToast('Could not enable notifications on this device');
+  }
+}
+function updateNotificationMenuLabel(){
+  const el = document.getElementById('notifyMenuLabel');
+  if(!el) return;
+  el.textContent = notificationPermissionState()==='granted' ? 'Notifications on' : 'Enable Notifications';
+}
+
 let deferredInstallPrompt = null;
 window.addEventListener('beforeinstallprompt', (e)=>{
   e.preventDefault();
@@ -4086,6 +4186,7 @@ window.addEventListener('appinstalled', ()=>{
   showToast('Medico installed!');
 });
 setupPwa();
+initFirebaseMessaging();
 
 /* ---------------- Init ---------------- */
 loadData();
